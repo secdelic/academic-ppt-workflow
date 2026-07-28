@@ -1,0 +1,31 @@
+{
+  "schema_version": "1.0",
+  "paths": {
+    "input_root": "input",
+    "staging_root": "staging",
+    "output_root": "output",
+    "audit_root": "audit",
+    "archive_root": "archive"
+  },
+  "environment": {
+    "input_root": "ACADEMIC_PPT_INPUT_ROOT",
+    "staging_root": "ACADEMIC_PPT_STAGING_ROOT",
+    "output_root": "ACADEMIC_PPT_OUTPUT_ROOT",
+    "node_executable": "ACADEMIC_PPT_NODE",
+    "node_modules": "ACADEMIC_PPT_NODE_MODULES",
+    "soffice_executable": "ACADEMIC_PPT_SOFFICE",
+    "pdftoppm_executable": "ACADEMIC_PPT_PDFTOPPM"
+  },
+  "supported_extensions": [
+    ".docx", ".pdf", ".pptx", ".xlsx", ".csv", ".tsv", ".md", ".txt",
+    ".png", ".jpg", ".jpeg", ".svg"
+  ],
+  "default_backend": "pptxgenjs",
+  "render_timeout_seconds": 120,
+  "resume": true,
+  "hash_algorithm": "sha256",
+  "ocr": {
+    "enabled_by_default": false,
+    "require_scanned_pdf_confirmation": true
+  }
+}

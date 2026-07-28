@@ -1,0 +1,39 @@
+{
+  "schema_version": "1.0",
+  "profile_name": "restrained_biomedical",
+  "aspect_ratio": "16:9",
+  "canvas_px": {"width": 1280, "height": 720},
+  "grid": {"margin_left": 72, "margin_right": 72, "margin_top": 56, "margin_bottom": 48, "base_unit": 8},
+  "fonts": {
+    "zh": ["Microsoft YaHei", "Source Han Sans CN", "SimHei", "sans-serif"],
+    "en": ["Aptos", "Arial", "Calibri", "sans-serif"]
+  },
+  "font_sizes_pt": {
+    "deck_title": 52,
+    "slide_title": 36,
+    "subheading": 24,
+    "body": 20,
+    "chart_label": 16,
+    "citation": 12
+  },
+  "minimum_font_sizes_pt": {"body": 16, "citation": 11},
+  "colors": {
+    "background": "#F7FAFC",
+    "surface": "#FFFFFF",
+    "ink": "#102A43",
+    "muted": "#627D98",
+    "primary": "#0F766E",
+    "secondary": "#2563EB",
+    "accent": "#D97706",
+    "danger": "#B91C1C",
+    "line": "#D9E2EC"
+  },
+  "rules": {
+    "gradients": false,
+    "glow": false,
+    "decorative_ai_images": false,
+    "prefer_editable_charts": true,
+    "prefer_svg_or_native_shapes": true,
+    "one_key_message_per_slide": true
+  }
+}

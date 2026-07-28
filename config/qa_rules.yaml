@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0",
+  "scientific": {
+    "require_source_for_every_claim": true,
+    "require_manual_review_for_low_confidence": true,
+    "causal_terms": ["causes", "caused", "leads to", "proves", "demonstrates mechanism", "导致", "证明机制"],
+    "computational_inference_terms": ["enrichment", "machine learning", "docking", "molecular dynamics", "CellChat", "trajectory", "regulon"]
+  },
+  "visual": {
+    "minimum_body_font_pt": 16,
+    "minimum_citation_font_pt": 11,
+    "maximum_title_lines": 1,
+    "minimum_contrast_ratio": 4.5,
+    "require_all_slide_previews": true,
+    "reject_blank_slides": true,
+    "reject_out_of_bounds_objects": true
+  },
+  "file": {
+    "require_nonzero_pptx": true,
+    "require_openable_pptx_zip": true,
+    "require_pdf_page_match": true,
+    "require_input_hash_unchanged": true,
+    "forbid_patient_level_data_in_output": true
+  }
+}

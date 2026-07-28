@@ -1,0 +1,20 @@
+{
+  "project_name": "synthetic_academic_workflow_demo",
+  "presentation_type": "research_report",
+  "presentation_objective": "Demonstrate a source-bound, editable, and render-verified academic PPT workflow using only synthetic material.",
+  "audience": "Researchers evaluating the local workflow",
+  "language": "en-US",
+  "duration_minutes": 8,
+  "target_slide_count": 8,
+  "output_aspect_ratio": "16:9",
+  "must_include": ["evidence boundary", "editable chart", "manual review gate"],
+  "must_exclude": ["real patient information", "external references", "causal claims"],
+  "key_message": "The synthetic run demonstrates traceable generation and mandatory human scientific review.",
+  "target_journal_or_meeting": "Internal workflow validation only",
+  "citation_style": "Source ID footer",
+  "theme_profile": "restrained_biomedical",
+  "style_reference_files": [],
+  "speaker_notes_required": true,
+  "appendix_required": false,
+  "confidential_content_rules": ["No real patient or participant data", "Synthetic values only"]
+}

@@ -1,0 +1,37 @@
+{
+  "research_report": {
+    "default_duration_minutes": 20,
+    "default_slide_count": 14,
+    "sections": ["question", "gap", "objective", "design", "population", "analysis", "results", "interpretation", "limitations", "conclusion"]
+  },
+  "thesis_defense": {
+    "default_duration_minutes": 40,
+    "default_slide_count": 28,
+    "sections": ["question", "literature", "gap", "aims", "methods", "results", "originality", "limitations", "conclusion", "future_work"]
+  },
+  "journal_club": {
+    "default_duration_minutes": 20,
+    "default_slide_count": 12,
+    "sections": ["citation", "question", "design", "population", "methods", "results", "bias", "applicability", "discussion"]
+  },
+  "conference_talk": {
+    "default_duration_minutes": 12,
+    "default_slide_count": 10,
+    "sections": ["problem", "gap", "objective", "methods", "key_results", "meaning", "conclusion"]
+  },
+  "project_update": {
+    "default_duration_minutes": 15,
+    "default_slide_count": 10,
+    "sections": ["objective", "completed", "current_results", "risks", "decisions", "next_steps"]
+  },
+  "clinical_research_protocol": {
+    "default_duration_minutes": 25,
+    "default_slide_count": 16,
+    "sections": ["rationale", "objective", "design", "population", "exposure_or_intervention", "outcomes", "statistics", "safety", "ethics", "timeline"]
+  },
+  "bioinformatics_study": {
+    "default_duration_minutes": 20,
+    "default_slide_count": 15,
+    "sections": ["question", "datasets", "preprocessing", "analysis_pipeline", "results", "validation", "computational_inference", "limitations", "conclusion"]
+  }
+}

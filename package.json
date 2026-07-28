@@ -1,0 +1,11 @@
+{
+  "name": "academic-ppt-workflow",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Local, source-bound, render-verified academic PowerPoint workflow",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "pptxgenjs": "4.0.1"
+  }
+}

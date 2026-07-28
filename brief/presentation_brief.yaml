@@ -1,0 +1,20 @@
+{
+  "project_name": "INFORMATION_REQUIRED",
+  "presentation_type": "research_report",
+  "presentation_objective": "INFORMATION_REQUIRED",
+  "audience": "INFORMATION_REQUIRED",
+  "language": "zh-CN",
+  "duration_minutes": 20,
+  "target_slide_count": 14,
+  "output_aspect_ratio": "16:9",
+  "must_include": [],
+  "must_exclude": [],
+  "key_message": "INFORMATION_REQUIRED",
+  "target_journal_or_meeting": "INFORMATION_REQUIRED",
+  "citation_style": "Vancouver",
+  "theme_profile": "restrained_biomedical",
+  "style_reference_files": [],
+  "speaker_notes_required": true,
+  "appendix_required": true,
+  "confidential_content_rules": ["Do not include patient-level data", "Do not expose direct identifiers"]
+}
