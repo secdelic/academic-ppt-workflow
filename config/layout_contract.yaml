@@ -1,0 +1,45 @@
+{
+  "schema_version": "2.1",
+  "aspect_ratios": {
+    "16:9": {
+      "width_in": 13.333,
+      "height_in": 7.5,
+      "zones": {
+        "title": {"x_min": 0.055, "x_max": 0.945, "y_min": 0.055, "y_max": 0.205},
+        "content": {"x_min": 0.060, "x_max": 0.940, "y_min": 0.235, "y_max": 0.855},
+        "footer_exclusion": {"x_min": 0.000, "x_max": 1.000, "y_min": 0.885, "y_max": 1.000},
+        "source_label": {"x_min": 0.055, "x_max": 0.875, "y_min": 0.912, "y_max": 0.962},
+        "page_number": {"x_min": 0.900, "x_max": 0.955, "y_min": 0.915, "y_max": 0.970}
+      }
+    }
+  },
+  "minimum_gutter_in": 0.12,
+  "minimum_font_pt": {
+    "title": 28,
+    "body": 18,
+    "chart_label": 15,
+    "footer": 10,
+    "page_number": 10
+  },
+  "text_policy": {
+    "allow_powerpoint_autofit": false,
+    "minimum_line_spacing_ratio": 1.05,
+    "preferred_line_spacing_ratio": 1.18,
+    "maximum_light_shrink_percent": 8
+  },
+  "layout_families": [
+    "cover",
+    "problem_gap_objective",
+    "timeline",
+    "native_flow",
+    "matrix_2x2",
+    "event_rate_chart",
+    "forest_plot",
+    "line_chart",
+    "missingness_chart",
+    "comparison",
+    "audit_table",
+    "takeaway",
+    "source_registry"
+  ]
+}

@@ -1,0 +1,3 @@
+maximum_primary: 1
+maximum_secondary: 1
+allowed: [direct_label, key_value_callout, delta_annotation, threshold_annotation, confidence_annotation, caution_annotation, evidence_boundary_annotation]

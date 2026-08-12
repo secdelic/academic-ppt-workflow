@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "academic-ppt/art-direction-spec/2.5",
+  "title": "Academic PPT ArtDirectionSpec",
+  "type": "object",
+  "required": [
+    "art_direction_id", "presentation_type", "audience", "domain_profile",
+    "visual_tone", "visual_motif", "primary_palette", "secondary_palette",
+    "semantic_colors", "background_strategy", "section_backgrounds",
+    "hero_style", "figure_treatment", "chart_treatment", "annotation_style",
+    "typography_personality", "card_style", "divider_style",
+    "conclusion_style", "appendix_style", "density_wave",
+    "emphasis_slides", "section_breaks", "signature_components",
+    "allowed_variants", "prohibited_styles"
+  ],
+  "properties": {
+    "art_direction_id": {"type": "string", "pattern": "^ART-[A-F0-9]{16}$"},
+    "presentation_type": {"type": "string", "minLength": 1},
+    "audience": {"type": "string", "minLength": 1},
+    "domain_profile": {"enum": ["clinical_methods", "bioinformatics", "evidence_synthesis", "clinical_protocol"]},
+    "primary_palette": {"type": "array", "minItems": 2, "items": {"type": "string", "pattern": "^[A-Fa-f0-9]{6}$"}},
+    "secondary_palette": {"type": "array", "minItems": 2, "items": {"type": "string", "pattern": "^[A-Fa-f0-9]{6}$"}},
+    "emphasis_slides": {"type": "array", "items": {"type": "string"}},
+    "section_breaks": {"type": "array", "items": {"type": "string"}},
+    "prohibited_styles": {"type": "array", "minItems": 1, "items": {"type": "string"}}
+  },
+  "additionalProperties": true
+}

@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "academic-ppt/deck-rhythm-plan/2.5",
+  "title": "Academic PPT DeckRhythmPlan",
+  "type": "object",
+  "required": ["art_direction_id", "slides", "hero_slide_count", "dark_slide_count", "dark_slide_ratio"],
+  "properties": {
+    "slides": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["slide_id", "visual_intensity", "density_target", "background_variant", "hero_priority", "transition_role", "section_role"],
+        "properties": {
+          "visual_intensity": {"type": "integer", "minimum": 1, "maximum": 4},
+          "background_variant": {"enum": ["light", "tinted", "dark_emphasis"]},
+          "hero_area_ratio": {"type": "number", "minimum": 0, "maximum": 0.65}
+        }
+      }
+    },
+    "dark_slide_ratio": {"type": "number", "minimum": 0, "maximum": 0.25}
+  },
+  "additionalProperties": false
+}

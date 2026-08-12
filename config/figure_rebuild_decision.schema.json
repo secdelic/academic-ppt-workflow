@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "academic-ppt/figure-rebuild-decision/2.5",
+  "title": "Academic PPT FigureRebuildDecision",
+  "type": "object",
+  "required": ["visual_id", "decision", "rationale", "source_ids"],
+  "properties": {
+    "decision": {
+      "enum": ["REDRAW_FROM_STRUCTURED_DATA", "PRESERVE_SOURCE_FIGURE", "PRESERVE_WITH_CALLOUT", "MANUAL_REVIEW_REQUIRED"]
+    },
+    "source_ids": {"type": "array", "items": {"type": "string"}}
+  },
+  "additionalProperties": true
+}

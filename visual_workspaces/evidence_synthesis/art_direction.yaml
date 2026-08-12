@@ -1,0 +1,12 @@
+workspace_id: evidence_synthesis
+visual_tone: rigorous, calm, decision-oriented
+signature_motif: "aggregation + certainty"
+palette:
+  primary: 263B57
+  accent: 6B7F9E
+  comparison: C74B50
+  canvas: F7F8FA
+typography:
+  zh: Microsoft YaHei
+  latin: Aptos
+prohibited_styles: [glow, decorative_gradient, unrelated_photo, entertainment_illustration]

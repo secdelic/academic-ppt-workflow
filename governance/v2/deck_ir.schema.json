@@ -1,0 +1,183 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:academic-ppt-workflow:deck-ir:2.0",
+  "title": "Academic PPT Workflow Deck IR",
+  "description": "Repository-owned intermediate representation. Stable slide identity is derived from deck_id plus logical_slide_key and never from page order.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema_version",
+    "deck_id",
+    "deck_version",
+    "narrative_mode",
+    "brief_hash",
+    "slides",
+    "canonical_hash"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "2.0"
+    },
+    "deck_id": {
+      "type": "string",
+      "pattern": "^DECK-[0-9A-F-]+$"
+    },
+    "deck_version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "narrative_mode": {
+      "enum": [
+        "scientific_problem",
+        "conclusion_first",
+        "thesis_defense",
+        "journal_club",
+        "clinical_protocol",
+        "methods_teaching",
+        "neutral_briefing"
+      ]
+    },
+    "brief_hash": {
+      "$ref": "#/$defs/sha256"
+    },
+    "canonical_hash": {
+      "$ref": "#/$defs/sha256"
+    },
+    "slides": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/slide"
+      }
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "identifierList": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "slide": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "slide_id",
+        "slide_revision",
+        "slide_role",
+        "narrative_mode",
+        "key_message",
+        "claim_ids",
+        "source_ids",
+        "layout_id",
+        "backend",
+        "template_layout_id",
+        "visual_assets",
+        "editable_object_requirements",
+        "speaker_notes",
+        "manual_review_required",
+        "content_hash",
+        "render_hash",
+        "logical_slide_key",
+        "section_id",
+        "figure_ids",
+        "managed_object_ids",
+        "powerpoint_slide_id"
+      ],
+      "properties": {
+        "slide_id": {
+          "type": "string",
+          "pattern": "^SLD-[0-9A-F]{20}$"
+        },
+        "slide_revision": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "slide_role": {
+          "type": "string",
+          "minLength": 1
+        },
+        "narrative_mode": {
+          "$ref": "#/properties/narrative_mode"
+        },
+        "key_message": {
+          "type": "string"
+        },
+        "claim_ids": {
+          "$ref": "#/$defs/identifierList"
+        },
+        "source_ids": {
+          "$ref": "#/$defs/identifierList"
+        },
+        "layout_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "backend": {
+          "type": "string",
+          "minLength": 1
+        },
+        "template_layout_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "visual_assets": {
+          "type": "array"
+        },
+        "editable_object_requirements": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "speaker_notes": {
+          "type": "string"
+        },
+        "manual_review_required": {
+          "type": "boolean"
+        },
+        "content_hash": {
+          "$ref": "#/$defs/sha256"
+        },
+        "render_hash": {
+          "oneOf": [
+            {
+              "const": ""
+            },
+            {
+              "$ref": "#/$defs/sha256"
+            }
+          ]
+        },
+        "logical_slide_key": {
+          "type": "string",
+          "minLength": 1
+        },
+        "section_id": {
+          "type": "string"
+        },
+        "figure_ids": {
+          "$ref": "#/$defs/identifierList"
+        },
+        "managed_object_ids": {
+          "$ref": "#/$defs/identifierList"
+        },
+        "powerpoint_slide_id": {
+          "type": [
+            "string",
+            "integer",
+            "null"
+          ]
+        }
+      }
+    }
+  }
+}

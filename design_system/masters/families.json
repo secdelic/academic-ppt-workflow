@@ -1,0 +1,17 @@
+{
+  "version": "2.4",
+  "families": [
+    "cover",
+    "section_divider",
+    "hero_insight",
+    "chart_led",
+    "figure_with_callout",
+    "split_screen",
+    "comparison_matrix",
+    "process_branch",
+    "evidence_ladder",
+    "risk_heatmap",
+    "conclusion_synthesis",
+    "appendix_audit"
+  ]
+}

@@ -1,0 +1,8 @@
+variants:
+  problem_gap_objective: [asymmetric_flow, central_gap, question_to_objective]
+  method_framework: [horizontal_branch, vertical_stages, framework_with_guardrails]
+  primary_result: [chart_plus_insight, hero_left, full_width]
+  secondary_result: [small_multiples, split_comparison, delta_focus]
+  hero_result: [hero_number_plus_chart, hero_chart_with_boundary]
+  conclusion: [numbered_takeaways, evidence_boundary_summary, hero_number_plus_takeaways]
+max_same_variant_run: 2

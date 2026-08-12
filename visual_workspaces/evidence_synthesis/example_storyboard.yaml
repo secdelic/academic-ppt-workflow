@@ -1,0 +1,42 @@
+workspace_id: evidence_synthesis
+slides:
+  - slide_id: SYN-EVIDENCE_SYNTHESIS-01
+    role: cover
+    layout_variant: standard
+    synthetic_only: true
+  - slide_id: SYN-EVIDENCE_SYNTHESIS-02
+    role: section_divider
+    layout_variant: standard
+    synthetic_only: true
+  - slide_id: SYN-EVIDENCE_SYNTHESIS-03
+    role: problem_gap_objective
+    layout_variant: question_to_objective
+    synthetic_only: true
+  - slide_id: SYN-EVIDENCE_SYNTHESIS-04
+    role: method_framework
+    layout_variant: horizontal_branch
+    synthetic_only: true
+  - slide_id: SYN-EVIDENCE_SYNTHESIS-05
+    role: primary_result
+    layout_variant: hero_left
+    synthetic_only: true
+  - slide_id: SYN-EVIDENCE_SYNTHESIS-06
+    role: secondary_result
+    layout_variant: delta_focus
+    synthetic_only: true
+  - slide_id: SYN-EVIDENCE_SYNTHESIS-07
+    role: hero_result
+    layout_variant: hero_number_plus_chart
+    synthetic_only: true
+  - slide_id: SYN-EVIDENCE_SYNTHESIS-08
+    role: limitation
+    layout_variant: standard
+    synthetic_only: true
+  - slide_id: SYN-EVIDENCE_SYNTHESIS-09
+    role: conclusion
+    layout_variant: hero_number_plus_takeaways
+    synthetic_only: true
+  - slide_id: SYN-EVIDENCE_SYNTHESIS-10
+    role: appendix
+    layout_variant: standard
+    synthetic_only: true

@@ -1,0 +1,2624 @@
+{
+  "schema_version": "2.0",
+  "reference_mode": "style-only",
+  "source": {
+    "extension": ".pptx",
+    "size_bytes": 2460445,
+    "sha256": "0ab8c4fa89e62cd89a9a10e91c7ef832b97f06bd7195fbfeff9963422bf3156d",
+    "read_only_verified": true,
+    "sha256_after": "0ab8c4fa89e62cd89a9a10e91c7ef832b97f06bd7195fbfeff9963422bf3156d"
+  },
+  "privacy_contract": {
+    "slide_text_returned": false,
+    "notes_text_returned": false,
+    "alternative_text_returned": false,
+    "media_bytes_returned": false,
+    "chart_values_returned": false,
+    "external_relationships_followed": false,
+    "archive_extracted_to_disk": false
+  },
+  "slide_dimensions": {
+    "width_emu": 12192000,
+    "height_emu": 6858000,
+    "aspect_ratio": 1.7778,
+    "declared_type": "custom_or_unknown"
+  },
+  "theme_fonts": {
+    "major": {
+      "latin": "等线 Light",
+      "east_asian": "UNKNOWN",
+      "complex_script": "UNKNOWN",
+      "script_overrides": {
+        "Arab": "Times New Roman",
+        "Armn": "Arial",
+        "Beng": "Vrinda",
+        "Bopo": "Microsoft JhengHei",
+        "Bugi": "Leelawadee UI",
+        "Cans": "Euphemia",
+        "Cher": "Plantagenet Cherokee",
+        "Deva": "Mangal",
+        "Ethi": "Nyala",
+        "Geor": "Sylfaen",
+        "Gujr": "Shruti",
+        "Guru": "Raavi",
+        "Hang": "맑은 고딕",
+        "Hans": "等线 Light",
+        "Hant": "新細明體",
+        "Hebr": "Times New Roman",
+        "Java": "Javanese Text",
+        "Jpan": "游ゴシック Light",
+        "Khmr": "MoolBoran",
+        "Knda": "Tunga",
+        "Laoo": "DokChampa",
+        "Lisu": "Segoe UI",
+        "Mlym": "Kartika",
+        "Mong": "Mongolian Baiti",
+        "Mymr": "Myanmar Text",
+        "Nkoo": "Ebrima",
+        "Olck": "Nirmala UI",
+        "Orya": "Kalinga",
+        "Osma": "Ebrima",
+        "Phag": "Phagspa",
+        "Sinh": "Iskoola Pota",
+        "Sora": "Nirmala UI",
+        "Syrc": "Estrangelo Edessa",
+        "Syre": "Estrangelo Edessa",
+        "Syrj": "Estrangelo Edessa",
+        "Syrn": "Estrangelo Edessa",
+        "Tale": "Microsoft Tai Le",
+        "Talu": "Microsoft New Tai Lue",
+        "Taml": "Latha",
+        "Telu": "Gautami",
+        "Tfng": "Ebrima",
+        "Thaa": "MV Boli",
+        "Thai": "Angsana New",
+        "Tibt": "Microsoft Himalaya",
+        "Uigh": "Microsoft Uighur",
+        "Viet": "Times New Roman",
+        "Yiii": "Microsoft Yi Baiti"
+      }
+    },
+    "minor": {
+      "latin": "等线",
+      "east_asian": "UNKNOWN",
+      "complex_script": "UNKNOWN",
+      "script_overrides": {
+        "Arab": "Arial",
+        "Armn": "Arial",
+        "Beng": "Vrinda",
+        "Bopo": "Microsoft JhengHei",
+        "Bugi": "Leelawadee UI",
+        "Cans": "Euphemia",
+        "Cher": "Plantagenet Cherokee",
+        "Deva": "Mangal",
+        "Ethi": "Nyala",
+        "Geor": "Sylfaen",
+        "Gujr": "Shruti",
+        "Guru": "Raavi",
+        "Hang": "맑은 고딕",
+        "Hans": "等线",
+        "Hant": "新細明體",
+        "Hebr": "Arial",
+        "Java": "Javanese Text",
+        "Jpan": "游ゴシック",
+        "Khmr": "DaunPenh",
+        "Knda": "Tunga",
+        "Laoo": "DokChampa",
+        "Lisu": "Segoe UI",
+        "Mlym": "Kartika",
+        "Mong": "Mongolian Baiti",
+        "Mymr": "Myanmar Text",
+        "Nkoo": "Ebrima",
+        "Olck": "Nirmala UI",
+        "Orya": "Kalinga",
+        "Osma": "Ebrima",
+        "Phag": "Phagspa",
+        "Sinh": "Iskoola Pota",
+        "Sora": "Nirmala UI",
+        "Syrc": "Estrangelo Edessa",
+        "Syre": "Estrangelo Edessa",
+        "Syrj": "Estrangelo Edessa",
+        "Syrn": "Estrangelo Edessa",
+        "Tale": "Microsoft Tai Le",
+        "Talu": "Microsoft New Tai Lue",
+        "Taml": "Latha",
+        "Telu": "Gautami",
+        "Tfng": "Ebrima",
+        "Thaa": "MV Boli",
+        "Thai": "Cordia New",
+        "Tibt": "Microsoft Himalaya",
+        "Uigh": "Microsoft Uighur",
+        "Viet": "Arial",
+        "Yiii": "Microsoft Yi Baiti"
+      }
+    }
+  },
+  "theme_colors": [
+    {
+      "slot": "dk1",
+      "type": "system",
+      "value": "000000"
+    },
+    {
+      "slot": "lt1",
+      "type": "system",
+      "value": "FFFFFF"
+    },
+    {
+      "slot": "dk2",
+      "type": "srgb",
+      "value": "44546A"
+    },
+    {
+      "slot": "lt2",
+      "type": "srgb",
+      "value": "E7E6E6"
+    },
+    {
+      "slot": "accent1",
+      "type": "srgb",
+      "value": "ED7D31"
+    },
+    {
+      "slot": "accent2",
+      "type": "srgb",
+      "value": "5E719B"
+    },
+    {
+      "slot": "accent3",
+      "type": "srgb",
+      "value": "7F6000"
+    },
+    {
+      "slot": "accent4",
+      "type": "srgb",
+      "value": "63866A"
+    },
+    {
+      "slot": "accent5",
+      "type": "srgb",
+      "value": "4472C4"
+    },
+    {
+      "slot": "accent6",
+      "type": "srgb",
+      "value": "70AD47"
+    },
+    {
+      "slot": "hlink",
+      "type": "srgb",
+      "value": "0563C1"
+    },
+    {
+      "slot": "folHlink",
+      "type": "srgb",
+      "value": "954F72"
+    }
+  ],
+  "themes": [
+    {
+      "part": "ppt/theme/theme1.xml",
+      "part_sha256": "adfb8c754c190e049a5bc216cd55c049d770a99723f6f0ce4726980c8fa84d6f",
+      "fonts": {
+        "major": {
+          "latin": "等线 Light",
+          "east_asian": "UNKNOWN",
+          "complex_script": "UNKNOWN",
+          "script_overrides": {
+            "Arab": "Times New Roman",
+            "Armn": "Arial",
+            "Beng": "Vrinda",
+            "Bopo": "Microsoft JhengHei",
+            "Bugi": "Leelawadee UI",
+            "Cans": "Euphemia",
+            "Cher": "Plantagenet Cherokee",
+            "Deva": "Mangal",
+            "Ethi": "Nyala",
+            "Geor": "Sylfaen",
+            "Gujr": "Shruti",
+            "Guru": "Raavi",
+            "Hang": "맑은 고딕",
+            "Hans": "等线 Light",
+            "Hant": "新細明體",
+            "Hebr": "Times New Roman",
+            "Java": "Javanese Text",
+            "Jpan": "游ゴシック Light",
+            "Khmr": "MoolBoran",
+            "Knda": "Tunga",
+            "Laoo": "DokChampa",
+            "Lisu": "Segoe UI",
+            "Mlym": "Kartika",
+            "Mong": "Mongolian Baiti",
+            "Mymr": "Myanmar Text",
+            "Nkoo": "Ebrima",
+            "Olck": "Nirmala UI",
+            "Orya": "Kalinga",
+            "Osma": "Ebrima",
+            "Phag": "Phagspa",
+            "Sinh": "Iskoola Pota",
+            "Sora": "Nirmala UI",
+            "Syrc": "Estrangelo Edessa",
+            "Syre": "Estrangelo Edessa",
+            "Syrj": "Estrangelo Edessa",
+            "Syrn": "Estrangelo Edessa",
+            "Tale": "Microsoft Tai Le",
+            "Talu": "Microsoft New Tai Lue",
+            "Taml": "Latha",
+            "Telu": "Gautami",
+            "Tfng": "Ebrima",
+            "Thaa": "MV Boli",
+            "Thai": "Angsana New",
+            "Tibt": "Microsoft Himalaya",
+            "Uigh": "Microsoft Uighur",
+            "Viet": "Times New Roman",
+            "Yiii": "Microsoft Yi Baiti"
+          }
+        },
+        "minor": {
+          "latin": "等线",
+          "east_asian": "UNKNOWN",
+          "complex_script": "UNKNOWN",
+          "script_overrides": {
+            "Arab": "Arial",
+            "Armn": "Arial",
+            "Beng": "Vrinda",
+            "Bopo": "Microsoft JhengHei",
+            "Bugi": "Leelawadee UI",
+            "Cans": "Euphemia",
+            "Cher": "Plantagenet Cherokee",
+            "Deva": "Mangal",
+            "Ethi": "Nyala",
+            "Geor": "Sylfaen",
+            "Gujr": "Shruti",
+            "Guru": "Raavi",
+            "Hang": "맑은 고딕",
+            "Hans": "等线",
+            "Hant": "新細明體",
+            "Hebr": "Arial",
+            "Java": "Javanese Text",
+            "Jpan": "游ゴシック",
+            "Khmr": "DaunPenh",
+            "Knda": "Tunga",
+            "Laoo": "DokChampa",
+            "Lisu": "Segoe UI",
+            "Mlym": "Kartika",
+            "Mong": "Mongolian Baiti",
+            "Mymr": "Myanmar Text",
+            "Nkoo": "Ebrima",
+            "Olck": "Nirmala UI",
+            "Orya": "Kalinga",
+            "Osma": "Ebrima",
+            "Phag": "Phagspa",
+            "Sinh": "Iskoola Pota",
+            "Sora": "Nirmala UI",
+            "Syrc": "Estrangelo Edessa",
+            "Syre": "Estrangelo Edessa",
+            "Syrj": "Estrangelo Edessa",
+            "Syrn": "Estrangelo Edessa",
+            "Tale": "Microsoft Tai Le",
+            "Talu": "Microsoft New Tai Lue",
+            "Taml": "Latha",
+            "Telu": "Gautami",
+            "Tfng": "Ebrima",
+            "Thaa": "MV Boli",
+            "Thai": "Cordia New",
+            "Tibt": "Microsoft Himalaya",
+            "Uigh": "Microsoft Uighur",
+            "Viet": "Arial",
+            "Yiii": "Microsoft Yi Baiti"
+          }
+        }
+      },
+      "colors": [
+        {
+          "slot": "dk1",
+          "type": "system",
+          "value": "000000"
+        },
+        {
+          "slot": "lt1",
+          "type": "system",
+          "value": "FFFFFF"
+        },
+        {
+          "slot": "dk2",
+          "type": "srgb",
+          "value": "44546A"
+        },
+        {
+          "slot": "lt2",
+          "type": "srgb",
+          "value": "E7E6E6"
+        },
+        {
+          "slot": "accent1",
+          "type": "srgb",
+          "value": "ED7D31"
+        },
+        {
+          "slot": "accent2",
+          "type": "srgb",
+          "value": "5E719B"
+        },
+        {
+          "slot": "accent3",
+          "type": "srgb",
+          "value": "7F6000"
+        },
+        {
+          "slot": "accent4",
+          "type": "srgb",
+          "value": "63866A"
+        },
+        {
+          "slot": "accent5",
+          "type": "srgb",
+          "value": "4472C4"
+        },
+        {
+          "slot": "accent6",
+          "type": "srgb",
+          "value": "70AD47"
+        },
+        {
+          "slot": "hlink",
+          "type": "srgb",
+          "value": "0563C1"
+        },
+        {
+          "slot": "folHlink",
+          "type": "srgb",
+          "value": "954F72"
+        }
+      ]
+    }
+  ],
+  "slide_masters": [
+    {
+      "part": "ppt/slideMasters/slideMaster1.xml",
+      "part_sha256": "6fd191beaa22b395071b9213c11a708d02674ded2866c1c2426868551ea8932f",
+      "kind": "master",
+      "layout_type": "NOT_APPLICABLE",
+      "common_page_role": "master",
+      "show_master_shapes": "INHERITED_OR_UNKNOWN",
+      "preserve": "INHERITED_OR_UNKNOWN",
+      "placeholders": [
+        {
+          "placeholder_type": "title",
+          "placeholder_index": "INHERITED_OR_UNKNOWN",
+          "placeholder_size": "full",
+          "orientation": "horz",
+          "geometry": {
+            "x_emu": 838200,
+            "y_emu": 365125,
+            "width_emu": 10515600,
+            "height_emu": 1325563,
+            "aspect_ratio": 7.9329
+          },
+          "margins": {
+            "left_emu": 91440,
+            "right_emu": 91440,
+            "top_emu": 45720,
+            "bottom_emu": 45720
+          }
+        },
+        {
+          "placeholder_type": "body",
+          "placeholder_index": "1",
+          "placeholder_size": "full",
+          "orientation": "horz",
+          "geometry": {
+            "x_emu": 838200,
+            "y_emu": 1825625,
+            "width_emu": 10515600,
+            "height_emu": 4351338,
+            "aspect_ratio": 2.4166
+          },
+          "margins": {
+            "left_emu": 91440,
+            "right_emu": 91440,
+            "top_emu": 45720,
+            "bottom_emu": 45720
+          }
+        },
+        {
+          "placeholder_type": "dt",
+          "placeholder_index": "2",
+          "placeholder_size": "half",
+          "orientation": "horz",
+          "geometry": {
+            "x_emu": 838200,
+            "y_emu": 6356350,
+            "width_emu": 2743200,
+            "height_emu": 365125,
+            "aspect_ratio": 7.513
+          },
+          "margins": {
+            "left_emu": 91440,
+            "right_emu": 91440,
+            "top_emu": 45720,
+            "bottom_emu": 45720
+          }
+        },
+        {
+          "placeholder_type": "ftr",
+          "placeholder_index": "3",
+          "placeholder_size": "quarter",
+          "orientation": "horz",
+          "geometry": {
+            "x_emu": 4038600,
+            "y_emu": 6356350,
+            "width_emu": 4114800,
+            "height_emu": 365125,
+            "aspect_ratio": 11.2696
+          },
+          "margins": {
+            "left_emu": 91440,
+            "right_emu": 91440,
+            "top_emu": 45720,
+            "bottom_emu": 45720
+          }
+        },
+        {
+          "placeholder_type": "sldNum",
+          "placeholder_index": "4",
+          "placeholder_size": "quarter",
+          "orientation": "horz",
+          "geometry": {
+            "x_emu": 8610600,
+            "y_emu": 6356350,
+            "width_emu": 2743200,
+            "height_emu": 365125,
+            "aspect_ratio": 7.513
+          },
+          "margins": {
+            "left_emu": 91440,
+            "right_emu": 91440,
+            "top_emu": 45720,
+            "bottom_emu": 45720
+          }
+        }
+      ],
+      "footer_and_page_number_rules": {
+        "date_time": true,
+        "footer": true,
+        "slide_number": true,
+        "header": "INHERITED_OR_UNKNOWN",
+        "placeholder_types_present": [
+          "dt",
+          "ftr",
+          "sldNum"
+        ]
+      },
+      "theme_part": "ppt/theme/theme1.xml",
+      "layout_parts": [
+        "ppt/slideLayouts/slideLayout1.xml",
+        "ppt/slideLayouts/slideLayout10.xml",
+        "ppt/slideLayouts/slideLayout11.xml",
+        "ppt/slideLayouts/slideLayout2.xml",
+        "ppt/slideLayouts/slideLayout3.xml",
+        "ppt/slideLayouts/slideLayout4.xml",
+        "ppt/slideLayouts/slideLayout5.xml",
+        "ppt/slideLayouts/slideLayout6.xml",
+        "ppt/slideLayouts/slideLayout7.xml",
+        "ppt/slideLayouts/slideLayout8.xml",
+        "ppt/slideLayouts/slideLayout9.xml"
+      ]
+    }
+  ],
+  "slide_layouts": [
+    {
+      "part": "ppt/slideLayouts/slideLayout1.xml",
+      "part_sha256": "4d4d0aed7f5a62f2ec123268512258a7e997b7c34efac8c2a4c73f85ca6ec672",
+      "kind": "layout",
+      "layout_type": "title",
+      "common_page_role": "title",
+      "show_master_shapes": "INHERITED_OR_UNKNOWN",
+      "preserve": "1",
+      "placeholders": [
+        {
+          "placeholder_type": "ctrTitle",
+          "placeholder_index": "INHERITED_OR_UNKNOWN",
+          "placeholder_size": "full",
+          "orientation": "horz",
+          "geometry": {
+            "x_emu": 1524000,
+            "y_emu": 1122363,
+            "width_emu": 9144000,
+            "height_emu": 2387600,
+            "aspect_ratio": 3.8298
+          },
+          "margins": {
+            "left_emu": "UNKNOWN",
+            "right_emu": "UNKNOWN",
+            "top_emu": "UNKNOWN",
+            "bottom_emu": "UNKNOWN"
+          }
+        },
+        {
+          "placeholder_type": "subTitle",
+          "placeholder_index": "1",
+          "placeholder_size": "full",
+          "orientation": "horz",
+          "geometry": {
+            "x_emu": 1524000,
+            "y_emu": 3602038,
+            "width_emu": 9144000,
+            "height_emu": 1655762,
+            "aspect_ratio": 5.5225
+          },
+          "margins": {
+            "left_emu": "UNKNOWN",
+            "right_emu": "UNKNOWN",
+            "top_emu": "UNKNOWN",
+            "bottom_emu": "UNKNOWN"
+          }
+        },
+        {
+          "placeholder_type": "dt",
+          "placeholder_index": "10",
+          "placeholder_size": "half",
+          "orientation": "horz",
+          "geometry": {
+            "x_emu": "UNKNOWN",
+            "y_emu": "UNKNOWN",
+            "width_emu": "UNKNOWN",
+            "height_emu": "UNKNOWN",
+            "aspect_ratio": "UNKNOWN"
+          },
+          "margins": {
+            "left_emu": "UNKNOWN",
+            "right_emu": "UNKNOWN",
+            "top_emu": "UNKNOWN",
+            "bottom_emu": "UNKNOWN"
+          }
+        },
+        {
+          "placeholder_type": "ftr",
+          "placeholder_index": "11",
+          "placeholder_size": "quarter",
+          "orientation": "horz",
+          "geometry": {
+            "x_emu": "UNKNOWN",
+            "y_emu": "UNKNOWN",
+            "width_emu": "UNKNOWN",
+            "height_emu": "UNKNOWN",
+            "aspect_ratio": "UNKNOWN"
+          },
+          "margins": {
+            "left_emu": "UNKNOWN",
+            "right_emu": "UNKNOWN",
+            "top_emu": "UNKNOWN",
+            "bottom_emu": "UNKNOWN"
+          }
+        },
+        {
+          "placeholder_type": "sldNum",
+          "placeholder_index": "12",
+          "placeholder_size": "quarter",
+          "orientation": "horz",
+          "geometry": {
+            "x_emu": "UNKNOWN",
+            "y_emu": "UNKNOWN",
+            "width_emu": "UNKNOWN",
+            "height_emu": "UNKNOWN",
+            "aspect_ratio": "UNKNOWN"
+          },
+          "margins": {
+            "left_emu": "UNKNOWN",
+            "right_emu": "UNKNOWN",
+            "top_emu": "UNKNOWN",
+            "bottom_emu": "UNKNOWN"
+          }
+        }
+      ],
+      "footer_and_page_number_rules": {
+        "date_time": true,
+        "footer": true,
+        "slide_number": true,
+        "header": "INHERITED_OR_UNKNOWN",
+        "placeholder_types_present": [
+          "dt",
+          "ftr",
+          "sldNum"
+        ]
+      },
+      "master_part": "ppt/slideMasters/slideMaster1.xml"
+    },
+    {
+      "part": "ppt/slideLayouts/slideLayout10.xml",
+      "part_sha256": "5ffe4a0f1364a0d5b31ce431d0b2ec0845c09ab8fa9ce5c0950489a193af1892",
+      "kind": "layout",
+      "layout_type": "vertTx",
+      "common_page_role": "custom_or_unknown",
+      "show_master_shapes": "INHERITED_OR_UNKNOWN",
+      "preserve": "1",
+      "placeholders": [
+        {
+          "placeholder_type": "title",
+          "placeholder_index": "INHERITED_OR_UNKNOWN",
+          "placeholder_size": "full",
+          "orientation": "horz",
+          "geometry": {
+            "x_emu": "UNKNOWN",
+            "y_emu": "UNKNOWN",
+            "width_emu": "UNKNOWN",
+            "height_emu": "UNKNOWN",
+            "aspect_ratio": "UNKNOWN"
+          },
+          "margins": {
+            "left_emu": "UNKNOWN",
+            "right_emu": "UNKNOWN",
+            "top_emu": "UNKNOWN",
+            "bottom_emu": "UNKNOWN"
+          }
+        },
+        {
+          "placeholder_type": "body",
+          "placeholder_index": "1",
+          "placeholder_size": "full",
+          "orientation": "vert",
+          "geometry": {
+            "x_emu": "UNKNOWN",
+            "y_emu": "UNKNOWN",
+            "width_emu": "UNKNOWN",
+            "height_emu": "UNKNOWN",
+            "aspect_ratio": "UNKNOWN"
+          },
+          "margins": {
+            "left_emu": "UNKNOWN",
+            "right_emu": "UNKNOWN",
+            "top_emu": "UNKNOWN",
+            "bottom_emu": "UNKNOWN"
+          }
+        },
+        {
+          "placeholder_type": "dt",
+          "placeholder_index": "10",
+          "placeholder_size": "half",
+          "orientation": "horz",
+          "geometry": {
+            "x_emu": "UNKNOWN",
+            "y_emu": "UNKNOWN",
+            "width_emu": "UNKNOWN",
+            "height_emu": "UNKNOWN",
+            "aspect_ratio": "UNKNOWN"
+          },
+          "margins": {
+            "left_emu": "UNKNOWN",
+            "right_emu": "UNKNOWN",
+            "top_emu": "UNKNOWN",
+            "bottom_emu": "UNKNOWN"
+          }
+        },
+        {
+          "placeholder_type": "ftr",
+          "placeholder_index": "11",
+          "placeholder_size": "quarter",
+          "orientation": "horz",
+          "geometry": {
+            "x_emu": "UNKNOWN",
+            "y_emu": "UNKNOWN",
+            "width_emu": "UNKNOWN",
+            "height_emu": "UNKNOWN",
+            "aspect_ratio": "UNKNOWN"
+          },
+          "margins": {
+            "left_emu": "UNKNOWN",
+            "right_emu": "UNKNOWN",
+            "top_emu": "UNKNOWN",
+            "bottom_emu": "UNKNOWN"
+          }
+        },
+        {
+          "placeholder_type": "sldNum",
+          "placeholder_index": "12",
+          "placeholder_size": "quarter",
+          "orientation": "horz",
+          "geometry": {
+            "x_emu": "UNKNOWN",
+            "y_emu": "UNKNOWN",
+            "width_emu": "UNKNOWN",
+            "height_emu": "UNKNOWN",
+            "aspect_ratio": "UNKNOWN"
+          },
+          "margins": {
+            "left_emu": "UNKNOWN",
+            "right_emu": "UNKNOWN",
+            "top_emu": "UNKNOWN",
+            "bottom_emu": "UNKNOWN"
+          }
+        }
+      ],
+      "footer_and_page_number_rules": {
+        "date_time": true,
+        "footer": true,
+        "slide_number": true,
+        "header": "INHERITED_OR_UNKNOWN",
+        "placeholder_types_present": [
+          "dt",
+          "ftr",
+          "sldNum"
+        ]
+      },
+      "master_part": "ppt/slideMasters/slideMaster1.xml"
+    },
+    {
+      "part": "ppt/slideLayouts/slideLayout11.xml",
+      "part_sha256": "9f3a124951cc4456479291dbdc56c7ad1858645ecea422d659a1289b52d15e9c",
+      "kind": "layout",
+      "layout_type": "vertTitleAndTx",
+      "common_page_role": "custom_or_unknown",
+      "show_master_shapes": "INHERITED_OR_UNKNOWN",
+      "preserve": "1",
+      "placeholders": [
+        {
+          "placeholder_type": "title",
+          "placeholder_index": "INHERITED_OR_UNKNOWN",
+          "placeholder_size": "full",
+          "orientation": "vert",
+          "geometry": {
+            "x_emu": 8724900,
+            "y_emu": 365125,
+            "width_emu": 2628900,
+            "height_emu": 5811838,
+            "aspect_ratio": 0.4523
+          },
+          "margins": {
+            "left_emu": "UNKNOWN",
+            "right_emu": "UNKNOWN",
+            "top_emu": "UNKNOWN",
+            "bottom_emu": "UNKNOWN"
+          }
+        },
+        {
+          "placeholder_type": "body",
+          "placeholder_index": "1",
+          "placeholder_size": "full",
+          "orientation": "vert",
+          "geometry": {
+            "x_emu": 838200,
+            "y_emu": 365125,
+            "width_emu": 7734300,
+            "height_emu": 5811838,
+            "aspect_ratio": 1.3308
+          },
+          "margins": {
+            "left_emu": "UNKNOWN",
+            "right_emu": "UNKNOWN",
+            "top_emu": "UNKNOWN",
+            "bottom_emu": "UNKNOWN"
+          }
+        },
+        {
+          "placeholder_type": "dt",
+          "placeholder_index": "10",
+          "placeholder_size": "half",
+          "orientation": "horz",
+          "geometry": {
+            "x_emu": "UNKNOWN",
+            "y_emu": "UNKNOWN",
+            "width_emu": "UNKNOWN",
+            "height_emu": "UNKNOWN",
+            "aspect_ratio": "UNKNOWN"
+          },
+          "margins": {
+            "left_emu": "UNKNOWN",
+            "right_emu": "UNKNOWN",
+            "top_emu": "UNKNOWN",
+            "bottom_emu": "UNKNOWN"
+          }
+        },
+        {
+          "placeholder_type": "ftr",
+          "placeholder_index": "11",
+          "placeholder_size": "quarter",
+          "orientation": "horz",
+          "geometry": {
+            "x_emu": "UNKNOWN",
+            "y_emu": "UNKNOWN",
+            "width_emu": "UNKNOWN",
+            "height_emu": "UNKNOWN",
+            "aspect_ratio": "UNKNOWN"
+          },
+          "margins": {
+            "left_emu": "UNKNOWN",
+            "right_emu": "UNKNOWN",
+            "top_emu": "UNKNOWN",
+            "bottom_emu": "UNKNOWN"
+          }
+        },
+        {
+          "placeholder_type": "sldNum",
+          "placeholder_index": "12",
+          "placeholder_size": "quarter",
+          "orientation": "horz",
+          "geometry": {
+            "x_emu": "UNKNOWN",
+            "y_emu": "UNKNOWN",
+            "width_emu": "UNKNOWN",
+            "height_emu": "UNKNOWN",
+            "aspect_ratio": "UNKNOWN"
+          },
+          "margins": {
+            "left_emu": "UNKNOWN",
+            "right_emu": "UNKNOWN",
+            "top_emu": "UNKNOWN",
+            "bottom_emu": "UNKNOWN"
+          }
+        }
+      ],
+      "footer_and_page_number_rules": {
+        "date_time": true,
+        "footer": true,
+        "slide_number": true,
+        "header": "INHERITED_OR_UNKNOWN",
+        "placeholder_types_present": [
+          "dt",
+          "ftr",
+          "sldNum"
+        ]
+      },
+      "master_part": "ppt/slideMasters/slideMaster1.xml"
+    },
+    {
+      "part": "ppt/slideLayouts/slideLayout2.xml",
+      "part_sha256": "8bcf7118399f4bdba50f6aa3a516d58b8a9edd4a7573c19fd877fe6ce7c205ca",
+      "kind": "layout",
+      "layout_type": "obj",
+      "common_page_role": "title_and_content",
+      "show_master_shapes": "INHERITED_OR_UNKNOWN",
+      "preserve": "1",
+      "placeholders": [
+        {
+          "placeholder_type": "title",
+          "placeholder_index": "INHERITED_OR_UNKNOWN",
+          "placeholder_size": "full",
+          "orientation": "horz",
+          "geometry": {
+            "x_emu": "UNKNOWN",
+            "y_emu": "UNKNOWN",
+            "width_emu": "UNKNOWN",
+            "height_emu": "UNKNOWN",
+            "aspect_ratio": "UNKNOWN"
+          },
+          "margins": {
+            "left_emu": "UNKNOWN",
+            "right_emu": "UNKNOWN",
+            "top_emu": "UNKNOWN",
+            "bottom_emu": "UNKNOWN"
+          }
+        },
+        {
+          "placeholder_type": "body",
+          "placeholder_index": "1",
+          "placeholder_size": "full",
+          "orientation": "horz",
+          "geometry": {
+            "x_emu": "UNKNOWN",
+            "y_emu": "UNKNOWN",
+            "width_emu": "UNKNOWN",
+            "height_emu": "UNKNOWN",
+            "aspect_ratio": "UNKNOWN"
+          },
+          "margins": {
+            "left_emu": "UNKNOWN",
+            "right_emu": "UNKNOWN",
+            "top_emu": "UNKNOWN",
+            "bottom_emu": "UNKNOWN"
+          }
+        },
+        {
+          "placeholder_type": "dt",
+          "placeholder_index": "10",
+          "placeholder_size": "half",
+          "orientation": "horz",
+          "geometry": {
+            "x_emu": "UNKNOWN",
+            "y_emu": "UNKNOWN",
+            "width_emu": "UNKNOWN",
+            "height_emu": "UNKNOWN",
+            "aspect_ratio": "UNKNOWN"
+          },
+          "margins": {
+            "left_emu": "UNKNOWN",
+            "right_emu": "UNKNOWN",
+            "top_emu": "UNKNOWN",
+            "bottom_emu": "UNKNOWN"
+          }
+        },
+        {
+          "placeholder_type": "ftr",
+          "placeholder_index": "11",
+          "placeholder_size": "quarter",
+          "orientation": "horz",
+          "geometry": {
+            "x_emu": "UNKNOWN",
+            "y_emu": "UNKNOWN",
+            "width_emu": "UNKNOWN",
+            "height_emu": "UNKNOWN",
+            "aspect_ratio": "UNKNOWN"
+          },
+          "margins": {
+            "left_emu": "UNKNOWN",
+            "right_emu": "UNKNOWN",
+            "top_emu": "UNKNOWN",
+            "bottom_emu": "UNKNOWN"
+          }
+        },
+        {
+          "placeholder_type": "sldNum",
+          "placeholder_index": "12",
+          "placeholder_size": "quarter",
+          "orientation": "horz",
+          "geometry": {
+            "x_emu": "UNKNOWN",
+            "y_emu": "UNKNOWN",
+            "width_emu": "UNKNOWN",
+            "height_emu": "UNKNOWN",
+            "aspect_ratio": "UNKNOWN"
+          },
+          "margins": {
+            "left_emu": "UNKNOWN",
+            "right_emu": "UNKNOWN",
+            "top_emu": "UNKNOWN",
+            "bottom_emu": "UNKNOWN"
+          }
+        }
+      ],
+      "footer_and_page_number_rules": {
+        "date_time": true,
+        "footer": true,
+        "slide_number": true,
+        "header": "INHERITED_OR_UNKNOWN",
+        "placeholder_types_present": [
+          "dt",
+          "ftr",
+          "sldNum"
+        ]
+      },
+      "master_part": "ppt/slideMasters/slideMaster1.xml"
+    },
+    {
+      "part": "ppt/slideLayouts/slideLayout3.xml",
+      "part_sha256": "04c7cb538fbd2ccc42de37d55101f373e34bca422c6fef5c7d0829c0edec8f37",
+      "kind": "layout",
+      "layout_type": "secHead",
+      "common_page_role": "section",
+      "show_master_shapes": "INHERITED_OR_UNKNOWN",
+      "preserve": "1",
+      "placeholders": [
+        {
+          "placeholder_type": "title",
+          "placeholder_index": "INHERITED_OR_UNKNOWN",
+          "placeholder_size": "full",
+          "orientation": "horz",
+          "geometry": {
+            "x_emu": 831850,
+            "y_emu": 1709738,
+            "width_emu": 10515600,
+            "height_emu": 2852737,
+            "aspect_ratio": 3.6861
+          },
+          "margins": {
+            "left_emu": "UNKNOWN",
+            "right_emu": "UNKNOWN",
+            "top_emu": "UNKNOWN",
+            "bottom_emu": "UNKNOWN"
+          }
+        },
+        {
+          "placeholder_type": "body",
+          "placeholder_index": "1",
+          "placeholder_size": "full",
+          "orientation": "horz",
+          "geometry": {
+            "x_emu": 831850,
+            "y_emu": 4589463,
+            "width_emu": 10515600,
+            "height_emu": 1500187,
+            "aspect_ratio": 7.0095
+          },
+          "margins": {
+            "left_emu": "UNKNOWN",
+            "right_emu": "UNKNOWN",
+            "top_emu": "UNKNOWN",
+            "bottom_emu": "UNKNOWN"
+          }
+        },
+        {
+          "placeholder_type": "dt",
+          "placeholder_index": "10",
+          "placeholder_size": "half",
+          "orientation": "horz",
+          "geometry": {
+            "x_emu": "UNKNOWN",
+            "y_emu": "UNKNOWN",
+            "width_emu": "UNKNOWN",
+            "height_emu": "UNKNOWN",
+            "aspect_ratio": "UNKNOWN"
+          },
+          "margins": {
+            "left_emu": "UNKNOWN",
+            "right_emu": "UNKNOWN",
+            "top_emu": "UNKNOWN",
+            "bottom_emu": "UNKNOWN"
+          }
+        },
+        {
+          "placeholder_type": "ftr",
+          "placeholder_index": "11",
+          "placeholder_size": "quarter",
+          "orientation": "horz",
+          "geometry": {
+            "x_emu": "UNKNOWN",
+            "y_emu": "UNKNOWN",
+            "width_emu": "UNKNOWN",
+            "height_emu": "UNKNOWN",
+            "aspect_ratio": "UNKNOWN"
+          },
+          "margins": {
+            "left_emu": "UNKNOWN",
+            "right_emu": "UNKNOWN",
+            "top_emu": "UNKNOWN",
+            "bottom_emu": "UNKNOWN"
+          }
+        },
+        {
+          "placeholder_type": "sldNum",
+          "placeholder_index": "12",
+          "placeholder_size": "quarter",
+          "orientation": "horz",
+          "geometry": {
+            "x_emu": "UNKNOWN",
+            "y_emu": "UNKNOWN",
+            "width_emu": "UNKNOWN",
+            "height_emu": "UNKNOWN",
+            "aspect_ratio": "UNKNOWN"
+          },
+          "margins": {
+            "left_emu": "UNKNOWN",
+            "right_emu": "UNKNOWN",
+            "top_emu": "UNKNOWN",
+            "bottom_emu": "UNKNOWN"
+          }
+        }
+      ],
+      "footer_and_page_number_rules": {
+        "date_time": true,
+        "footer": true,
+        "slide_number": true,
+        "header": "INHERITED_OR_UNKNOWN",
+        "placeholder_types_present": [
+          "dt",
+          "ftr",
+          "sldNum"
+        ]
+      },
+      "master_part": "ppt/slideMasters/slideMaster1.xml"
+    },
+    {
+      "part": "ppt/slideLayouts/slideLayout4.xml",
+      "part_sha256": "5f557fc5606a1306f328059b45f5f9c748ebfbeefcd788e49b6f338dc0d2d4b3",
+      "kind": "layout",
+      "layout_type": "twoObj",
+      "common_page_role": "two_content",
+      "show_master_shapes": "INHERITED_OR_UNKNOWN",
+      "preserve": "1",
+      "placeholders": [
+        {
+          "placeholder_type": "title",
+          "placeholder_index": "INHERITED_OR_UNKNOWN",
+          "placeholder_size": "full",
+          "orientation": "horz",
+          "geometry": {
+            "x_emu": "UNKNOWN",
+            "y_emu": "UNKNOWN",
+            "width_emu": "UNKNOWN",
+            "height_emu": "UNKNOWN",
+            "aspect_ratio": "UNKNOWN"
+          },
+          "margins": {
+            "left_emu": "UNKNOWN",
+            "right_emu": "UNKNOWN",
+            "top_emu": "UNKNOWN",
+            "bottom_emu": "UNKNOWN"
+          }
+        },
+        {
+          "placeholder_type": "body",
+          "placeholder_index": "1",
+          "placeholder_size": "half",
+          "orientation": "horz",
+          "geometry": {
+            "x_emu": 838200,
+            "y_emu": 1825625,
+            "width_emu": 5181600,
+            "height_emu": 4351338,
+            "aspect_ratio": 1.1908
+          },
+          "margins": {
+            "left_emu": "UNKNOWN",
+            "right_emu": "UNKNOWN",
+            "top_emu": "UNKNOWN",
+            "bottom_emu": "UNKNOWN"
+          }
+        },
+        {
+          "placeholder_type": "body",
+          "placeholder_index": "2",
+          "placeholder_size": "half",
+          "orientation": "horz",
+          "geometry": {
+            "x_emu": 6172200,
+            "y_emu": 1825625,
+            "width_emu": 5181600,
+            "height_emu": 4351338,
+            "aspect_ratio": 1.1908
+          },
+          "margins": {
+            "left_emu": "UNKNOWN",
+            "right_emu": "UNKNOWN",
+            "top_emu": "UNKNOWN",
+            "bottom_emu": "UNKNOWN"
+          }
+        },
+        {
+          "placeholder_type": "dt",
+          "placeholder_index": "10",
+          "placeholder_size": "half",
+          "orientation": "horz",
+          "geometry": {
+            "x_emu": "UNKNOWN",
+            "y_emu": "UNKNOWN",
+            "width_emu": "UNKNOWN",
+            "height_emu": "UNKNOWN",
+            "aspect_ratio": "UNKNOWN"
+          },
+          "margins": {
+            "left_emu": "UNKNOWN",
+            "right_emu": "UNKNOWN",
+            "top_emu": "UNKNOWN",
+            "bottom_emu": "UNKNOWN"
+          }
+        },
+        {
+          "placeholder_type": "ftr",
+          "placeholder_index": "11",
+          "placeholder_size": "quarter",
+          "orientation": "horz",
+          "geometry": {
+            "x_emu": "UNKNOWN",
+            "y_emu": "UNKNOWN",
+            "width_emu": "UNKNOWN",
+            "height_emu": "UNKNOWN",
+            "aspect_ratio": "UNKNOWN"
+          },
+          "margins": {
+            "left_emu": "UNKNOWN",
+            "right_emu": "UNKNOWN",
+            "top_emu": "UNKNOWN",
+            "bottom_emu": "UNKNOWN"
+          }
+        },
+        {
+          "placeholder_type": "sldNum",
+          "placeholder_index": "12",
+          "placeholder_size": "quarter",
+          "orientation": "horz",
+          "geometry": {
+            "x_emu": "UNKNOWN",
+            "y_emu": "UNKNOWN",
+            "width_emu": "UNKNOWN",
+            "height_emu": "UNKNOWN",
+            "aspect_ratio": "UNKNOWN"
+          },
+          "margins": {
+            "left_emu": "UNKNOWN",
+            "right_emu": "UNKNOWN",
+            "top_emu": "UNKNOWN",
+            "bottom_emu": "UNKNOWN"
+          }
+        }
+      ],
+      "footer_and_page_number_rules": {
+        "date_time": true,
+        "footer": true,
+        "slide_number": true,
+        "header": "INHERITED_OR_UNKNOWN",
+        "placeholder_types_present": [
+          "dt",
+          "ftr",
+          "sldNum"
+        ]
+      },
+      "master_part": "ppt/slideMasters/slideMaster1.xml"
+    },
+    {
+      "part": "ppt/slideLayouts/slideLayout5.xml",
+      "part_sha256": "46e9de454dbd4132abc8ed1ebdecba53682266fe4f57f0f25250210aba45372f",
+      "kind": "layout",
+      "layout_type": "twoTxTwoObj",
+      "common_page_role": "comparison",
+      "show_master_shapes": "INHERITED_OR_UNKNOWN",
+      "preserve": "1",
+      "placeholders": [
+        {
+          "placeholder_type": "title",
+          "placeholder_index": "INHERITED_OR_UNKNOWN",
+          "placeholder_size": "full",
+          "orientation": "horz",
+          "geometry": {
+            "x_emu": 839788,
+            "y_emu": 365125,
+            "width_emu": 10515600,
+            "height_emu": 1325563,
+            "aspect_ratio": 7.9329
+          },
+          "margins": {
+            "left_emu": "UNKNOWN",
+            "right_emu": "UNKNOWN",
+            "top_emu": "UNKNOWN",
+            "bottom_emu": "UNKNOWN"
+          }
+        },
+        {
+          "placeholder_type": "body",
+          "placeholder_index": "1",
+          "placeholder_size": "full",
+          "orientation": "horz",
+          "geometry": {
+            "x_emu": 839788,
+            "y_emu": 1681163,
+            "width_emu": 5157787,
+            "height_emu": 823912,
+            "aspect_ratio": 6.2601
+          },
+          "margins": {
+            "left_emu": "UNKNOWN",
+            "right_emu": "UNKNOWN",
+            "top_emu": "UNKNOWN",
+            "bottom_emu": "UNKNOWN"
+          }
+        },
+        {
+          "placeholder_type": "body",
+          "placeholder_index": "2",
+          "placeholder_size": "half",
+          "orientation": "horz",
+          "geometry": {
+            "x_emu": 839788,
+            "y_emu": 2505075,
+            "width_emu": 5157787,
+            "height_emu": 3684588,
+            "aspect_ratio": 1.3998
+          },
+          "margins": {
+            "left_emu": "UNKNOWN",
+            "right_emu": "UNKNOWN",
+            "top_emu": "UNKNOWN",
+            "bottom_emu": "UNKNOWN"
+          }
+        },
+        {
+          "placeholder_type": "body",
+          "placeholder_index": "3",
+          "placeholder_size": "quarter",
+          "orientation": "horz",
+          "geometry": {
+            "x_emu": 6172200,
+            "y_emu": 1681163,
+            "width_emu": 5183188,
+            "height_emu": 823912,
+            "aspect_ratio": 6.2909
+          },
+          "margins": {
+            "left_emu": "UNKNOWN",
+            "right_emu": "UNKNOWN",
+            "top_emu": "UNKNOWN",
+            "bottom_emu": "UNKNOWN"
+          }
+        },
+        {
+          "placeholder_type": "body",
+          "placeholder_index": "4",
+          "placeholder_size": "quarter",
+          "orientation": "horz",
+          "geometry": {
+            "x_emu": 6172200,
+            "y_emu": 2505075,
+            "width_emu": 5183188,
+            "height_emu": 3684588,
+            "aspect_ratio": 1.4067
+          },
+          "margins": {
+            "left_emu": "UNKNOWN",
+            "right_emu": "UNKNOWN",
+            "top_emu": "UNKNOWN",
+            "bottom_emu": "UNKNOWN"
+          }
+        },
+        {
+          "placeholder_type": "dt",
+          "placeholder_index": "10",
+          "placeholder_size": "half",
+          "orientation": "horz",
+          "geometry": {
+            "x_emu": "UNKNOWN",
+            "y_emu": "UNKNOWN",
+            "width_emu": "UNKNOWN",
+            "height_emu": "UNKNOWN",
+            "aspect_ratio": "UNKNOWN"
+          },
+          "margins": {
+            "left_emu": "UNKNOWN",
+            "right_emu": "UNKNOWN",
+            "top_emu": "UNKNOWN",
+            "bottom_emu": "UNKNOWN"
+          }
+        },
+        {
+          "placeholder_type": "ftr",
+          "placeholder_index": "11",
+          "placeholder_size": "quarter",
+          "orientation": "horz",
+          "geometry": {
+            "x_emu": "UNKNOWN",
+            "y_emu": "UNKNOWN",
+            "width_emu": "UNKNOWN",
+            "height_emu": "UNKNOWN",
+            "aspect_ratio": "UNKNOWN"
+          },
+          "margins": {
+            "left_emu": "UNKNOWN",
+            "right_emu": "UNKNOWN",
+            "top_emu": "UNKNOWN",
+            "bottom_emu": "UNKNOWN"
+          }
+        },
+        {
+          "placeholder_type": "sldNum",
+          "placeholder_index": "12",
+          "placeholder_size": "quarter",
+          "orientation": "horz",
+          "geometry": {
+            "x_emu": "UNKNOWN",
+            "y_emu": "UNKNOWN",
+            "width_emu": "UNKNOWN",
+            "height_emu": "UNKNOWN",
+            "aspect_ratio": "UNKNOWN"
+          },
+          "margins": {
+            "left_emu": "UNKNOWN",
+            "right_emu": "UNKNOWN",
+            "top_emu": "UNKNOWN",
+            "bottom_emu": "UNKNOWN"
+          }
+        }
+      ],
+      "footer_and_page_number_rules": {
+        "date_time": true,
+        "footer": true,
+        "slide_number": true,
+        "header": "INHERITED_OR_UNKNOWN",
+        "placeholder_types_present": [
+          "dt",
+          "ftr",
+          "sldNum"
+        ]
+      },
+      "master_part": "ppt/slideMasters/slideMaster1.xml"
+    },
+    {
+      "part": "ppt/slideLayouts/slideLayout6.xml",
+      "part_sha256": "71571d74ec8518c3de192facaeb043a5026ad95f679e73c3a098bbeb7808796d",
+      "kind": "layout",
+      "layout_type": "titleOnly",
+      "common_page_role": "title_only",
+      "show_master_shapes": "INHERITED_OR_UNKNOWN",
+      "preserve": "1",
+      "placeholders": [
+        {
+          "placeholder_type": "title",
+          "placeholder_index": "INHERITED_OR_UNKNOWN",
+          "placeholder_size": "full",
+          "orientation": "horz",
+          "geometry": {
+            "x_emu": "UNKNOWN",
+            "y_emu": "UNKNOWN",
+            "width_emu": "UNKNOWN",
+            "height_emu": "UNKNOWN",
+            "aspect_ratio": "UNKNOWN"
+          },
+          "margins": {
+            "left_emu": "UNKNOWN",
+            "right_emu": "UNKNOWN",
+            "top_emu": "UNKNOWN",
+            "bottom_emu": "UNKNOWN"
+          }
+        },
+        {
+          "placeholder_type": "dt",
+          "placeholder_index": "10",
+          "placeholder_size": "half",
+          "orientation": "horz",
+          "geometry": {
+            "x_emu": "UNKNOWN",
+            "y_emu": "UNKNOWN",
+            "width_emu": "UNKNOWN",
+            "height_emu": "UNKNOWN",
+            "aspect_ratio": "UNKNOWN"
+          },
+          "margins": {
+            "left_emu": "UNKNOWN",
+            "right_emu": "UNKNOWN",
+            "top_emu": "UNKNOWN",
+            "bottom_emu": "UNKNOWN"
+          }
+        },
+        {
+          "placeholder_type": "ftr",
+          "placeholder_index": "11",
+          "placeholder_size": "quarter",
+          "orientation": "horz",
+          "geometry": {
+            "x_emu": "UNKNOWN",
+            "y_emu": "UNKNOWN",
+            "width_emu": "UNKNOWN",
+            "height_emu": "UNKNOWN",
+            "aspect_ratio": "UNKNOWN"
+          },
+          "margins": {
+            "left_emu": "UNKNOWN",
+            "right_emu": "UNKNOWN",
+            "top_emu": "UNKNOWN",
+            "bottom_emu": "UNKNOWN"
+          }
+        },
+        {
+          "placeholder_type": "sldNum",
+          "placeholder_index": "12",
+          "placeholder_size": "quarter",
+          "orientation": "horz",
+          "geometry": {
+            "x_emu": "UNKNOWN",
+            "y_emu": "UNKNOWN",
+            "width_emu": "UNKNOWN",
+            "height_emu": "UNKNOWN",
+            "aspect_ratio": "UNKNOWN"
+          },
+          "margins": {
+            "left_emu": "UNKNOWN",
+            "right_emu": "UNKNOWN",
+            "top_emu": "UNKNOWN",
+            "bottom_emu": "UNKNOWN"
+          }
+        }
+      ],
+      "footer_and_page_number_rules": {
+        "date_time": true,
+        "footer": true,
+        "slide_number": true,
+        "header": "INHERITED_OR_UNKNOWN",
+        "placeholder_types_present": [
+          "dt",
+          "ftr",
+          "sldNum"
+        ]
+      },
+      "master_part": "ppt/slideMasters/slideMaster1.xml"
+    },
+    {
+      "part": "ppt/slideLayouts/slideLayout7.xml",
+      "part_sha256": "708185e5adf99dc29426231040e7ce761dfc4d1ac0703e77f3d2b36cfdb67280",
+      "kind": "layout",
+      "layout_type": "blank",
+      "common_page_role": "blank",
+      "show_master_shapes": "INHERITED_OR_UNKNOWN",
+      "preserve": "1",
+      "placeholders": [
+        {
+          "placeholder_type": "dt",
+          "placeholder_index": "10",
+          "placeholder_size": "half",
+          "orientation": "horz",
+          "geometry": {
+            "x_emu": "UNKNOWN",
+            "y_emu": "UNKNOWN",
+            "width_emu": "UNKNOWN",
+            "height_emu": "UNKNOWN",
+            "aspect_ratio": "UNKNOWN"
+          },
+          "margins": {
+            "left_emu": "UNKNOWN",
+            "right_emu": "UNKNOWN",
+            "top_emu": "UNKNOWN",
+            "bottom_emu": "UNKNOWN"
+          }
+        },
+        {
+          "placeholder_type": "ftr",
+          "placeholder_index": "11",
+          "placeholder_size": "quarter",
+          "orientation": "horz",
+          "geometry": {
+            "x_emu": "UNKNOWN",
+            "y_emu": "UNKNOWN",
+            "width_emu": "UNKNOWN",
+            "height_emu": "UNKNOWN",
+            "aspect_ratio": "UNKNOWN"
+          },
+          "margins": {
+            "left_emu": "UNKNOWN",
+            "right_emu": "UNKNOWN",
+            "top_emu": "UNKNOWN",
+            "bottom_emu": "UNKNOWN"
+          }
+        },
+        {
+          "placeholder_type": "sldNum",
+          "placeholder_index": "12",
+          "placeholder_size": "quarter",
+          "orientation": "horz",
+          "geometry": {
+            "x_emu": "UNKNOWN",
+            "y_emu": "UNKNOWN",
+            "width_emu": "UNKNOWN",
+            "height_emu": "UNKNOWN",
+            "aspect_ratio": "UNKNOWN"
+          },
+          "margins": {
+            "left_emu": "UNKNOWN",
+            "right_emu": "UNKNOWN",
+            "top_emu": "UNKNOWN",
+            "bottom_emu": "UNKNOWN"
+          }
+        }
+      ],
+      "footer_and_page_number_rules": {
+        "date_time": true,
+        "footer": true,
+        "slide_number": true,
+        "header": "INHERITED_OR_UNKNOWN",
+        "placeholder_types_present": [
+          "dt",
+          "ftr",
+          "sldNum"
+        ]
+      },
+      "master_part": "ppt/slideMasters/slideMaster1.xml"
+    },
+    {
+      "part": "ppt/slideLayouts/slideLayout8.xml",
+      "part_sha256": "60ed961efcf791649af02c1933bd3d6706e7f72d685de85781699fc4d6bff76b",
+      "kind": "layout",
+      "layout_type": "objTx",
+      "common_page_role": "content_with_caption",
+      "show_master_shapes": "INHERITED_OR_UNKNOWN",
+      "preserve": "1",
+      "placeholders": [
+        {
+          "placeholder_type": "title",
+          "placeholder_index": "INHERITED_OR_UNKNOWN",
+          "placeholder_size": "full",
+          "orientation": "horz",
+          "geometry": {
+            "x_emu": 839788,
+            "y_emu": 457200,
+            "width_emu": 3932237,
+            "height_emu": 1600200,
+            "aspect_ratio": 2.4573
+          },
+          "margins": {
+            "left_emu": "UNKNOWN",
+            "right_emu": "UNKNOWN",
+            "top_emu": "UNKNOWN",
+            "bottom_emu": "UNKNOWN"
+          }
+        },
+        {
+          "placeholder_type": "body",
+          "placeholder_index": "1",
+          "placeholder_size": "full",
+          "orientation": "horz",
+          "geometry": {
+            "x_emu": 5183188,
+            "y_emu": 987425,
+            "width_emu": 6172200,
+            "height_emu": 4873625,
+            "aspect_ratio": 1.2664
+          },
+          "margins": {
+            "left_emu": "UNKNOWN",
+            "right_emu": "UNKNOWN",
+            "top_emu": "UNKNOWN",
+            "bottom_emu": "UNKNOWN"
+          }
+        },
+        {
+          "placeholder_type": "body",
+          "placeholder_index": "2",
+          "placeholder_size": "half",
+          "orientation": "horz",
+          "geometry": {
+            "x_emu": 839788,
+            "y_emu": 2057400,
+            "width_emu": 3932237,
+            "height_emu": 3811588,
+            "aspect_ratio": 1.0317
+          },
+          "margins": {
+            "left_emu": "UNKNOWN",
+            "right_emu": "UNKNOWN",
+            "top_emu": "UNKNOWN",
+            "bottom_emu": "UNKNOWN"
+          }
+        },
+        {
+          "placeholder_type": "dt",
+          "placeholder_index": "10",
+          "placeholder_size": "half",
+          "orientation": "horz",
+          "geometry": {
+            "x_emu": "UNKNOWN",
+            "y_emu": "UNKNOWN",
+            "width_emu": "UNKNOWN",
+            "height_emu": "UNKNOWN",
+            "aspect_ratio": "UNKNOWN"
+          },
+          "margins": {
+            "left_emu": "UNKNOWN",
+            "right_emu": "UNKNOWN",
+            "top_emu": "UNKNOWN",
+            "bottom_emu": "UNKNOWN"
+          }
+        },
+        {
+          "placeholder_type": "ftr",
+          "placeholder_index": "11",
+          "placeholder_size": "quarter",
+          "orientation": "horz",
+          "geometry": {
+            "x_emu": "UNKNOWN",
+            "y_emu": "UNKNOWN",
+            "width_emu": "UNKNOWN",
+            "height_emu": "UNKNOWN",
+            "aspect_ratio": "UNKNOWN"
+          },
+          "margins": {
+            "left_emu": "UNKNOWN",
+            "right_emu": "UNKNOWN",
+            "top_emu": "UNKNOWN",
+            "bottom_emu": "UNKNOWN"
+          }
+        },
+        {
+          "placeholder_type": "sldNum",
+          "placeholder_index": "12",
+          "placeholder_size": "quarter",
+          "orientation": "horz",
+          "geometry": {
+            "x_emu": "UNKNOWN",
+            "y_emu": "UNKNOWN",
+            "width_emu": "UNKNOWN",
+            "height_emu": "UNKNOWN",
+            "aspect_ratio": "UNKNOWN"
+          },
+          "margins": {
+            "left_emu": "UNKNOWN",
+            "right_emu": "UNKNOWN",
+            "top_emu": "UNKNOWN",
+            "bottom_emu": "UNKNOWN"
+          }
+        }
+      ],
+      "footer_and_page_number_rules": {
+        "date_time": true,
+        "footer": true,
+        "slide_number": true,
+        "header": "INHERITED_OR_UNKNOWN",
+        "placeholder_types_present": [
+          "dt",
+          "ftr",
+          "sldNum"
+        ]
+      },
+      "master_part": "ppt/slideMasters/slideMaster1.xml"
+    },
+    {
+      "part": "ppt/slideLayouts/slideLayout9.xml",
+      "part_sha256": "62acb5e75a32eaf8647ed24ae65f30f7cf4f338aca7a5b6005b6ec31cefd2dbc",
+      "kind": "layout",
+      "layout_type": "picTx",
+      "common_page_role": "picture_with_caption",
+      "show_master_shapes": "INHERITED_OR_UNKNOWN",
+      "preserve": "1",
+      "placeholders": [
+        {
+          "placeholder_type": "title",
+          "placeholder_index": "INHERITED_OR_UNKNOWN",
+          "placeholder_size": "full",
+          "orientation": "horz",
+          "geometry": {
+            "x_emu": 839788,
+            "y_emu": 457200,
+            "width_emu": 3932237,
+            "height_emu": 1600200,
+            "aspect_ratio": 2.4573
+          },
+          "margins": {
+            "left_emu": "UNKNOWN",
+            "right_emu": "UNKNOWN",
+            "top_emu": "UNKNOWN",
+            "bottom_emu": "UNKNOWN"
+          }
+        },
+        {
+          "placeholder_type": "pic",
+          "placeholder_index": "1",
+          "placeholder_size": "full",
+          "orientation": "horz",
+          "geometry": {
+            "x_emu": 5183188,
+            "y_emu": 987425,
+            "width_emu": 6172200,
+            "height_emu": 4873625,
+            "aspect_ratio": 1.2664
+          },
+          "margins": {
+            "left_emu": "UNKNOWN",
+            "right_emu": "UNKNOWN",
+            "top_emu": "UNKNOWN",
+            "bottom_emu": "UNKNOWN"
+          }
+        },
+        {
+          "placeholder_type": "body",
+          "placeholder_index": "2",
+          "placeholder_size": "half",
+          "orientation": "horz",
+          "geometry": {
+            "x_emu": 839788,
+            "y_emu": 2057400,
+            "width_emu": 3932237,
+            "height_emu": 3811588,
+            "aspect_ratio": 1.0317
+          },
+          "margins": {
+            "left_emu": "UNKNOWN",
+            "right_emu": "UNKNOWN",
+            "top_emu": "UNKNOWN",
+            "bottom_emu": "UNKNOWN"
+          }
+        },
+        {
+          "placeholder_type": "dt",
+          "placeholder_index": "10",
+          "placeholder_size": "half",
+          "orientation": "horz",
+          "geometry": {
+            "x_emu": "UNKNOWN",
+            "y_emu": "UNKNOWN",
+            "width_emu": "UNKNOWN",
+            "height_emu": "UNKNOWN",
+            "aspect_ratio": "UNKNOWN"
+          },
+          "margins": {
+            "left_emu": "UNKNOWN",
+            "right_emu": "UNKNOWN",
+            "top_emu": "UNKNOWN",
+            "bottom_emu": "UNKNOWN"
+          }
+        },
+        {
+          "placeholder_type": "ftr",
+          "placeholder_index": "11",
+          "placeholder_size": "quarter",
+          "orientation": "horz",
+          "geometry": {
+            "x_emu": "UNKNOWN",
+            "y_emu": "UNKNOWN",
+            "width_emu": "UNKNOWN",
+            "height_emu": "UNKNOWN",
+            "aspect_ratio": "UNKNOWN"
+          },
+          "margins": {
+            "left_emu": "UNKNOWN",
+            "right_emu": "UNKNOWN",
+            "top_emu": "UNKNOWN",
+            "bottom_emu": "UNKNOWN"
+          }
+        },
+        {
+          "placeholder_type": "sldNum",
+          "placeholder_index": "12",
+          "placeholder_size": "quarter",
+          "orientation": "horz",
+          "geometry": {
+            "x_emu": "UNKNOWN",
+            "y_emu": "UNKNOWN",
+            "width_emu": "UNKNOWN",
+            "height_emu": "UNKNOWN",
+            "aspect_ratio": "UNKNOWN"
+          },
+          "margins": {
+            "left_emu": "UNKNOWN",
+            "right_emu": "UNKNOWN",
+            "top_emu": "UNKNOWN",
+            "bottom_emu": "UNKNOWN"
+          }
+        }
+      ],
+      "footer_and_page_number_rules": {
+        "date_time": true,
+        "footer": true,
+        "slide_number": true,
+        "header": "INHERITED_OR_UNKNOWN",
+        "placeholder_types_present": [
+          "dt",
+          "ftr",
+          "sldNum"
+        ]
+      },
+      "master_part": "ppt/slideMasters/slideMaster1.xml"
+    }
+  ],
+  "placeholder_and_geometry_summary": {
+    "master_placeholder_count": 5,
+    "layout_placeholder_count": 58,
+    "title_and_body_positions": [
+      {
+        "layout_part": "ppt/slideLayouts/slideLayout1.xml",
+        "role": "title",
+        "placeholder_type": "ctrTitle",
+        "geometry": {
+          "x_emu": 1524000,
+          "y_emu": 1122363,
+          "width_emu": 9144000,
+          "height_emu": 2387600,
+          "aspect_ratio": 3.8298
+        },
+        "margins": {
+          "left_emu": "UNKNOWN",
+          "right_emu": "UNKNOWN",
+          "top_emu": "UNKNOWN",
+          "bottom_emu": "UNKNOWN"
+        }
+      },
+      {
+        "layout_part": "ppt/slideLayouts/slideLayout1.xml",
+        "role": "title",
+        "placeholder_type": "subTitle",
+        "geometry": {
+          "x_emu": 1524000,
+          "y_emu": 3602038,
+          "width_emu": 9144000,
+          "height_emu": 1655762,
+          "aspect_ratio": 5.5225
+        },
+        "margins": {
+          "left_emu": "UNKNOWN",
+          "right_emu": "UNKNOWN",
+          "top_emu": "UNKNOWN",
+          "bottom_emu": "UNKNOWN"
+        }
+      },
+      {
+        "layout_part": "ppt/slideLayouts/slideLayout10.xml",
+        "role": "custom_or_unknown",
+        "placeholder_type": "title",
+        "geometry": {
+          "x_emu": "UNKNOWN",
+          "y_emu": "UNKNOWN",
+          "width_emu": "UNKNOWN",
+          "height_emu": "UNKNOWN",
+          "aspect_ratio": "UNKNOWN"
+        },
+        "margins": {
+          "left_emu": "UNKNOWN",
+          "right_emu": "UNKNOWN",
+          "top_emu": "UNKNOWN",
+          "bottom_emu": "UNKNOWN"
+        }
+      },
+      {
+        "layout_part": "ppt/slideLayouts/slideLayout10.xml",
+        "role": "custom_or_unknown",
+        "placeholder_type": "body",
+        "geometry": {
+          "x_emu": "UNKNOWN",
+          "y_emu": "UNKNOWN",
+          "width_emu": "UNKNOWN",
+          "height_emu": "UNKNOWN",
+          "aspect_ratio": "UNKNOWN"
+        },
+        "margins": {
+          "left_emu": "UNKNOWN",
+          "right_emu": "UNKNOWN",
+          "top_emu": "UNKNOWN",
+          "bottom_emu": "UNKNOWN"
+        }
+      },
+      {
+        "layout_part": "ppt/slideLayouts/slideLayout11.xml",
+        "role": "custom_or_unknown",
+        "placeholder_type": "title",
+        "geometry": {
+          "x_emu": 8724900,
+          "y_emu": 365125,
+          "width_emu": 2628900,
+          "height_emu": 5811838,
+          "aspect_ratio": 0.4523
+        },
+        "margins": {
+          "left_emu": "UNKNOWN",
+          "right_emu": "UNKNOWN",
+          "top_emu": "UNKNOWN",
+          "bottom_emu": "UNKNOWN"
+        }
+      },
+      {
+        "layout_part": "ppt/slideLayouts/slideLayout11.xml",
+        "role": "custom_or_unknown",
+        "placeholder_type": "body",
+        "geometry": {
+          "x_emu": 838200,
+          "y_emu": 365125,
+          "width_emu": 7734300,
+          "height_emu": 5811838,
+          "aspect_ratio": 1.3308
+        },
+        "margins": {
+          "left_emu": "UNKNOWN",
+          "right_emu": "UNKNOWN",
+          "top_emu": "UNKNOWN",
+          "bottom_emu": "UNKNOWN"
+        }
+      },
+      {
+        "layout_part": "ppt/slideLayouts/slideLayout2.xml",
+        "role": "title_and_content",
+        "placeholder_type": "title",
+        "geometry": {
+          "x_emu": "UNKNOWN",
+          "y_emu": "UNKNOWN",
+          "width_emu": "UNKNOWN",
+          "height_emu": "UNKNOWN",
+          "aspect_ratio": "UNKNOWN"
+        },
+        "margins": {
+          "left_emu": "UNKNOWN",
+          "right_emu": "UNKNOWN",
+          "top_emu": "UNKNOWN",
+          "bottom_emu": "UNKNOWN"
+        }
+      },
+      {
+        "layout_part": "ppt/slideLayouts/slideLayout2.xml",
+        "role": "title_and_content",
+        "placeholder_type": "body",
+        "geometry": {
+          "x_emu": "UNKNOWN",
+          "y_emu": "UNKNOWN",
+          "width_emu": "UNKNOWN",
+          "height_emu": "UNKNOWN",
+          "aspect_ratio": "UNKNOWN"
+        },
+        "margins": {
+          "left_emu": "UNKNOWN",
+          "right_emu": "UNKNOWN",
+          "top_emu": "UNKNOWN",
+          "bottom_emu": "UNKNOWN"
+        }
+      },
+      {
+        "layout_part": "ppt/slideLayouts/slideLayout3.xml",
+        "role": "section",
+        "placeholder_type": "title",
+        "geometry": {
+          "x_emu": 831850,
+          "y_emu": 1709738,
+          "width_emu": 10515600,
+          "height_emu": 2852737,
+          "aspect_ratio": 3.6861
+        },
+        "margins": {
+          "left_emu": "UNKNOWN",
+          "right_emu": "UNKNOWN",
+          "top_emu": "UNKNOWN",
+          "bottom_emu": "UNKNOWN"
+        }
+      },
+      {
+        "layout_part": "ppt/slideLayouts/slideLayout3.xml",
+        "role": "section",
+        "placeholder_type": "body",
+        "geometry": {
+          "x_emu": 831850,
+          "y_emu": 4589463,
+          "width_emu": 10515600,
+          "height_emu": 1500187,
+          "aspect_ratio": 7.0095
+        },
+        "margins": {
+          "left_emu": "UNKNOWN",
+          "right_emu": "UNKNOWN",
+          "top_emu": "UNKNOWN",
+          "bottom_emu": "UNKNOWN"
+        }
+      },
+      {
+        "layout_part": "ppt/slideLayouts/slideLayout4.xml",
+        "role": "two_content",
+        "placeholder_type": "title",
+        "geometry": {
+          "x_emu": "UNKNOWN",
+          "y_emu": "UNKNOWN",
+          "width_emu": "UNKNOWN",
+          "height_emu": "UNKNOWN",
+          "aspect_ratio": "UNKNOWN"
+        },
+        "margins": {
+          "left_emu": "UNKNOWN",
+          "right_emu": "UNKNOWN",
+          "top_emu": "UNKNOWN",
+          "bottom_emu": "UNKNOWN"
+        }
+      },
+      {
+        "layout_part": "ppt/slideLayouts/slideLayout4.xml",
+        "role": "two_content",
+        "placeholder_type": "body",
+        "geometry": {
+          "x_emu": 838200,
+          "y_emu": 1825625,
+          "width_emu": 5181600,
+          "height_emu": 4351338,
+          "aspect_ratio": 1.1908
+        },
+        "margins": {
+          "left_emu": "UNKNOWN",
+          "right_emu": "UNKNOWN",
+          "top_emu": "UNKNOWN",
+          "bottom_emu": "UNKNOWN"
+        }
+      },
+      {
+        "layout_part": "ppt/slideLayouts/slideLayout4.xml",
+        "role": "two_content",
+        "placeholder_type": "body",
+        "geometry": {
+          "x_emu": 6172200,
+          "y_emu": 1825625,
+          "width_emu": 5181600,
+          "height_emu": 4351338,
+          "aspect_ratio": 1.1908
+        },
+        "margins": {
+          "left_emu": "UNKNOWN",
+          "right_emu": "UNKNOWN",
+          "top_emu": "UNKNOWN",
+          "bottom_emu": "UNKNOWN"
+        }
+      },
+      {
+        "layout_part": "ppt/slideLayouts/slideLayout5.xml",
+        "role": "comparison",
+        "placeholder_type": "title",
+        "geometry": {
+          "x_emu": 839788,
+          "y_emu": 365125,
+          "width_emu": 10515600,
+          "height_emu": 1325563,
+          "aspect_ratio": 7.9329
+        },
+        "margins": {
+          "left_emu": "UNKNOWN",
+          "right_emu": "UNKNOWN",
+          "top_emu": "UNKNOWN",
+          "bottom_emu": "UNKNOWN"
+        }
+      },
+      {
+        "layout_part": "ppt/slideLayouts/slideLayout5.xml",
+        "role": "comparison",
+        "placeholder_type": "body",
+        "geometry": {
+          "x_emu": 839788,
+          "y_emu": 1681163,
+          "width_emu": 5157787,
+          "height_emu": 823912,
+          "aspect_ratio": 6.2601
+        },
+        "margins": {
+          "left_emu": "UNKNOWN",
+          "right_emu": "UNKNOWN",
+          "top_emu": "UNKNOWN",
+          "bottom_emu": "UNKNOWN"
+        }
+      },
+      {
+        "layout_part": "ppt/slideLayouts/slideLayout5.xml",
+        "role": "comparison",
+        "placeholder_type": "body",
+        "geometry": {
+          "x_emu": 839788,
+          "y_emu": 2505075,
+          "width_emu": 5157787,
+          "height_emu": 3684588,
+          "aspect_ratio": 1.3998
+        },
+        "margins": {
+          "left_emu": "UNKNOWN",
+          "right_emu": "UNKNOWN",
+          "top_emu": "UNKNOWN",
+          "bottom_emu": "UNKNOWN"
+        }
+      },
+      {
+        "layout_part": "ppt/slideLayouts/slideLayout5.xml",
+        "role": "comparison",
+        "placeholder_type": "body",
+        "geometry": {
+          "x_emu": 6172200,
+          "y_emu": 1681163,
+          "width_emu": 5183188,
+          "height_emu": 823912,
+          "aspect_ratio": 6.2909
+        },
+        "margins": {
+          "left_emu": "UNKNOWN",
+          "right_emu": "UNKNOWN",
+          "top_emu": "UNKNOWN",
+          "bottom_emu": "UNKNOWN"
+        }
+      },
+      {
+        "layout_part": "ppt/slideLayouts/slideLayout5.xml",
+        "role": "comparison",
+        "placeholder_type": "body",
+        "geometry": {
+          "x_emu": 6172200,
+          "y_emu": 2505075,
+          "width_emu": 5183188,
+          "height_emu": 3684588,
+          "aspect_ratio": 1.4067
+        },
+        "margins": {
+          "left_emu": "UNKNOWN",
+          "right_emu": "UNKNOWN",
+          "top_emu": "UNKNOWN",
+          "bottom_emu": "UNKNOWN"
+        }
+      },
+      {
+        "layout_part": "ppt/slideLayouts/slideLayout6.xml",
+        "role": "title_only",
+        "placeholder_type": "title",
+        "geometry": {
+          "x_emu": "UNKNOWN",
+          "y_emu": "UNKNOWN",
+          "width_emu": "UNKNOWN",
+          "height_emu": "UNKNOWN",
+          "aspect_ratio": "UNKNOWN"
+        },
+        "margins": {
+          "left_emu": "UNKNOWN",
+          "right_emu": "UNKNOWN",
+          "top_emu": "UNKNOWN",
+          "bottom_emu": "UNKNOWN"
+        }
+      },
+      {
+        "layout_part": "ppt/slideLayouts/slideLayout8.xml",
+        "role": "content_with_caption",
+        "placeholder_type": "title",
+        "geometry": {
+          "x_emu": 839788,
+          "y_emu": 457200,
+          "width_emu": 3932237,
+          "height_emu": 1600200,
+          "aspect_ratio": 2.4573
+        },
+        "margins": {
+          "left_emu": "UNKNOWN",
+          "right_emu": "UNKNOWN",
+          "top_emu": "UNKNOWN",
+          "bottom_emu": "UNKNOWN"
+        }
+      },
+      {
+        "layout_part": "ppt/slideLayouts/slideLayout8.xml",
+        "role": "content_with_caption",
+        "placeholder_type": "body",
+        "geometry": {
+          "x_emu": 5183188,
+          "y_emu": 987425,
+          "width_emu": 6172200,
+          "height_emu": 4873625,
+          "aspect_ratio": 1.2664
+        },
+        "margins": {
+          "left_emu": "UNKNOWN",
+          "right_emu": "UNKNOWN",
+          "top_emu": "UNKNOWN",
+          "bottom_emu": "UNKNOWN"
+        }
+      },
+      {
+        "layout_part": "ppt/slideLayouts/slideLayout8.xml",
+        "role": "content_with_caption",
+        "placeholder_type": "body",
+        "geometry": {
+          "x_emu": 839788,
+          "y_emu": 2057400,
+          "width_emu": 3932237,
+          "height_emu": 3811588,
+          "aspect_ratio": 1.0317
+        },
+        "margins": {
+          "left_emu": "UNKNOWN",
+          "right_emu": "UNKNOWN",
+          "top_emu": "UNKNOWN",
+          "bottom_emu": "UNKNOWN"
+        }
+      },
+      {
+        "layout_part": "ppt/slideLayouts/slideLayout9.xml",
+        "role": "picture_with_caption",
+        "placeholder_type": "title",
+        "geometry": {
+          "x_emu": 839788,
+          "y_emu": 457200,
+          "width_emu": 3932237,
+          "height_emu": 1600200,
+          "aspect_ratio": 2.4573
+        },
+        "margins": {
+          "left_emu": "UNKNOWN",
+          "right_emu": "UNKNOWN",
+          "top_emu": "UNKNOWN",
+          "bottom_emu": "UNKNOWN"
+        }
+      },
+      {
+        "layout_part": "ppt/slideLayouts/slideLayout9.xml",
+        "role": "picture_with_caption",
+        "placeholder_type": "body",
+        "geometry": {
+          "x_emu": 839788,
+          "y_emu": 2057400,
+          "width_emu": 3932237,
+          "height_emu": 3811588,
+          "aspect_ratio": 1.0317
+        },
+        "margins": {
+          "left_emu": "UNKNOWN",
+          "right_emu": "UNKNOWN",
+          "top_emu": "UNKNOWN",
+          "bottom_emu": "UNKNOWN"
+        }
+      }
+    ]
+  },
+  "common_page_roles": [
+    {
+      "role": "blank",
+      "layout_count": 1
+    },
+    {
+      "role": "comparison",
+      "layout_count": 1
+    },
+    {
+      "role": "content_with_caption",
+      "layout_count": 1
+    },
+    {
+      "role": "custom_or_unknown",
+      "layout_count": 2
+    },
+    {
+      "role": "picture_with_caption",
+      "layout_count": 1
+    },
+    {
+      "role": "section",
+      "layout_count": 1
+    },
+    {
+      "role": "title",
+      "layout_count": 1
+    },
+    {
+      "role": "title_and_content",
+      "layout_count": 1
+    },
+    {
+      "role": "title_only",
+      "layout_count": 1
+    },
+    {
+      "role": "two_content",
+      "layout_count": 1
+    }
+  ],
+  "chart_color_tokens": {
+    "inspected_chart_part_count": 0,
+    "inspected_style_part_count": 0,
+    "tokens": [],
+    "chart_values_returned": false
+  },
+  "table_styles": {
+    "default_style_id": "{5C22544A-7EE6-4342-B048-85BDC9FD1C3A}",
+    "style_ids": []
+  },
+  "footer_and_page_number_rules": {
+    "show_special_placeholders_on_title_slide": "INHERITED_OR_UNKNOWN",
+    "masters": [
+      {
+        "part": "ppt/slideMasters/slideMaster1.xml",
+        "rules": {
+          "date_time": true,
+          "footer": true,
+          "slide_number": true,
+          "header": "INHERITED_OR_UNKNOWN",
+          "placeholder_types_present": [
+            "dt",
+            "ftr",
+            "sldNum"
+          ]
+        }
+      }
+    ],
+    "layouts": [
+      {
+        "part": "ppt/slideLayouts/slideLayout1.xml",
+        "rules": {
+          "date_time": true,
+          "footer": true,
+          "slide_number": true,
+          "header": "INHERITED_OR_UNKNOWN",
+          "placeholder_types_present": [
+            "dt",
+            "ftr",
+            "sldNum"
+          ]
+        }
+      },
+      {
+        "part": "ppt/slideLayouts/slideLayout10.xml",
+        "rules": {
+          "date_time": true,
+          "footer": true,
+          "slide_number": true,
+          "header": "INHERITED_OR_UNKNOWN",
+          "placeholder_types_present": [
+            "dt",
+            "ftr",
+            "sldNum"
+          ]
+        }
+      },
+      {
+        "part": "ppt/slideLayouts/slideLayout11.xml",
+        "rules": {
+          "date_time": true,
+          "footer": true,
+          "slide_number": true,
+          "header": "INHERITED_OR_UNKNOWN",
+          "placeholder_types_present": [
+            "dt",
+            "ftr",
+            "sldNum"
+          ]
+        }
+      },
+      {
+        "part": "ppt/slideLayouts/slideLayout2.xml",
+        "rules": {
+          "date_time": true,
+          "footer": true,
+          "slide_number": true,
+          "header": "INHERITED_OR_UNKNOWN",
+          "placeholder_types_present": [
+            "dt",
+            "ftr",
+            "sldNum"
+          ]
+        }
+      },
+      {
+        "part": "ppt/slideLayouts/slideLayout3.xml",
+        "rules": {
+          "date_time": true,
+          "footer": true,
+          "slide_number": true,
+          "header": "INHERITED_OR_UNKNOWN",
+          "placeholder_types_present": [
+            "dt",
+            "ftr",
+            "sldNum"
+          ]
+        }
+      },
+      {
+        "part": "ppt/slideLayouts/slideLayout4.xml",
+        "rules": {
+          "date_time": true,
+          "footer": true,
+          "slide_number": true,
+          "header": "INHERITED_OR_UNKNOWN",
+          "placeholder_types_present": [
+            "dt",
+            "ftr",
+            "sldNum"
+          ]
+        }
+      },
+      {
+        "part": "ppt/slideLayouts/slideLayout5.xml",
+        "rules": {
+          "date_time": true,
+          "footer": true,
+          "slide_number": true,
+          "header": "INHERITED_OR_UNKNOWN",
+          "placeholder_types_present": [
+            "dt",
+            "ftr",
+            "sldNum"
+          ]
+        }
+      },
+      {
+        "part": "ppt/slideLayouts/slideLayout6.xml",
+        "rules": {
+          "date_time": true,
+          "footer": true,
+          "slide_number": true,
+          "header": "INHERITED_OR_UNKNOWN",
+          "placeholder_types_present": [
+            "dt",
+            "ftr",
+            "sldNum"
+          ]
+        }
+      },
+      {
+        "part": "ppt/slideLayouts/slideLayout7.xml",
+        "rules": {
+          "date_time": true,
+          "footer": true,
+          "slide_number": true,
+          "header": "INHERITED_OR_UNKNOWN",
+          "placeholder_types_present": [
+            "dt",
+            "ftr",
+            "sldNum"
+          ]
+        }
+      },
+      {
+        "part": "ppt/slideLayouts/slideLayout8.xml",
+        "rules": {
+          "date_time": true,
+          "footer": true,
+          "slide_number": true,
+          "header": "INHERITED_OR_UNKNOWN",
+          "placeholder_types_present": [
+            "dt",
+            "ftr",
+            "sldNum"
+          ]
+        }
+      },
+      {
+        "part": "ppt/slideLayouts/slideLayout9.xml",
+        "rules": {
+          "date_time": true,
+          "footer": true,
+          "slide_number": true,
+          "header": "INHERITED_OR_UNKNOWN",
+          "placeholder_types_present": [
+            "dt",
+            "ftr",
+            "sldNum"
+          ]
+        }
+      }
+    ]
+  },
+  "image_aspect_ratio_patterns": [
+    {
+      "shape_aspect_ratio": 0.5625,
+      "intrinsic_aspect_ratio": 0.6887,
+      "fit_pattern": "cropped",
+      "occurrences": 7
+    },
+    {
+      "shape_aspect_ratio": 0.6708,
+      "intrinsic_aspect_ratio": 0.6698,
+      "fit_pattern": "uncropped_or_unknown",
+      "occurrences": 1
+    },
+    {
+      "shape_aspect_ratio": 0.9865,
+      "intrinsic_aspect_ratio": 0.985,
+      "fit_pattern": "uncropped_or_unknown",
+      "occurrences": 28
+    },
+    {
+      "shape_aspect_ratio": 1.0,
+      "intrinsic_aspect_ratio": 1.0,
+      "fit_pattern": "uncropped_or_unknown",
+      "occurrences": 1
+    },
+    {
+      "shape_aspect_ratio": 1.3047,
+      "intrinsic_aspect_ratio": 1.228,
+      "fit_pattern": "stretched_or_clipped",
+      "occurrences": 1
+    },
+    {
+      "shape_aspect_ratio": 1.6036,
+      "intrinsic_aspect_ratio": 1.6027,
+      "fit_pattern": "uncropped_or_unknown",
+      "occurrences": 1
+    },
+    {
+      "shape_aspect_ratio": 1.7778,
+      "intrinsic_aspect_ratio": 1.7769,
+      "fit_pattern": "uncropped_or_unknown",
+      "occurrences": 1
+    },
+    {
+      "shape_aspect_ratio": 1.7778,
+      "intrinsic_aspect_ratio": 1.7775,
+      "fit_pattern": "uncropped_or_unknown",
+      "occurrences": 1
+    },
+    {
+      "shape_aspect_ratio": 1.9695,
+      "intrinsic_aspect_ratio": 1.759,
+      "fit_pattern": "stretched_or_clipped",
+      "occurrences": 1
+    },
+    {
+      "shape_aspect_ratio": 2.2043,
+      "intrinsic_aspect_ratio": 2.2,
+      "fit_pattern": "uncropped_or_unknown",
+      "occurrences": 1
+    },
+    {
+      "shape_aspect_ratio": 3.0673,
+      "intrinsic_aspect_ratio": 3.0673,
+      "fit_pattern": "uncropped_or_unknown",
+      "occurrences": 1
+    },
+    {
+      "shape_aspect_ratio": 6.868,
+      "intrinsic_aspect_ratio": 6.8539,
+      "fit_pattern": "uncropped_or_unknown",
+      "occurrences": 1
+    },
+    {
+      "shape_aspect_ratio": 6.9408,
+      "intrinsic_aspect_ratio": 6.9432,
+      "fit_pattern": "uncropped_or_unknown",
+      "occurrences": 1
+    }
+  ],
+  "external_relationship_warnings": [
+    {
+      "source_part": "ppt/slides/slide2.xml",
+      "relationship_id": "rId6",
+      "relationship_type": "http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink",
+      "target_mode": "External",
+      "target_scheme": "http",
+      "target_sha256": "f9daa5b7e8612b392f2b20043f7e55e5b666b2d3b466d6f8ac4ccc154caeb313",
+      "action": "NOT_FOLLOWED"
+    }
+  ],
+  "warnings": [],
+  "unknown_policy": "UNKNOWN and INHERITED_OR_UNKNOWN are preserved; values are never guessed."
+}

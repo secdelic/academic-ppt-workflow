@@ -1,6 +1,6 @@
 {
   "name": "academic-ppt-workflow",
-  "version": "1.0.0",
+  "version": "2.7.0-rc1",
   "private": true,
   "type": "module",
   "description": "Local, source-bound, render-verified academic PowerPoint workflow",

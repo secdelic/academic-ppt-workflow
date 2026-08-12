@@ -1,0 +1,12 @@
+workspace_id: scientific_results
+visual_tone: rigorous, calm, decision-oriented
+signature_motif: "effect + uncertainty"
+palette:
+  primary: 243B53
+  accent: 2A9D8F
+  comparison: D95F59
+  canvas: F7F9FC
+typography:
+  zh: Microsoft YaHei
+  latin: Aptos
+prohibited_styles: [glow, decorative_gradient, unrelated_photo, entertainment_illustration]

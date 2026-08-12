@@ -1,0 +1,9 @@
+{
+  "version": "2.4",
+  "profiles": {
+    "target_trial": {"profile": "clinical_methods", "hero": "absolute_risk", "process": "branch_flow", "warning_hierarchy": true},
+    "single_cell": {"profile": "bioinformatics", "hero": "umap", "diverging_effects": true, "prediction_badge": true},
+    "meta_analysis": {"profile": "evidence_synthesis", "hero": "forest", "rob": "traffic_light_matrix", "certainty_hierarchy": true},
+    "protocol": {"profile": "clinical_protocol", "planned_only": true, "schedule": "phase_bands", "risk": "probability_impact", "milestones": "gantt"}
+  }
+}

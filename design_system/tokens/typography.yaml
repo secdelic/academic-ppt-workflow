@@ -1,0 +1,12 @@
+version: 2.4
+deck_title_pt: 50
+slide_title_pt: 35
+subheading_pt: 24
+body_pt: 18
+card_detail_pt: 16
+chart_label_pt: 15
+footer_pt: 10
+zh_primary: Microsoft YaHei
+zh_fallback: SimHei
+latin_primary: Aptos
+latin_fallback: Arial

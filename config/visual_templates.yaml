@@ -1,0 +1,20 @@
+{
+  "schema_version": "2.1",
+  "templates": {
+    "problem_gap_objective": {"visual_anchors": 3, "layout_family": "problem_gap_objective"},
+    "timeline": {"visual_anchors": 1, "layout_family": "timeline"},
+    "native_flow": {"visual_anchors": 1, "layout_family": "native_flow"},
+    "matrix_2x2": {"visual_anchors": 1, "layout_family": "matrix_2x2"},
+    "event_rate_chart": {"visual_anchors": 2, "layout_family": "event_rate_chart"},
+    "forest_plot": {"visual_anchors": 2, "layout_family": "forest_plot"},
+    "subgroup_forest_plot": {"visual_anchors": 2, "layout_family": "forest_plot"},
+    "line_chart": {"visual_anchors": 2, "layout_family": "line_chart"},
+    "missingness_chart": {"visual_anchors": 2, "layout_family": "missingness_chart"},
+    "comparison": {"visual_anchors": 2, "layout_family": "comparison"},
+    "audit_table": {"visual_anchors": 1, "layout_family": "audit_table"},
+    "takeaway": {"visual_anchors": 2, "layout_family": "takeaway"},
+    "source_registry": {"visual_anchors": 1, "layout_family": "source_registry"},
+    "source_figure": {"visual_anchors": 2, "layout_family": "line_chart"},
+    "cover": {"visual_anchors": 1, "layout_family": "cover"}
+  }
+}

@@ -19,6 +19,8 @@ MANIFEST_FIELDS = [
     "page_or_sheet_count",
     "parse_warning",
     "possible_sensitive_information",
+    "source_role",
+    "reference_mode",
 ]
 
 SENSITIVE_PATTERN = re.compile(
@@ -27,22 +29,38 @@ SENSITIVE_PATTERN = re.compile(
 )
 
 
-def inventory_sources(input_root: Path, supported: set[str], manifest_path: Path) -> list[dict[str, str]]:
+def inventory_sources(
+    input_root: Path,
+    supported: set[str],
+    manifest_path: Path,
+    reference_mode: str = "style-only",
+) -> list[dict[str, str]]:
     rows: list[dict[str, str]] = []
     if not input_root.exists():
         write_csv(manifest_path, MANIFEST_FIELDS, rows)
         return rows
     for path in sorted(input_root.rglob("*")):
+        relative_parts = {
+            part.lower() for part in path.relative_to(input_root).parts
+        }
+        if "expected_ground_truth" in relative_parts:
+            continue
         if not path.is_file() or path.suffix.lower() not in supported:
             continue
         digest = sha256_file(path)
         sample = path.read_bytes()[:2_000_000].decode("utf-8", errors="ignore")
+        relative_path = path.relative_to(input_root).as_posix()
+        source_role = (
+            "style_reference"
+            if relative_path.lower().startswith("style_reference/")
+            else "scientific_source"
+        )
         rows.append(
             {
                 "source_id": stable_source_id(path, digest),
                 "file_name": path.name,
                 "file_type": path.suffix.lower().lstrip("."),
-                "relative_path": path.relative_to(input_root).as_posix(),
+                "relative_path": relative_path,
                 "sha256": digest,
                 "size_bytes": str(path.stat().st_size),
                 "modified_time": datetime.fromtimestamp(path.stat().st_mtime)
@@ -52,6 +70,8 @@ def inventory_sources(input_root: Path, supported: set[str], manifest_path: Path
                 "page_or_sheet_count": "",
                 "parse_warning": "",
                 "possible_sensitive_information": "yes" if SENSITIVE_PATTERN.search(sample) else "no",
+                "source_role": source_role,
+                "reference_mode": reference_mode if source_role == "style_reference" else "",
             }
         )
     write_csv(manifest_path, MANIFEST_FIELDS, rows)

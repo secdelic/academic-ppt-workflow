@@ -1,0 +1,7 @@
+version: 2.4
+minimum_layout_families_per_deck: 5
+maximum_card_grid_ratio: 0.30
+maximum_text_only_ratio: 0.15
+maximum_consecutive_same_layout: 2
+require_hero_visual_for_primary_result: true
+require_section_pacing_variation: true

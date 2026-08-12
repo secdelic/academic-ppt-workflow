@@ -1,0 +1,11 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "NarrativeCoverageContract v2.4",
+  "type": "object",
+  "required": [
+    "must_include_item", "expected_claim", "expected_visual",
+    "expected_row_count", "target_slide_count", "rendered_slide",
+    "appendix_location", "omitted", "omission_reason",
+    "manual_decision_required"
+  ]
+}

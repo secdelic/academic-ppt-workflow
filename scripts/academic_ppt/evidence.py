@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import csv
 import re
 from pathlib import Path
 
@@ -11,10 +12,21 @@ EVIDENCE_FIELDS = [
     "claim_text",
     "source_id",
     "source_location",
+    "source_type",
+    "source_sha256",
+    "canonical_status",
     "evidence_type",
+    "estimate",
+    "confidence_interval",
+    "p_value",
     "confidence",
     "allowed_wording",
+    "wording_boundary",
     "prohibited_overstatement",
+    "conflict_status",
+    "manual_review_required",
+    "visual_type",
+    "visual_asset_path",
 ]
 
 CONTENT_SECTIONS = {
@@ -85,6 +97,93 @@ def build_evidence(
                 }
             )
 
+    registry_raw = brief.get("validated_claim_registry")
+    if registry_raw:
+        registry_path = Path(str(registry_raw)).expanduser().resolve()
+        if not registry_path.is_file():
+            unresolved.append(
+                f"Validated claim registry is missing: {registry_path}"
+            )
+        else:
+            known_sources = {
+                row["source_id"]: row for row in manifest
+                if row.get("source_role", "scientific_source") != "style_reference"
+            }
+            with registry_path.open(
+                "r", encoding="utf-8-sig", newline=""
+            ) as handle:
+                for row_number, row in enumerate(csv.DictReader(handle), start=2):
+                    source_id = str(row.get("source_id", "")).strip()
+                    source_sha256 = str(row.get("source_sha256", "")).strip()
+                    manifest_row = known_sources.get(source_id)
+                    if manifest_row is None:
+                        unresolved.append(
+                            f"Validated registry row {row_number} has unknown source_id: {source_id}"
+                        )
+                        continue
+                    if source_sha256 and source_sha256 != manifest_row["sha256"]:
+                        unresolved.append(
+                            f"Validated registry row {row_number} source hash mismatch: {source_id}"
+                        )
+                        continue
+                    claim_text = str(row.get("claim_text", "")).strip()
+                    if not claim_text:
+                        unresolved.append(
+                            f"Validated registry row {row_number} has no claim_text"
+                        )
+                        continue
+                    claims.append(
+                        {
+                            "claim_id": str(row.get("claim_id", "")).strip()
+                            or f"CLM-{len(claims) + 1:04d}",
+                            "claim_text": claim_text,
+                            "source_id": source_id,
+                            "source_location": str(
+                                row.get("source_location", "")
+                            ).strip()
+                            or f"validated registry row {row_number}",
+                            "evidence_type": str(
+                                row.get("evidence_type", "")
+                            ).strip()
+                            or "reported_source_text",
+                            "source_type": str(row.get("source_type", "")).strip(),
+                            "source_sha256": source_sha256
+                            or manifest_row.get("sha256", ""),
+                            "canonical_status": str(
+                                row.get("canonical_status", "")
+                            ).strip(),
+                            "estimate": str(row.get("estimate", "")).strip(),
+                            "confidence_interval": str(
+                                row.get("confidence_interval", "")
+                            ).strip(),
+                            "p_value": str(row.get("p_value", "")).strip(),
+                            "confidence": str(row.get("confidence", "")).strip()
+                            or "medium",
+                            "allowed_wording": str(
+                                row.get("allowed_wording", "")
+                            ).strip()
+                            or claim_text,
+                            "prohibited_overstatement": str(
+                                row.get("prohibited_overstatement", "")
+                            ).strip()
+                            or "Any wording beyond the registered source",
+                            "visual_type": str(row.get("visual_type", "")).strip(),
+                            "visual_asset_path": str(
+                                row.get("visual_asset_path", "")
+                            ).strip(),
+                            "wording_boundary": str(
+                                row.get("wording_boundary", "")
+                            ).strip(),
+                            "conflict_status": str(
+                                row.get("conflict_status", "")
+                            ).strip(),
+                            "manual_review_required": str(
+                                row.get("manual_review_required", "")
+                            ).strip()
+                            or "yes",
+                        }
+                    )
+
     inventory_lines = ["# Content Inventory", "", "All entries are source excerpts or locations; no missing content is inferred.", ""]
     for section in list(CONTENT_SECTIONS) + ["待确认事项"]:
         inventory_lines.extend([f"## {section}", ""])
@@ -109,7 +208,12 @@ def build_evidence(
             "manual_review_required": "yes",
         }
         for i, row in enumerate(
-            [r for r in manifest if r["file_type"] in {"png", "jpg", "jpeg", "svg"}],
+            [
+                r
+                for r in manifest
+                if r["file_type"] in {"png", "jpg", "jpeg", "svg"}
+                and r.get("source_role", "scientific_source") != "style_reference"
+            ],
             start=1,
         )
     ]
@@ -127,7 +231,12 @@ def build_evidence(
             "manual_review_required": "yes",
         }
         for i, row in enumerate(
-            [r for r in manifest if r["file_type"] in {"csv", "tsv", "xlsx"}],
+            [
+                r
+                for r in manifest
+                if r["file_type"] in {"csv", "tsv", "xlsx"}
+                and r.get("source_role", "scientific_source") != "style_reference"
+            ],
             start=1,
         )
     ]
@@ -145,7 +254,10 @@ def build_evidence(
     for row in manifest:
         if row["parsed_successfully"] != "yes":
             unresolved.append(f"Source parsing failed: {row['relative_path']} - {row['parse_warning']}")
-        elif row["parse_warning"]:
+        elif row["parse_warning"] and not (
+            row.get("source_role") == "style_reference"
+            and "content and notes intentionally excluded" in row["parse_warning"]
+        ):
             unresolved.append(f"Source warning: {row['relative_path']} - {row['parse_warning']}")
         if row["possible_sensitive_information"] == "yes":
             unresolved.append(f"Possible sensitive information requires manual review: {row['relative_path']}")

@@ -5,12 +5,14 @@ import math
 import re
 import zipfile
 from pathlib import Path
+from typing import Any, Mapping
 
-from PIL import Image, ImageStat
+from PIL import Image, ImageFilter, ImageStat
 from pypdf import PdfReader
 
 from .inventory import verify_input_hashes
 from .utils import write_csv, write_json
+from .visual_layout_qa import inspect_text_geometry
 
 
 def count_pptx_slides(path: Path) -> int:
@@ -27,7 +29,10 @@ def count_pptx_slides(path: Path) -> int:
         )
 
 
-def inspect_previews(previews: list[Path]) -> list[str]:
+def inspect_previews(
+    previews: list[Path],
+    storyboard: list[dict[str, str]] | None = None,
+) -> list[str]:
     issues: list[str] = []
     for index, path in enumerate(previews, start=1):
         with Image.open(path) as image:
@@ -39,6 +44,43 @@ def inspect_previews(previews: list[Path]) -> list[str]:
             dynamic_range = max(channel[1] - channel[0] for channel in extrema)
             if variance < 2.0 or dynamic_range < 8:
                 issues.append(f"Slide {index}: possible blank or near-blank page")
+            grayscale = image.convert("L")
+            footer_top = int(image.height * 0.885)
+            footer = grayscale.crop((0, footer_top, image.width, image.height))
+            footer_edges = footer.filter(ImageFilter.FIND_EDGES)
+            footer_edge_pixels = list(footer_edges.getdata())
+            footer_edge_ratio = (
+                sum(value > 24 for value in footer_edge_pixels)
+                / max(1, len(footer_edge_pixels))
+            )
+            if footer_edge_ratio > 0.085:
+                issues.append(
+                    f"Slide {index}: render-level footer region contains unexpectedly "
+                    f"dense linework ({footer_edge_ratio:.1%} edge pixels)"
+                )
+            role = (
+                storyboard[index - 1].get("slide_role", "")
+                if storyboard and index <= len(storyboard)
+                else ""
+            )
+            body = grayscale.crop(
+                (0, int(image.height * 0.205), image.width, footer_top)
+            )
+            body_edges = body.filter(ImageFilter.FIND_EDGES)
+            body_edge_pixels = list(body_edges.getdata())
+            body_edge_ratio = (
+                sum(value > 24 for value in body_edge_pixels)
+                / max(1, len(body_edge_pixels))
+            )
+            if role not in {"cover", "section_divider", "conclusion"}:
+                if body_edge_ratio < 0.001:
+                    issues.append(
+                        f"Slide {index}: render-level content region is unexpectedly sparse"
+                    )
+                if body_edge_ratio > 0.32:
+                    issues.append(
+                        f"Slide {index}: render-level content region is unexpectedly dense"
+                    )
     return issues
 
 
@@ -82,9 +124,33 @@ def run_qa(
     input_root: Path,
     output_dir: Path,
     render_method: str,
+    ooxml_report: Mapping[str, Any] | None = None,
+    powerpoint_layout_report: Mapping[str, Any] | None = None,
+    density_issues: list[str] | None = None,
 ) -> tuple[str, list[str], list[str], list[str]]:
     file_issues: list[str] = []
-    visual_issues = inspect_previews(previews) + inspect_layouts(layout_dir)
+    visual_issues = inspect_previews(previews, storyboard) + inspect_layouts(layout_dir)
+    if density_issues:
+        visual_issues.extend(density_issues)
+    powerpoint_layout_issues: list[str] = []
+    if powerpoint_layout_report is not None:
+        status_value = str(powerpoint_layout_report.get("status", "UNKNOWN"))
+        if status_value == "PASS":
+            powerpoint_layout_issues = inspect_text_geometry(
+                powerpoint_layout_report
+            )
+        elif status_value == "NOT_RUN":
+            powerpoint_layout_issues = []
+        else:
+            powerpoint_layout_issues = [
+                "PowerPoint text-geometry QA failed: "
+                + str(
+                    powerpoint_layout_report.get(
+                        "error", "layout manifest did not report PASS"
+                    )
+                )
+            ]
+        visual_issues.extend(powerpoint_layout_issues)
     scientific_issues: list[str] = []
 
     try:
@@ -104,6 +170,26 @@ def run_qa(
     if len(previews) != pptx_count:
         file_issues.append(f"Preview/PPTX page mismatch: {len(previews)} vs {pptx_count}")
     file_issues.extend(verify_input_hashes(input_root, manifest))
+    ooxml_errors: list[str] = []
+    ooxml_warnings: list[str] = []
+    if ooxml_report is not None:
+        for issue in ooxml_report.get("errors", []):
+            if isinstance(issue, Mapping):
+                code = str(issue.get("code", "OOXML_ERROR"))
+                message = str(issue.get("message", "Unspecified OOXML error"))
+            else:
+                code = "OOXML_ERROR"
+                message = str(issue)
+            ooxml_errors.append(f"{code}: {message}")
+        for issue in ooxml_report.get("warnings", []):
+            if isinstance(issue, Mapping):
+                code = str(issue.get("code", "OOXML_WARNING"))
+                message = str(issue.get("message", "Unspecified OOXML warning"))
+            else:
+                code = "OOXML_WARNING"
+                message = str(issue)
+            ooxml_warnings.append(f"{code}: {message}")
+        file_issues.extend(f"OOXML {item}" for item in ooxml_errors)
 
     source_ids = {row["source_id"] for row in manifest}
     for claim in claims:
@@ -148,6 +234,44 @@ def run_qa(
         "",
         *(f"- FAIL: {item}" for item in file_issues),
         *(["- PASS: PPTX ZIP, PDF page count, preview count, and immutable-input hash checks passed"] if not file_issues else []),
+        "",
+        "## OOXML QA",
+        "",
+        *(f"- FAIL: {item}" for item in ooxml_errors),
+        *(f"- WARN: {item}" for item in ooxml_warnings),
+        *(
+            ["- PASS: presentation relationships, source-note markers, and Deck IR identity bindings passed"]
+            if ooxml_report is not None and not ooxml_errors and not ooxml_warnings
+            else []
+        ),
+        *(
+            ["- NOT RUN: no OOXML QA report was supplied"]
+            if ooxml_report is None
+            else []
+        ),
+        "",
+        "## PowerPoint Text Geometry QA",
+        "",
+        *(f"- FAIL: {item}" for item in powerpoint_layout_issues),
+        *(
+            [
+                "- PASS: PowerPoint-reported text bounds showed no overflow "
+                "or competing text-box overlap"
+            ]
+            if powerpoint_layout_report is not None
+            and powerpoint_layout_report.get("status") == "PASS"
+            and not powerpoint_layout_issues
+            else []
+        ),
+        *(
+            [
+                "- NOT RUN: PowerPoint geometry inspection was unavailable; "
+                "rendered-image QA still ran"
+            ]
+            if powerpoint_layout_report is None
+            or powerpoint_layout_report.get("status") == "NOT_RUN"
+            else []
+        ),
         "",
         "## Boundary",
         "",

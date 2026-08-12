@@ -1,0 +1,18 @@
+schema_version: visual-workspace/1
+workspace_id: clinical_mdt
+selection:
+  domain_profile: clinical_mdt
+  presentation_types: [academic, clinical, research]
+  project_name_routing: prohibited
+  slide_number_routing: prohibited
+required_roles:
+  - cover
+  - section_divider
+  - problem_gap_objective
+  - method_framework
+  - primary_result
+  - secondary_result
+  - hero_result
+  - limitation
+  - conclusion
+  - appendix

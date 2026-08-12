@@ -1,0 +1,97 @@
+{
+  "schema_version": "2.0",
+  "evaluated_at": "2026-07-28",
+  "final_status": "PARTIAL_GO_REAL_WORLD_VALIDATION_PENDING",
+  "baseline_commit": "834163c324727f3a782c12c710b1c5c44d2a8427",
+  "baseline_tag": "academic-ppt-v1-ready",
+  "default_backend": "pptxgenjs",
+  "direct_upstream_code_reuse": false,
+  "promotion_gate": [
+    {
+      "id": "PG-01",
+      "status": "PASS_WITH_CONTENT_COMPLETENESS_LIMITATION",
+      "evidence": "No invented fact, causal upgrade, mechanism proof, or private reference content was observed; all arms omitted expected numeric claims."
+    },
+    {
+      "id": "PG-02",
+      "status": "PASS_FOR_PROMOTED_INFRASTRUCTURE_ONLY",
+      "evidence": "No unmapped formal claim was emitted because claim_source_map.csv contained zero rows; content extraction is not promoted as validated."
+    },
+    {
+      "id": "PG-03",
+      "status": "PASS",
+      "evidence": "All 18 fixture files matched fixture_manifest.json after benchmark execution."
+    },
+    {
+      "id": "PG-04",
+      "status": "PASS",
+      "evidence": "PowerPoint COM opened and exported all nine selected arm/case PPTX files."
+    },
+    {
+      "id": "PG-05",
+      "status": "PASS",
+      "evidence": "PPTX, PDF, and PNG counts were 5/5/5 for every selected arm/case run."
+    },
+    {
+      "id": "PG-06",
+      "status": "PASS",
+      "evidence": "No benchmark or promoted module performed network access."
+    },
+    {
+      "id": "PG-07",
+      "status": "PASS",
+      "evidence": "No third-party API relay, key, bridge, or local service was used."
+    },
+    {
+      "id": "PG-08",
+      "status": "PASS_CLEAN_ROOM_NO_COPY",
+      "evidence": "No upstream code was copied or executed; attribution and fixed-commit audit records are retained."
+    },
+    {
+      "id": "PG-09",
+      "status": "PASS",
+      "evidence": "Existing project locks remain authoritative; optional formula/diagram engines are capability-gated and unavailable engines fail closed."
+    },
+    {
+      "id": "PG-10",
+      "status": "PASS",
+      "evidence": "Frozen v1 tag/worktree and PptxGenJS default remain available; no default-backend change was made."
+    },
+    {
+      "id": "PG-11",
+      "status": "PASS_FUNCTIONAL_AND_GEOMETRY_GAIN",
+      "evidence": "Arm C supported stable-ID incremental replacement and style-only privacy; Case 1/2 geometry issues fell from two per Arm A deck to zero in selected Arm C reruns."
+    },
+    {
+      "id": "PG-12",
+      "status": "PASS_FOR_LIMITED_PROMOTION",
+      "evidence": "Promoted modules are repository-owned and tested; high-cost formula, Mermaid, DrawingML, and generalized visual backends remain non-production."
+    }
+  ],
+  "promoted_capabilities": [
+    "four-route controller",
+    "Deck IR and stable semantic slide_id",
+    "single-slide incremental replacement with backup and diff",
+    "style-only reference PPTX/POTX parsing",
+    "read-only OOXML structural QA",
+    "PowerPoint text-geometry QA",
+    "seven narrative-mode contracts"
+  ],
+  "controlled_non_default_capabilities": [
+    "native template fill",
+    "scientific visual templates using PowerPoint shapes or SVG"
+  ],
+  "not_promoted": [
+    "automatic complex DOCX/CSV claim extraction",
+    "OMML production injection",
+    "LaTeX rendering",
+    "Mermaid rendering",
+    "general SVG-to-DrawingML compiler",
+    "any upstream Skill as canonical authority"
+  ],
+  "rollback": {
+    "status": "PASS",
+    "method": "Use tag academic-ppt-v1-ready or route generate with the default PptxGenJS backend.",
+    "automatic_merge_or_push": false
+  }
+}

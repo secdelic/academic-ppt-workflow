@@ -1,0 +1,38 @@
+{
+  "schema_version": "2.1",
+  "default_mode": "short-label",
+  "audit_presentation_mode": "detailed",
+  "level_1": {
+    "maximum_characters": 72,
+    "maximum_source_labels": 2,
+    "font_size_pt": 10,
+    "show_source_id": false,
+    "show_path": false,
+    "show_sha256": false
+  },
+  "level_2_notes": {
+    "show_source_id": true,
+    "show_path": true,
+    "show_claim_id": true,
+    "show_source_location": true,
+    "show_wording_boundary": true
+  },
+  "level_3_audit": {
+    "show_source_id": true,
+    "show_path": true,
+    "show_sha256": true,
+    "show_canonical_decision": true
+  },
+  "short_label_rules": [
+    {"path_pattern": "(?i)model|estimate|effect", "label": "冻结模型结果"},
+    {"path_pattern": "(?i)cohort|summary|event", "label": "队列汇总表"},
+    {"path_pattern": "(?i)sensitivity", "label": "敏感性分析结果"},
+    {"path_pattern": "(?i)subgroup", "label": "亚组分析结果"},
+    {"path_pattern": "(?i)missing", "label": "缺失数据表"},
+    {"path_pattern": "(?i)supplement|method", "label": "补充方法"},
+    {"path_pattern": "(?i)figure|image|\\.png$|\\.svg$", "label": "输入图形"},
+    {"path_pattern": "(?i)reference|\\.ris$", "label": "输入参考文献"},
+    {"path_pattern": "(?i)document|\\.docx$|\\.pdf$", "label": "研究文档"}
+  ],
+  "fallback_label": "输入材料"
+}

@@ -1,0 +1,43 @@
+schema_version: privacy-allowlist/1
+allowed_roots:
+  - scripts
+  - config
+  - docs
+  - tests
+  - regression
+  - visual_workspaces
+  - visual_templates
+  - design_system
+  - extensions
+  - governance
+  - prompts
+  - skills
+  - templates
+  - .github
+allowed_root_files:
+  - run_ppt_workflow.py
+  - pyproject.toml
+  - package.json
+  - package-lock.json
+  - requirements-lock.txt
+  - README.md
+  - README_中文使用说明.md
+  - README_使用说明.md
+  - README_FIRST_INSTALL.md
+  - CHANGELOG.md
+  - AGENTS.md
+  - privacy_allowlist.yaml
+  - release_exclusion_rules.yaml
+  - .gitignore
+  - .gitattributes
+allowed_binary_classes:
+  - sanitized_synthetic_preview
+  - authorized_sanitized_template
+prohibited_content:
+  - direct_patient_identifier
+  - real_clinical_ppt
+  - real_clinical_output
+  - private_cache
+  - runtime_log
+  - api_key_or_token
+  - powerpoint_temporary_file

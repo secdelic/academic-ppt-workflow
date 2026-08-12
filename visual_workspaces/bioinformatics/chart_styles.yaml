@@ -1,0 +1,8 @@
+native_chart:
+  font: Aptos
+  axis_color: 627D98
+  series: [2A9D8F, D95F59, 9FB3C8]
+editable_shapes:
+  reference_line: 9FB3C8
+  uncertainty_fill: FFF4E5
+  direct_label: true

@@ -1,0 +1,12 @@
+workspace_id: clinical_research_protocol
+visual_tone: rigorous, calm, decision-oriented
+signature_motif: "planned pathway + phase bands"
+palette:
+  primary: 1D3B46
+  accent: 3A8D8A
+  comparison: 6C8EBF
+  canvas: F5F9FA
+typography:
+  zh: Microsoft YaHei
+  latin: Aptos
+prohibited_styles: [glow, decorative_gradient, unrelated_photo, entertainment_illustration]
