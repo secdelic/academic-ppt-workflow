@@ -36,6 +36,13 @@ class VisualWorkspaceTests(unittest.TestCase):
             self.assertEqual(row["total_score"],"")
 
 class PortabilityTests(unittest.TestCase):
+    def test_ci_secret_scan_treats_git_grep_no_match_as_success(self):
+        workflow = (ROOT / ".github/workflows/synthetic-ci.yml").read_text(encoding="utf-8")
+        self.assertIn("$grepExit = $LASTEXITCODE", workflow)
+        self.assertIn("if ($grepExit -eq 1)", workflow)
+        self.assertIn("if ($grepExit -ne 0)", workflow)
+        self.assertIn("if ($matches) { $matches; exit 2 }", workflow)
+
     def test_release_version_contract_is_consistent(self):
         expected = VERSION.removeprefix("v")
         package = json.loads((ROOT / "package.json").read_text(encoding="utf-8"))

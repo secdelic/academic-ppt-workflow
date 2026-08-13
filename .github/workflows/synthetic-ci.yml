@@ -30,7 +30,11 @@ jobs:
         shell: pwsh
         run: |
           $matches = git grep -n -I -E 'sk-[A-Za-z0-9_-]{16,}|api[_-]?key[[:space:]]*[:=][[:space:]]*["''][^"'']+' -- . ':!tests' 2>$null
+          $grepExit = $LASTEXITCODE
+          if ($grepExit -eq 1) { Write-Host 'Secret scan PASS: no matches'; exit 0 }
+          if ($grepExit -ne 0) { Write-Error "git grep failed with exit code $grepExit"; exit $grepExit }
           if ($matches) { $matches; exit 2 }
+          exit 0
       - name: Synthetic workspace smoke
         shell: pwsh
         run: |
