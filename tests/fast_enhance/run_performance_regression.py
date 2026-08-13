@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import shutil
 import sys
 import time
@@ -155,7 +156,7 @@ def run(root: Path) -> Path:
             },
         },
     )
-    cache_root = REPO_ROOT / ".cache" / "project_state"
+    cache_root = Path(os.environ.get("PPT_CACHE_HOME", root / "cache")) / "project_state"
     cache = ProjectCache.from_identity(
         REPO_ROOT,
         project_identity,

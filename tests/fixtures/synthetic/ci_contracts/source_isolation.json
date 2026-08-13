@@ -1,0 +1,30 @@
+{
+  "fixture_provenance": "SYNTHETIC",
+  "contract": "cross_project_source_isolation",
+  "projects": [
+    {
+      "project_id": "SYNTHETIC-A",
+      "sources": [
+        {"fixture_provenance": "SYNTHETIC", "source_id": "SRC-SYN-A-001"}
+      ]
+    },
+    {
+      "project_id": "SYNTHETIC-B",
+      "sources": [
+        {"fixture_provenance": "SYNTHETIC", "source_id": "SRC-SYN-B-001"}
+      ]
+    },
+    {
+      "project_id": "SYNTHETIC-C",
+      "sources": [
+        {"fixture_provenance": "SYNTHETIC", "source_id": "SRC-SYN-C-001"}
+      ]
+    },
+    {
+      "project_id": "SYNTHETIC-D",
+      "sources": [
+        {"fixture_provenance": "SYNTHETIC", "source_id": "SRC-SYN-D-001"}
+      ]
+    }
+  ]
+}

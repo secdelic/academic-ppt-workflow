@@ -6,7 +6,10 @@
 - Art-direction result: **44/44 PASS; 0 skip, 0 failure, 0 error**
 - Full workflow regression result: **177/177 PASS; 0 failure, 0 error**
 - Full-suite runtime: **13.735 s**
-- Evidence: `audit/v2_5/runs/20260811_200637_v25_final/regression_test_raw.log`
+- Historical receipt identifier: `<LOCAL_AUDIT_ROOT>/v2_5/art-direction-regression.log`
+
+The historical receipt is documentation only and is not a runtime dependency
+of this test suite.
 
 The connected tests exercise the production `ArtDirectionSpec`,
 `DeckRhythmPlan`, layout variants, hero geometry, annotation limits, hybrid

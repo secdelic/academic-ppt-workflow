@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import copy
 import json
+import os
 import shutil
 import sys
 import time
@@ -166,7 +167,7 @@ def run(root: Path, *, clinical: bool = False, retry_slide: str = "") -> dict:
             "pptx_state": {"sha256": sha256_file(fixture.baseline_pptx), "slide_count": 21},
         },
     )
-    cache_root = REPO_ROOT / ".cache/project_state"
+    cache_root = Path(os.environ.get("PPT_CACHE_HOME", root / "cache")) / "project_state"
     cache = ProjectCache.from_identity(REPO_ROOT, project_name, cache_root=cache_root, clinical_privacy_mode=True)
     cache.commit_generation(cache_state)
     args = SimpleNamespace(

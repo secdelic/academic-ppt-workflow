@@ -1,0 +1,22 @@
+{
+  "fixture_provenance": "SYNTHETIC",
+  "contract": "libreoffice_render_index_gate",
+  "rows": [
+    {"fixture_provenance": "SYNTHETIC", "deck_id": "SYN-DECK-01", "exit_code": 0, "pdf_page_count": 4},
+    {"fixture_provenance": "SYNTHETIC", "deck_id": "SYN-DECK-02", "exit_code": 0, "pdf_page_count": 5},
+    {"fixture_provenance": "SYNTHETIC", "deck_id": "SYN-DECK-03", "exit_code": 0, "pdf_page_count": 6},
+    {"fixture_provenance": "SYNTHETIC", "deck_id": "SYN-DECK-04", "exit_code": 0, "pdf_page_count": 7},
+    {"fixture_provenance": "SYNTHETIC", "deck_id": "SYN-DECK-05", "exit_code": 0, "pdf_page_count": 8},
+    {"fixture_provenance": "SYNTHETIC", "deck_id": "SYN-DECK-06", "exit_code": 0, "pdf_page_count": 9},
+    {"fixture_provenance": "SYNTHETIC", "deck_id": "SYN-DECK-07", "exit_code": 0, "pdf_page_count": 10},
+    {"fixture_provenance": "SYNTHETIC", "deck_id": "SYN-DECK-08", "exit_code": 0, "pdf_page_count": 11},
+    {"fixture_provenance": "SYNTHETIC", "deck_id": "SYN-DECK-09", "exit_code": 0, "pdf_page_count": 12},
+    {"fixture_provenance": "SYNTHETIC", "deck_id": "SYN-DECK-10", "exit_code": 0, "pdf_page_count": 13},
+    {"fixture_provenance": "SYNTHETIC", "deck_id": "SYN-DECK-11", "exit_code": 0, "pdf_page_count": 14},
+    {"fixture_provenance": "SYNTHETIC", "deck_id": "SYN-DECK-12", "exit_code": 0, "pdf_page_count": 15},
+    {"fixture_provenance": "SYNTHETIC", "deck_id": "SYN-DECK-13", "exit_code": 0, "pdf_page_count": 16},
+    {"fixture_provenance": "SYNTHETIC", "deck_id": "SYN-DECK-14", "exit_code": 0, "pdf_page_count": 17},
+    {"fixture_provenance": "SYNTHETIC", "deck_id": "SYN-DECK-15", "exit_code": 0, "pdf_page_count": 18},
+    {"fixture_provenance": "SYNTHETIC", "deck_id": "SYN-DECK-16", "exit_code": 0, "pdf_page_count": 19}
+  ]
+}

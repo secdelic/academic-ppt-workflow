@@ -289,7 +289,8 @@ class ClinicalCacheGateTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as raw:
             repo = Path(raw)
             (repo / ".gitignore").write_text(
-                ".cache/\n!.cache/project_state/\n", encoding="utf-8"
+                ".cache/\n!.cache/project_state/\n",  # self-containment: documentation-only
+                encoding="utf-8",
             )
             with self.assertRaisesRegex(FastEnhanceError, "conflicting"):
                 _assert_clinical_cache_is_ignored(repo, None)

@@ -28,6 +28,11 @@ from academic_ppt.project_interface import (  # noqa: E402
     validate_public_output_tree,
 )
 from run_ppt_workflow import build_parser, normalise_public_request  # noqa: E402
+from tests.support.path_contract import (  # noqa: E402
+    canonical_test_path,
+    path_is_within,
+    paths_equal,
+)
 
 
 def approved_visual_brief(route: str) -> dict:
@@ -254,13 +259,14 @@ class OutputContractTests(unittest.TestCase):
                 )
             )
             configured, run = configure_project_args(args)
-            self.assertEqual(Path(configured.input_root), (root / "input").resolve())
-            self.assertTrue(Path(configured.output_root).is_relative_to(root / "private"))
-            self.assertTrue(Path(configured.staging_root).is_relative_to(root / "private"))
-            self.assertEqual(run.run_root, (root / "output/RUN1").resolve())
+            self.assertTrue(paths_equal(configured.input_root, root / "input"))
+            self.assertTrue(path_is_within(configured.output_root, root / "private"))
+            self.assertTrue(path_is_within(configured.staging_root, root / "private"))
+            self.assertTrue(paths_equal(run.run_root, root / "output/RUN1"))  # self-containment: generated-temp
             public_contract = run.public_contract()
             self.assertFalse(public_contract["internal_workflow_objects_exposed"])
             self.assertNotIn("hash", json.dumps(public_contract).casefold())
+
 
     def test_enhance_project_without_visual_brief_inherits_existing_style(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
@@ -338,6 +344,32 @@ class OutputContractTests(unittest.TestCase):
             self.assertIn("master_roles", resolution["template_protected_fields"])
             self.assertIn("theme_colors", resolution["template_protected_fields"])
             self.assertIsNone(getattr(configured, "style_profile", None))
+
+
+class PortablePathContractTests(unittest.TestCase):
+    def test_paths_equal_after_canonical_normalization(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            left = root / "private" / "engine"
+            right = root / "private" / "nested" / ".." / "engine"
+            self.assertEqual(canonical_test_path(left), canonical_test_path(right))
+            self.assertTrue(paths_equal(left, right))
+
+    def test_paths_differ_when_logically_distinct(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            self.assertFalse(
+                paths_equal(root / "private" / "engine-a", root / "private" / "engine-b")
+            )
+
+    def test_no_private_absolute_path_required(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            workspace = Path(temporary) / "workspace"
+            with patch.dict(os.environ, {"PPT_WORKSPACE_HOME": str(workspace)}, clear=False):
+                resolved = resolve_project_reference("portable-study")
+            expected = workspace / "projects" / "portable-study"
+            self.assertTrue(paths_equal(resolved.root, expected))
+            self.assertFalse(path_is_within(resolved.root, ROOT))
 
 
 class ApprovedAssetsTests(unittest.TestCase):

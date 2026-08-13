@@ -4,7 +4,6 @@ import csv
 import json
 import re
 import sys
-import tempfile
 import unittest
 from pathlib import Path
 from typing import Any
@@ -25,6 +24,7 @@ from model import (  # noqa: E402
 )
 from run_v2_4 import coverage_contracts, derived_artifacts, make_slide, make_visual  # noqa: E402
 from finalize_v2_4 import canonical_source_matches  # noqa: E402
+from tests.support.runtime_workspace import temporary_runtime_workspace  # noqa: E402
 
 
 def dataset(role: str, columns: list[str], rows: list[dict[str, Any]] | None = None) -> dict[str, Any]:
@@ -234,8 +234,8 @@ class PresentationDesignContracts(unittest.TestCase):
             "验证任意字段交集不构成完整来源绑定", "chart_led", [visual], [claim],
             claim_ids=[claim["claim_id"]],
         )
-        with tempfile.TemporaryDirectory(dir=REPO / "staging") as tmp:
-            out = Path(tmp)
+        with temporary_runtime_workspace() as workspace:
+            out = workspace.staging
             derived_artifacts(out, [slide], [claim], [], [], [])
             with (out / "claim_source_map.csv").open("r", encoding="utf-8-sig", newline="") as handle:
                 claim_rows = list(csv.DictReader(handle))
@@ -367,8 +367,8 @@ class PresentationDesignContracts(unittest.TestCase):
             "验证派生映射不会把同页全部visual_id复制给每个来源", "chart_led",
             [first_visual, second_visual], [claim], claim_ids=[claim["claim_id"]],
         )
-        with tempfile.TemporaryDirectory(dir=REPO / "staging") as tmp:
-            out = Path(tmp)
+        with temporary_runtime_workspace() as workspace:
+            out = workspace.staging
             derived_artifacts(out, [slide], [claim], [], [], [])
             with (out / "source_binding_map.csv").open("r", encoding="utf-8-sig", newline="") as handle:
                 source_rows = list(csv.DictReader(handle))

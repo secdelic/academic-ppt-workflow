@@ -37,7 +37,7 @@ def _write_repo_contract(root: Path) -> tuple[Path, Path]:
         "schema_version": "1.0",
         "paths": {
             "input_root": "input",
-            "staging_root": "staging",
+            "staging_root": "staging",  # self-containment: generated-temp
             "output_root": "output",
             "audit_root": "audit",
             "archive_root": "archive",

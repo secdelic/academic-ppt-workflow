@@ -66,14 +66,20 @@ class PortabilityTests(unittest.TestCase):
         self.assertEqual(result.returncode,0,result.stderr)
 
     def test_production_scope_has_no_fixed_repository_drive(self):
-        paths=[ROOT/"run_ppt_workflow.py",ROOT/"scripts",ROOT/"config"]
+        tracked = subprocess.run(
+            ["git", "ls-files", "run_ppt_workflow.py", "scripts", "config"],
+            cwd=ROOT,
+            text=True,
+            capture_output=True,
+            check=True,
+        ).stdout.splitlines()
         bad=[]
-        for base in paths:
-            candidates=[base] if base.is_file() else base.rglob("*")
-            for path in candidates:
-                if path.is_file() and path.suffix.lower() in {".py",".ps1",".mjs",".json",".yaml",".yml"}:
-                    text=path.read_text(encoding="utf-8",errors="replace").lower()
-                    if ("".join(("e:", "/ppt")) in text or "".join(("e:", "\\ppt")) in text): bad.append(str(path.relative_to(ROOT)))
+        for relative in tracked:
+            path = ROOT / relative
+            if path.suffix.lower() in {".py",".ps1",".mjs",".json",".yaml",".yml"}:
+                text=path.read_text(encoding="utf-8",errors="replace").lower()
+                if ("".join(("e:", "/ppt")) in text or "".join(("e:", "\\ppt")) in text):
+                    bad.append(relative)
         self.assertEqual(bad,[])
 
     def test_release_builder_excludes_private_roots(self):
@@ -83,7 +89,7 @@ class PortabilityTests(unittest.TestCase):
             bundle=out/"academic-ppt-workflow-v2.7.0-rc1.zip"
             with zipfile.ZipFile(bundle) as zf:
                 names=[n.split("/",1)[1] for n in zf.namelist() if "/" in n]
-            self.assertFalse(any(n.startswith(("input/","output/","staging/","audit/","benchmark/","private/","release/",".cache/")) for n in names))
+            self.assertFalse(any(n.startswith(("input/","output/","staging/","audit/","benchmark/","private/","release/",".cache/")) for n in names))  # self-containment: documentation-only
             self.assertFalse(any(n.startswith("docs/") and n.endswith(".docx") for n in names))
             self.assertTrue(any(n.startswith("extensions/") for n in names))
             self.assertTrue(any(n.startswith("prompts/") for n in names))

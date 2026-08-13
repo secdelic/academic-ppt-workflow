@@ -1,0 +1,22 @@
+{
+  "fixture_provenance": "SYNTHETIC",
+  "contract": "powerpoint_render_index_gate",
+  "rows": [
+    {"fixture_provenance": "SYNTHETIC", "deck_id": "SYN-DECK-01", "powerpoint_open": true, "pptx_slide_count": 4, "png_count": 4},
+    {"fixture_provenance": "SYNTHETIC", "deck_id": "SYN-DECK-02", "powerpoint_open": true, "pptx_slide_count": 5, "png_count": 5},
+    {"fixture_provenance": "SYNTHETIC", "deck_id": "SYN-DECK-03", "powerpoint_open": true, "pptx_slide_count": 6, "png_count": 6},
+    {"fixture_provenance": "SYNTHETIC", "deck_id": "SYN-DECK-04", "powerpoint_open": true, "pptx_slide_count": 7, "png_count": 7},
+    {"fixture_provenance": "SYNTHETIC", "deck_id": "SYN-DECK-05", "powerpoint_open": true, "pptx_slide_count": 8, "png_count": 8},
+    {"fixture_provenance": "SYNTHETIC", "deck_id": "SYN-DECK-06", "powerpoint_open": true, "pptx_slide_count": 9, "png_count": 9},
+    {"fixture_provenance": "SYNTHETIC", "deck_id": "SYN-DECK-07", "powerpoint_open": true, "pptx_slide_count": 10, "png_count": 10},
+    {"fixture_provenance": "SYNTHETIC", "deck_id": "SYN-DECK-08", "powerpoint_open": true, "pptx_slide_count": 11, "png_count": 11},
+    {"fixture_provenance": "SYNTHETIC", "deck_id": "SYN-DECK-09", "powerpoint_open": true, "pptx_slide_count": 12, "png_count": 12},
+    {"fixture_provenance": "SYNTHETIC", "deck_id": "SYN-DECK-10", "powerpoint_open": true, "pptx_slide_count": 13, "png_count": 13},
+    {"fixture_provenance": "SYNTHETIC", "deck_id": "SYN-DECK-11", "powerpoint_open": true, "pptx_slide_count": 14, "png_count": 14},
+    {"fixture_provenance": "SYNTHETIC", "deck_id": "SYN-DECK-12", "powerpoint_open": true, "pptx_slide_count": 15, "png_count": 15},
+    {"fixture_provenance": "SYNTHETIC", "deck_id": "SYN-DECK-13", "powerpoint_open": true, "pptx_slide_count": 16, "png_count": 16},
+    {"fixture_provenance": "SYNTHETIC", "deck_id": "SYN-DECK-14", "powerpoint_open": true, "pptx_slide_count": 17, "png_count": 17},
+    {"fixture_provenance": "SYNTHETIC", "deck_id": "SYN-DECK-15", "powerpoint_open": true, "pptx_slide_count": 18, "png_count": 18},
+    {"fixture_provenance": "SYNTHETIC", "deck_id": "SYN-DECK-16", "powerpoint_open": true, "pptx_slide_count": 19, "png_count": 19}
+  ]
+}

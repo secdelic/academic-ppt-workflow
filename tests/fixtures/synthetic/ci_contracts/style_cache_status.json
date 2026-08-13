@@ -1,0 +1,10 @@
+{
+  "fixture_provenance": "SYNTHETIC",
+  "contract": "no_cross_project_style_cache_reuse",
+  "projects": [
+    {"fixture_provenance": "SYNTHETIC", "project_id": "SYNTHETIC-A", "status": "NO_REFERENCE_STYLE", "cache_used": false},
+    {"fixture_provenance": "SYNTHETIC", "project_id": "SYNTHETIC-B", "status": "NO_REFERENCE_STYLE", "cache_used": false},
+    {"fixture_provenance": "SYNTHETIC", "project_id": "SYNTHETIC-C", "status": "NO_REFERENCE_STYLE", "cache_used": false},
+    {"fixture_provenance": "SYNTHETIC", "project_id": "SYNTHETIC-D", "status": "NO_REFERENCE_STYLE", "cache_used": false}
+  ]
+}
