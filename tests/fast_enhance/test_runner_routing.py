@@ -23,12 +23,13 @@ from academic_ppt.fast_enhance import (  # noqa: E402
     _write_checkpoint,
     _write_runtime_outputs,
     _blocking_geometry_messages,
+    execute_fast_production,
     retry_stage_execution_policy,
     validate_fast_runtime_controls,
     validate_fast_cache_baseline,
 )
 from academic_ppt.runtime_profile import RuntimeProfiler  # noqa: E402
-from academic_ppt.utils import sha256_file  # noqa: E402
+from academic_ppt.utils import resolve_path, sha256_file  # noqa: E402
 from academic_ppt.routing import (  # noqa: E402
     RouteRequest,
     RouteValidationError,
@@ -39,6 +40,9 @@ from run_ppt_workflow import build_parser, normalise_public_request  # noqa: E40
 
 
 class RuntimeModeRoutingTests(unittest.TestCase):
+    def test_fast_production_has_portable_path_resolver_bound(self) -> None:
+        self.assertIs(execute_fast_production.__globals__.get("resolve_path"), resolve_path)
+
     def test_enhance_existing_defaults_to_fast(self) -> None:
         args = SimpleNamespace(route="enhance-existing", workflow_mode=None)
         expected = Path("synthetic-fast")

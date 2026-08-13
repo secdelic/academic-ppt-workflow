@@ -42,6 +42,7 @@ from .utils import (
     load_local_runtime_config,
     output_timestamp,
     read_csv,
+    resolve_path,
     resolve_runtime_path,
     resolve_workflow_home,
     safe_slug,
