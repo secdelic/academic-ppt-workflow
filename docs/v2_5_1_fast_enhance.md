@@ -15,6 +15,13 @@ SourceRegistry
   -> Renderer
 ```
 
+既有Deck在正式`enhance`路线中默认登记为`PRESENTATION_BASELINE`。它保留
+manifest、hash、privacy、KEEP页和版式继承谱系，但不作为科学claim覆盖率
+分母。changed slide的新科学内容必须绑定`SCIENTIFIC_SOURCE`；继承且未重新
+核验的原Deck文字只能使用`INHERITED_PRESENTATION_CONTENT`并进入人工复核。
+`STYLE_REFERENCE`、`FORMAL_TEMPLATE`和`APPROVED_VISUAL_ASSET`不能满足科学
+claim binding。只有显式`content-reference`模式可将既有Deck作为科学来源。
+
 缓存只是上述对象的经验证快照，不是第二套科学权威。无法证明影响范围时，
 必须升级到 `full_validation`。临床模式仍要求人工科学批准，自动 QA 不得替代
 临床判断。

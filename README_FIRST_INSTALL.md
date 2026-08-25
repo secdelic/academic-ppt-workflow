@@ -1,4 +1,4 @@
-# Academic PPT Workflow v2.7.0-rc2 — First Install
+# Academic PPT Workflow v2.7.0-rc3 — First Install
 
 This is a private, local-first release candidate. The repository remains the only canonical authority. Native PptxGenJS is the default and only production generation backend; no external PPT Skill is installed or invoked.
 

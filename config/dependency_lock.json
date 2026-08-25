@@ -1,5 +1,5 @@
 {
-  "schema_version": "2.7.0-rc2",
+  "schema_version": "2.7.0-rc3",
   "lock_purpose": "Auditable exact runtime contract; no automatic global installation",
   "node": {
     "runtime_version": "24.14.0",
@@ -7,7 +7,7 @@
       "name": "pptxgenjs",
       "version": "4.0.1",
       "license": "MIT",
-      "package_json_sha256": "44504140864242DECEFA964A7EF09BD40CBAA263384ABE31B8D7B1D598CA5F68"
+      "package_json_sha256": "1589133F304A93C5826670C81F7AF7ABE6909ABB19A3D5338A5CC89E3B206FD0"
     }
   },
   "python": {

@@ -720,6 +720,7 @@ def execute_full_validation(args: Any) -> Path:
                 supported,
                 manifest_path,
                 reference_mode=reference_mode,
+                route=route_name,
             )
             if not manifest:
                 raise WorkflowError(f"No supported input files found under {input_root}")

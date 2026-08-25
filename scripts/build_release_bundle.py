@@ -9,7 +9,7 @@ import zipfile
 from datetime import datetime, timezone
 from pathlib import Path
 
-VERSION = "v2.7.0-rc2"
+VERSION = "v2.7.0-rc3"
 INCLUDE = [
     "run_ppt_workflow.py", "pyproject.toml", "package.json", "package-lock.json", "requirements-lock.txt",
     "README.md", "README_使用说明.md", "README_中文使用说明.md",

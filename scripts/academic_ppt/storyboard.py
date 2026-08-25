@@ -10,6 +10,7 @@ from .layout_contract import (
     plan_slide_geometry,
     validate_planned_geometry,
 )
+from .inventory import is_scientific_source
 from .scientific_visuals import TEMPLATE_IDS, build_visual_spec
 from .source_display import short_source_label
 from .utils import load_yaml_compatible, write_csv, write_json
@@ -264,7 +265,7 @@ def create_storyboard(
     scientific_manifest = [
         row
         for row in manifest
-        if row.get("source_role", "scientific_source") != "style_reference"
+        if is_scientific_source(row)
     ]
     all_source_ids = [row["source_id"] for row in scientific_manifest]
     planned_slides: list[dict[str, Any]] = [

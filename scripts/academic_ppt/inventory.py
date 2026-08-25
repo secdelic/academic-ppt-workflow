@@ -3,6 +3,7 @@ from __future__ import annotations
 import re
 from datetime import datetime
 from pathlib import Path
+from typing import Any, Mapping
 
 from .utils import sha256_file, stable_source_id, utc_offset_timestamp, write_csv
 
@@ -28,12 +29,119 @@ SENSITIVE_PATTERN = re.compile(
     re.IGNORECASE,
 )
 
+SCIENTIFIC_SOURCE = "scientific_source"
+PRESENTATION_BASELINE = "presentation_baseline"
+STYLE_REFERENCE = "style_reference"
+FORMAL_TEMPLATE = "formal_template"
+APPROVED_VISUAL_ASSET = "approved_visual_asset"
+NON_SCIENTIFIC_SOURCE_ROLES = frozenset(
+    {
+        PRESENTATION_BASELINE,
+        STYLE_REFERENCE,
+        FORMAL_TEMPLATE,
+        APPROVED_VISUAL_ASSET,
+    }
+)
+
+
+def classify_source_role(
+    relative_path: str,
+    *,
+    route: str = "generate",
+    reference_mode: str = "style-only",
+) -> str:
+    """Classify one registered input without changing its scientific meaning.
+
+    ``content-reference`` is the existing explicit authority that permits an
+    existing deck to participate in scientific evidence.  All other enhance
+    baselines remain presentation lineage only.
+    """
+
+    relative = str(relative_path).strip().replace("\\", "/").lstrip("/")
+    first = relative.partition("/")[0].casefold()
+    normalized_route = str(route).strip().casefold().replace("_", "-")
+    normalized_mode = str(reference_mode).strip().casefold()
+    if first == "style_reference":
+        return STYLE_REFERENCE
+    if first == "template":
+        return FORMAL_TEMPLATE
+    if first == "approved_assets":
+        return APPROVED_VISUAL_ASSET
+    if first == "existing" and normalized_route in {"enhance", "enhance-existing"}:
+        if normalized_mode == "content-reference":
+            return SCIENTIFIC_SOURCE
+        return PRESENTATION_BASELINE
+    return SCIENTIFIC_SOURCE
+
+
+def source_role(value: object) -> str:
+    """Return a role with legacy registry rows treated as scientific."""
+
+    if isinstance(value, Mapping):
+        return str(value.get("source_role", SCIENTIFIC_SOURCE)).strip() or SCIENTIFIC_SOURCE
+    return str(value or SCIENTIFIC_SOURCE).strip()
+
+
+def is_scientific_source(value: object) -> bool:
+    return source_role(value) == SCIENTIFIC_SOURCE
+
+
+def scientific_delta_manifest(
+    delta: Mapping[str, Any],
+    *,
+    route: str,
+    reference_mode: str = "style-only",
+) -> dict[str, Any]:
+    """Project a full source delta onto the scientific lineage denominator."""
+
+    entries = delta.get("entries", [])
+    if not isinstance(entries, list):
+        raise ValueError("Delta manifest entries must be a list")
+    selected = [
+        dict(row)
+        for row in entries
+        if isinstance(row, Mapping)
+        and classify_source_role(
+            str(row.get("source_key", "")),
+            route=route,
+            reference_mode=reference_mode,
+        )
+        == SCIENTIFIC_SOURCE
+    ]
+    statuses = ("MODIFIED", "NEW", "REMOVED", "UNCHANGED")
+    return {
+        "schema_version": "academic-ppt-scientific-delta-manifest/1",
+        "hash_algorithm": str(delta.get("hash_algorithm", "sha256")),
+        "lineage_scope": "SCIENTIFIC_SOURCE_ONLY",
+        "entries": selected,
+        "counts": {
+            status: sum(str(row.get("status", "")).upper() == status for row in selected)
+            for status in statuses
+        },
+        "parse_source_keys": [
+            str(row.get("source_key", ""))
+            for row in selected
+            if str(row.get("status", "")).upper() in {"NEW", "MODIFIED"}
+        ],
+        "unchanged_source_keys": [
+            str(row.get("source_key", ""))
+            for row in selected
+            if str(row.get("status", "")).upper() == "UNCHANGED"
+        ],
+        "removed_source_keys": [
+            str(row.get("source_key", ""))
+            for row in selected
+            if str(row.get("status", "")).upper() == "REMOVED"
+        ],
+    }
+
 
 def inventory_sources(
     input_root: Path,
     supported: set[str],
     manifest_path: Path,
     reference_mode: str = "style-only",
+    route: str = "generate",
 ) -> list[dict[str, str]]:
     rows: list[dict[str, str]] = []
     if not input_root.exists():
@@ -50,10 +158,10 @@ def inventory_sources(
         digest = sha256_file(path)
         sample = path.read_bytes()[:2_000_000].decode("utf-8", errors="ignore")
         relative_path = path.relative_to(input_root).as_posix()
-        source_role = (
-            "style_reference"
-            if relative_path.lower().startswith("style_reference/")
-            else "scientific_source"
+        classified_role = classify_source_role(
+            relative_path,
+            route=route,
+            reference_mode=reference_mode,
         )
         rows.append(
             {
@@ -70,8 +178,12 @@ def inventory_sources(
                 "page_or_sheet_count": "",
                 "parse_warning": "",
                 "possible_sensitive_information": "yes" if SENSITIVE_PATTERN.search(sample) else "no",
-                "source_role": source_role,
-                "reference_mode": reference_mode if source_role == "style_reference" else "",
+                "source_role": classified_role,
+                "reference_mode": (
+                    reference_mode
+                    if classified_role in {STYLE_REFERENCE, PRESENTATION_BASELINE}
+                    else ""
+                ),
             }
         )
     write_csv(manifest_path, MANIFEST_FIELDS, rows)

@@ -1,5 +1,5 @@
 {
-  "schema_version": "academic-ppt-runtime-manifest/2.7.0-rc2",
+  "schema_version": "academic-ppt-runtime-manifest/2.7.0-rc3",
   "validation_date": "2026-08-13",
   "os": {
     "family": "Windows 11",

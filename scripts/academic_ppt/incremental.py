@@ -739,6 +739,14 @@ def build_operation_plan(
                     f"source_index does not match source_slide_ids for {slide_id}"
                 )
             normalized["source_index"] = source_index
+            if action == "KEEP":
+                lineage = str(row.get("presentation_lineage", "")).strip()
+                if lineage:
+                    if lineage != "PRESERVED_FROM_EXISTING_DECK":
+                        raise IncrementalUpdateError(
+                            f"Unsupported KEEP presentation lineage: {lineage}"
+                        )
+                    normalized["presentation_lineage"] = lineage
         else:
             if slide_id in source_set:
                 raise IncrementalUpdateError(

@@ -4,6 +4,7 @@ import csv
 import re
 from pathlib import Path
 
+from .inventory import is_scientific_source
 from .utils import write_csv
 
 
@@ -107,7 +108,7 @@ def build_evidence(
         else:
             known_sources = {
                 row["source_id"]: row for row in manifest
-                if row.get("source_role", "scientific_source") != "style_reference"
+                if is_scientific_source(row)
             }
             with registry_path.open(
                 "r", encoding="utf-8-sig", newline=""
@@ -212,7 +213,7 @@ def build_evidence(
                 r
                 for r in manifest
                 if r["file_type"] in {"png", "jpg", "jpeg", "svg"}
-                and r.get("source_role", "scientific_source") != "style_reference"
+                and is_scientific_source(r)
             ],
             start=1,
         )
@@ -235,7 +236,7 @@ def build_evidence(
                 r
                 for r in manifest
                 if r["file_type"] in {"csv", "tsv", "xlsx"}
-                and r.get("source_role", "scientific_source") != "style_reference"
+                and is_scientific_source(r)
             ],
             start=1,
         )
@@ -255,7 +256,7 @@ def build_evidence(
         if row["parsed_successfully"] != "yes":
             unresolved.append(f"Source parsing failed: {row['relative_path']} - {row['parse_warning']}")
         elif row["parse_warning"] and not (
-            row.get("source_role") == "style_reference"
+            not is_scientific_source(row)
             and "content and notes intentionally excluded" in row["parse_warning"]
         ):
             unresolved.append(f"Source warning: {row['relative_path']} - {row['parse_warning']}")

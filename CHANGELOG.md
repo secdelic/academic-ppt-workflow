@@ -1,5 +1,17 @@
 # Changelog
 
+## v2.7.0-rc3
+
+- Separated enhance presentation lineage from scientific claim lineage.
+  Existing decks remain registered and fingerprinted as presentation baselines
+  but no longer enter the scientific claim-coverage denominator by default.
+- Added one canonical source-role classifier, explicit inherited-content
+  boundaries, and fail-closed changed-slide scientific bindings.
+- Added the synthetic `SECOND_DEVICE_EXISTING_DECK_LINEAGE` regression for
+  separate application/workspace roots. Scientific semantics, visual design,
+  rendering, cache schema, and external-Skill policy remain unchanged.
+- `v2.7.0-rc1` and `v2.7.0-rc2` remain immutable historical candidates.
+
 ## v2.7.0-rc2
 
 - Corrected the production project-cache authority for deployments where the

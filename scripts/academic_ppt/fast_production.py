@@ -13,6 +13,12 @@ from typing import Any, Iterable, Mapping
 from xml.etree import ElementTree as ET
 
 from .incremental import build_operation_plan, validate_operation_plan, write_operation_plan
+from .inventory import (
+    PRESENTATION_BASELINE,
+    SCIENTIFIC_SOURCE,
+    is_scientific_source,
+    source_role,
+)
 from .layout_contract import LayoutContract, plan_slide_geometry, validate_planned_geometry
 from .source_display import short_source_label
 from .utils import load_yaml_compatible
@@ -85,37 +91,69 @@ def _source_bindings(
     source_registry: Iterable[Mapping[str, Any]],
 ) -> list[dict[str, Any]]:
     by_id = {
-        str(row.get("source_id", "")).strip(): str(row.get("relative_path", "")).strip()
+        str(row.get("source_id", "")).strip(): dict(row)
         for row in source_registry
         if str(row.get("source_id", "")).strip()
         and str(row.get("relative_path", "")).strip()
     }
-    by_file = {value: key for key, value in by_id.items()}
+    by_file = {
+        str(value.get("relative_path", "")).strip(): key
+        for key, value in by_id.items()
+    }
     result: list[dict[str, Any]] = []
     for index, item in enumerate(_as_list(raw), start=1):
         if isinstance(item, Mapping):
             source_id = str(item.get("source_id", "")).strip()
             source_file = str(item.get("source_file", "")).strip().replace("\\", "/")
             fields = _clean_lines(item.get("fields_used") or ["reported_source_text"], label="fields_used")
+            declared_status = str(item.get("canonical_status", "")).strip().upper()
         else:
             token = str(item).strip().replace("\\", "/")
             source_id = token if token in by_id else by_file.get(token, "")
-            source_file = by_id.get(token, token if token in by_file else "")
+            source_file = (
+                str(by_id[token].get("relative_path", "")).strip()
+                if token in by_id
+                else token if token in by_file else ""
+            )
             fields = ["reported_source_text"]
+            declared_status = ""
         if not source_id and source_file:
             source_id = by_file.get(source_file, "")
         if not source_file and source_id:
-            source_file = by_id.get(source_id, "")
-        if not source_id or not source_file or by_id.get(source_id) != source_file:
+            source_file = str(by_id.get(source_id, {}).get("relative_path", "")).strip()
+        registry_row = by_id.get(source_id, {})
+        if (
+            not source_id
+            or not source_file
+            or str(registry_row.get("relative_path", "")).strip() != source_file
+        ):
             raise FastProductionError(
                 f"source binding {index} does not resolve in the current SourceRegistry"
+            )
+        role = source_role(registry_row)
+        if role == PRESENTATION_BASELINE:
+            if declared_status != "INHERITED_PRESENTATION_CONTENT":
+                raise FastProductionError(
+                    "Presentation baseline cannot satisfy a scientific source binding; "
+                    "declare INHERITED_PRESENTATION_CONTENT only for preserved deck content"
+                )
+            canonical_status = "INHERITED_PRESENTATION_CONTENT"
+            claim_ceiling = "PRESENTATION_ONLY_NOT_VERIFIED_SCIENTIFIC_EVIDENCE"
+        elif role == SCIENTIFIC_SOURCE:
+            canonical_status = "source_bound"
+            claim_ceiling = "SCIENTIFIC_SOURCE_BOUND"
+        else:
+            raise FastProductionError(
+                f"Source role {role} cannot satisfy changed-slide scientific lineage"
             )
         result.append(
             {
                 "source_id": source_id,
                 "source_file": source_file,
                 "fields_used": fields,
-                "canonical_status": "source_bound",
+                "source_role": role,
+                "canonical_status": canonical_status,
+                "claim_ceiling": claim_ceiling,
             }
         )
     if not result:
@@ -224,6 +262,20 @@ def build_changed_slide_plans(
         if not title or not key_message:
             raise FastProductionError(f"Changed slide {slide_id} requires title and key_message")
         bindings = _source_bindings(raw.get("source_bindings"), source_rows)
+        scientific_bindings = [binding for binding in bindings if is_scientific_source(binding)]
+        inherited_bindings = [
+            binding for binding in bindings
+            if binding.get("canonical_status") == "INHERITED_PRESENTATION_CONTENT"
+        ]
+        if claim_ids and not scientific_bindings:
+            raise FastProductionError(
+                f"Changed slide {slide_id} claim_ids require a scientific source binding"
+            )
+        presentation_lineage = (
+            "INHERITED_PRESENTATION_CONTENT"
+            if inherited_bindings and not scientific_bindings
+            else "CHANGED_SCIENTIFIC_CONTENT"
+        )
         uncertainty = _clean_lines(
             raw.get("uncertainty_bindings") or raw.get("uncertainties"),
             label="uncertainty_bindings",
@@ -245,6 +297,7 @@ def build_changed_slide_plans(
             "manual_review_required": bool(raw.get("manual_review_required", True)),
             "prohibited_wording": prohibited,
             "claim_ids": claim_ids,
+            "presentation_lineage": presentation_lineage,
         }
         content_hash = _canonical_hash(content_core)
         result.append(
@@ -255,8 +308,23 @@ def build_changed_slide_plans(
                 "content_hash": content_hash,
                 "source_binding_required": True,
                 "scientific_qa_status": "PASS",
-                "scientific_review": {"status": "PASS", "scope": "changed_slide"},
-                "review_flags": ["manual_review_required"] if content_core["manual_review_required"] else [],
+                "scientific_review": {
+                    "status": "PASS",
+                    "scope": (
+                        "presentation_lineage_not_reverified"
+                        if presentation_lineage == "INHERITED_PRESENTATION_CONTENT"
+                        else "changed_slide"
+                    ),
+                },
+                "source_reverification_required": (
+                    presentation_lineage == "INHERITED_PRESENTATION_CONTENT"
+                ),
+                "review_flags": list(
+                    dict.fromkeys(
+                        (["manual_review_required"] if content_core["manual_review_required"] else [])
+                        + (["SOURCE_REVERIFICATION_REQUIRED"] if presentation_lineage == "INHERITED_PRESENTATION_CONTENT" else [])
+                    )
+                ),
             }
         )
     if retry_slide and not result:
@@ -297,7 +365,13 @@ def write_changed_content_review(
                 "- Uncertainty:",
                 *([f"  - {item}" for item in plan.get("uncertainty_bindings", [])] or ["  - None declared"]),
                 "- Sources:",
-                *[f"  - {item['source_file']} ({item['source_id']})" for item in plan.get("source_bindings", [])],
+                *[
+                    f"  - {item['source_file']} ({item['source_id']}; "
+                    f"role={item.get('source_role', 'scientific_source')}; "
+                    f"status={item.get('canonical_status', 'source_bound')})"
+                    for item in plan.get("source_bindings", [])
+                ],
+                f"- Presentation lineage: `{plan.get('presentation_lineage', 'CHANGED_SCIENTIFIC_CONTENT')}`",
                 "- Prohibited wording:",
                 *([f"  - {item}" for item in plan.get("prohibited_wording", [])] or ["  - Any wording beyond registered evidence"]),
                 "",
@@ -551,7 +625,13 @@ def build_automatic_operation_plan(
     for slide_id in final_ids:
         changed = plan_by_id.get(slide_id)
         if changed is None:
-            operations.append({"action": "KEEP", "slide_id": slide_id})
+            operations.append(
+                {
+                    "action": "KEEP",
+                    "slide_id": slide_id,
+                    "presentation_lineage": "PRESERVED_FROM_EXISTING_DECK",
+                }
+            )
             continue
         row = {
             "action": changed["operation"],
@@ -577,6 +657,7 @@ def build_automatic_operation_plan(
             }
             for plan in plans
             for binding in plan.get("source_bindings", [])
+            if is_scientific_source(binding)
         ],
         manual_review_items=[
             {

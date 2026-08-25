@@ -48,4 +48,4 @@ jobs:
       - name: Validate local release builder
         run: python scripts/build_release_bundle.py --output-root "$env:RUNNER_TEMP\release"
       - name: Validate bundle
-        run: python scripts/validate_release_bundle.py "$env:RUNNER_TEMP\release\academic-ppt-workflow-v2.7.0-rc2.zip"
+        run: python scripts/validate_release_bundle.py "$env:RUNNER_TEMP\release\academic-ppt-workflow-v2.7.0-rc3.zip"

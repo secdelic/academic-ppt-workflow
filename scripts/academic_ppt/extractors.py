@@ -4,6 +4,8 @@ import csv
 import re
 import zipfile
 from pathlib import Path
+
+from .inventory import is_scientific_source, source_role
 from xml.etree import ElementTree as ET
 
 
@@ -108,13 +110,11 @@ def extract_all(input_root: Path, staging_root: Path, manifest: list[dict[str, s
     extracted_dir.mkdir(parents=True, exist_ok=True)
     for row in manifest:
         path = input_root / row["relative_path"]
-        if row.get("source_role") == "style_reference" and row.get(
-            "reference_mode", "style-only"
-        ) in {"style-only", "template-fill", "protected-reference"}:
+        if not is_scientific_source(row):
             row["parsed_successfully"] = "yes"
             row["page_or_sheet_count"] = ""
             row["parse_warning"] = (
-                f"{row.get('reference_mode', 'style-only')}: content and notes "
+                f"{source_role(row)}: content and notes "
                 "intentionally excluded from the evidence stream"
             )
             extracted[row["source_id"]] = ""
@@ -174,14 +174,12 @@ def extract_selected(
                 missing_count += 1
             continue
         path = input_root / row["relative_path"]
-        if row.get("source_role") == "style_reference" and row.get(
-            "reference_mode", "style-only"
-        ) in {"style-only", "template-fill", "protected-reference"}:
+        if not is_scientific_source(row):
             text = ""
             row["parsed_successfully"] = "yes"
             row["page_or_sheet_count"] = ""
             row["parse_warning"] = (
-                f"{row.get('reference_mode', 'style-only')}: content and notes "
+                f"{source_role(row)}: content and notes "
                 "intentionally excluded from the evidence stream"
             )
         else:

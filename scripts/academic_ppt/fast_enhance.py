@@ -17,14 +17,20 @@ from pypdf import PdfReader
 from PIL import Image, ImageStat
 
 from .change_impact import ChangeImpactGraph
-from .evidence import build_evidence
+from .evidence import EVIDENCE_FIELDS, build_evidence
 from .extractors import extract_selected
 from .fast_qa import run_changed_slide_qa, run_whole_deck_lightweight_qa
 from .incremental import (
     run_powerpoint_operations,
     validate_operation_plan,
 )
-from .inventory import inventory_sources, verify_input_hashes
+from .inventory import (
+    PRESENTATION_BASELINE,
+    inventory_sources,
+    is_scientific_source,
+    scientific_delta_manifest,
+    verify_input_hashes,
+)
 from .project_cache import (
     CacheStateError,
     ProjectCache,
@@ -48,6 +54,7 @@ from .utils import (
     safe_slug,
     sha256_file,
     utc_offset_timestamp,
+    write_csv,
     write_json,
 )
 from .visual_layout_qa import (
@@ -370,7 +377,7 @@ def _validate_changed_spec_source_registry(
 ) -> None:
     """Require every changed-slide binding to resolve in the current registry."""
 
-    by_id: dict[str, str] = {}
+    by_id: dict[str, dict[str, Any]] = {}
     by_file: dict[str, str] = {}
     for row in source_registry:
         if not isinstance(row, Mapping):
@@ -381,7 +388,7 @@ def _validate_changed_spec_source_registry(
             raise FastEnhanceError("Current SourceRegistry entry lacks source_id or relative_path")
         if source_id in by_id or source_file in by_file:
             raise FastEnhanceError("Current SourceRegistry contains duplicate identity")
-        by_id[source_id] = source_file
+        by_id[source_id] = dict(row)
         by_file[source_file] = source_id
 
     for spec in changed_specs:
@@ -389,6 +396,7 @@ def _validate_changed_spec_source_registry(
         bindings = spec.get("source_bindings")
         if not isinstance(bindings, list) or not bindings:
             raise FastEnhanceError(f"Changed slide {slide_id} has no source bindings")
+        scientific_binding_count = 0
         for binding in bindings:
             if not isinstance(binding, Mapping):
                 raise FastEnhanceError(
@@ -408,10 +416,27 @@ def _validate_changed_spec_source_registry(
                 raise FastEnhanceError(
                     f"Changed slide {slide_id} binds an unknown current source_file"
                 )
-            if source_id and source_file and by_id[source_id] != source_file:
+            if source_id and source_file and str(by_id[source_id].get("relative_path", "")).replace("\\", "/") != source_file:
                 raise FastEnhanceError(
                     f"Changed slide {slide_id} source_id/source_file binding is inconsistent"
                 )
+            resolved_id = source_id or by_file[source_file]
+            registry_row = by_id[resolved_id]
+            role = str(registry_row.get("source_role", "scientific_source")).strip()
+            status = str(binding.get("canonical_status", "")).strip().upper()
+            if is_scientific_source(registry_row):
+                scientific_binding_count += 1
+            elif role == PRESENTATION_BASELINE and status == "INHERITED_PRESENTATION_CONTENT":
+                pass
+            else:
+                raise FastEnhanceError(
+                    f"Changed slide {slide_id} binds non-scientific role {role} as evidence"
+                )
+        claim_ids = spec.get("claim_ids") or []
+        if isinstance(claim_ids, list) and claim_ids and scientific_binding_count == 0:
+            raise FastEnhanceError(
+                f"Changed slide {slide_id} claims require a scientific source binding"
+            )
 def _write_checkpoint(
     path: Path,
     *,
@@ -700,9 +725,11 @@ def build_cached_change_impact_graph(
     relative_by_id = {
         str(row.get("source_id", "")): str(row.get("relative_path", ""))
         for row in source_registry
-        if str(row.get("source_id", "")).strip()
+        if is_scientific_source(row)
+        and str(row.get("source_id", "")).strip()
         and str(row.get("relative_path", "")).strip()
     }
+    scientific_relatives = set(relative_by_id.values())
     for relative in relative_by_id.values():
         graph.register_source(relative)
     claims_by_id: dict[str, Mapping[str, Any]] = {}
@@ -746,7 +773,7 @@ def build_cached_change_impact_graph(
                 continue
             source_id = str(binding.get("source_id", "")).strip()
             relative = str(binding.get("source_file", "")).strip() or relative_by_id.get(source_id, "")
-            if not relative:
+            if not relative or relative not in scientific_relatives:
                 continue
             claim_id = f"CLM-BIND-{hashlib.sha256((relative + '|' + slide_id).encode('utf-8')).hexdigest()[:20].upper()}"
             graph.add_source_claim(relative, claim_id)
@@ -1409,6 +1436,7 @@ def execute_fast_enhance(args: Any) -> Path:
                 set(workflow_config["supported_extensions"]),
                 staging_root / "current_source_manifest.csv",
                 reference_mode=str(_arg(args, "reference_mode", "style-only")),
+                route="enhance-existing",
             )
             if not manifest:
                 raise FastEnhanceError("No supported input sources were found")
@@ -1536,12 +1564,16 @@ def execute_fast_enhance(args: Any) -> Path:
                 changed_manifest = [
                     row for row in manifest
                     if str(row.get("source_id", "")) in changed_source_ids
+                    and is_scientific_source(row)
                 ]
+                changed_scientific_ids = {
+                    str(row.get("source_id", "")) for row in changed_manifest
+                }
                 if changed_manifest:
                     (staging_root / "evidence_delta").mkdir(parents=True, exist_ok=True)
                     changed_extracted = {
                         source_id: parsed_objects[source_id]
-                        for source_id in changed_source_ids
+                        for source_id in changed_scientific_ids
                         if source_id in parsed_objects
                     }
                     changed_claims, unresolved = build_evidence(
@@ -1561,7 +1593,16 @@ def execute_fast_enhance(args: Any) -> Path:
                 graph_document = cached_state.get("change_impact_graph")
                 if not isinstance(graph_document, Mapping):
                     raise FastEnhanceError("Validated cache has no ChangeImpactGraph")
-                graph = ChangeImpactGraph.from_dict(graph_document)
+                ChangeImpactGraph.from_dict(graph_document)
+                cached_evidence = cached_state.get("evidence_registry", [])
+                cached_specs = cached_state.get("slide_specs", [])
+                if not isinstance(cached_evidence, list) or not isinstance(cached_specs, list):
+                    raise FastEnhanceError("Validated cache lineage objects are invalid")
+                graph = build_cached_change_impact_graph(
+                    source_registry=manifest,
+                    evidence_registry=cached_evidence,
+                    slide_specs=cached_specs,
+                )
                 source_impacts = metadata.get("source_impacts", []) or []
                 if not isinstance(source_impacts, list) or any(
                     not isinstance(item, Mapping) for item in source_impacts
@@ -1573,13 +1614,27 @@ def execute_fast_enhance(args: Any) -> Path:
                     if str(row.get("source_id", "")).strip()
                     and str(row.get("relative_path", "")).strip()
                 }
+                scientific_source_ids = {
+                    str(row.get("source_id", ""))
+                    for row in manifest
+                    if is_scientific_source(row)
+                }
                 _extend_graph_from_declared_impacts(
                     graph,
-                    source_impacts,
+                    [
+                        row for row in source_impacts
+                        if str(row.get("source_id", "")) in scientific_source_ids
+                    ],
                     allowed_slides=set(plan["expected_final_order"]),
                     relative_by_source_id=relative_by_current_id,
                 )
-                impact = graph.analyze_delta(delta, changed_slides=changed_ids)
+                science_delta = scientific_delta_manifest(
+                    delta,
+                    route="enhance-existing",
+                    reference_mode=str(_arg(args, "reference_mode", "style-only")),
+                )
+                write_json(staging_root / "scientific_delta_manifest.json", science_delta)
+                impact = graph.analyze_delta(science_delta, changed_slides=changed_ids)
                 write_json(staging_root / "change_impact_result.json", impact.to_dict())
                 if impact.requires_full_rebuild:
                     raise FastEnhanceError(
@@ -2043,7 +2098,13 @@ def execute_fast_production(args: Any) -> Path:
         expected_slide_count=len(cached_specs),
         current_contract_fingerprints=build_cache_contract_fingerprints(repo_root=repo_root, brief=brief),
     )
-    manifest = inventory_sources(input_root, set(config["supported_extensions"]), staging_root / "current_source_manifest.csv", reference_mode=str(_arg(args, "reference_mode", "style-only")))
+    manifest = inventory_sources(
+        input_root,
+        set(config["supported_extensions"]),
+        staging_root / "current_source_manifest.csv",
+        reference_mode=str(_arg(args, "reference_mode", "style-only")),
+        route="enhance-existing",
+    )
     if not manifest:
         raise FastEnhanceError("No supported input sources were found")
     current_manifest = build_source_manifest(_source_paths(input_root, manifest), relative_to=input_root)
@@ -2066,9 +2127,35 @@ def execute_fast_production(args: Any) -> Path:
     parsed_objects, parse_stats = extract_selected(input_root, staging_root, manifest, changed_source_ids, cached_extractions=dict(cached_parsed))
     if parse_stats["missing"]:
         raise FastEnhanceError("Validated cache lacks an unchanged parse; full_validation required")
-    changed_manifest = [row for row in manifest if row["source_id"] in changed_source_ids]
+    changed_manifest = [
+        row for row in manifest
+        if row["source_id"] in changed_source_ids and is_scientific_source(row)
+    ]
+    changed_scientific_ids = {
+        str(row["source_id"]) for row in changed_manifest
+    }
     (staging_root / "evidence_delta").mkdir(parents=True, exist_ok=True)
-    changed_claims, unresolved = build_evidence({sid: parsed_objects[sid] for sid in changed_source_ids}, changed_manifest, staging_root / "evidence_delta", brief)
+    if changed_manifest:
+        changed_claims, unresolved = build_evidence(
+            {sid: parsed_objects[sid] for sid in changed_scientific_ids},
+            changed_manifest,
+            staging_root / "evidence_delta",
+            brief,
+        )
+    else:
+        changed_claims, unresolved = [], []
+        write_json(
+            staging_root / "evidence_delta" / "presentation_only_delta.json",
+            {
+                "schema_version": "academic-ppt-presentation-only-delta/1",
+                "status": "NO_SCIENTIFIC_SOURCE_CHANGED",
+            },
+        )
+        write_csv(
+            staging_root / "evidence_delta" / "evidence_inventory.csv",
+            EVIDENCE_FIELDS,
+            [],
+        )
     evidence_inventory = staging_root / "evidence_delta" / "evidence_inventory.csv"
     machine.checkpoint("EVIDENCE_PATCH", {"evidence_patch": sha256_file(evidence_inventory).lower()})
     plans = build_changed_slide_plans(
