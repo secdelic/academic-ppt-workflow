@@ -37,11 +37,21 @@ SourceRegistry
 
 ## 3. Project Cache 与 Delta
 
-默认缓存位置为仓库内：
+Production中，应用目录与用户工作区分离。缓存权威优先级为：显式内部
+`project_cache_root`、`PPT_CACHE_HOME`、最后是项目目录内的默认值：
 
 ```text
-.cache/project_state/<opaque_project_key>/
+<PPT_WORKSPACE_HOME>/projects/<PROJECT_ID>/cache/<opaque_project_key>/
 ```
+
+如配置共享缓存根，则使用：
+
+```text
+<PPT_CACHE_HOME>/<opaque_project_key>/
+```
+
+仓库内`.cache/project_state/`仅用于`DEV_TEST_ONLY`和已有兼容测试，不是
+Production默认值，也不能覆盖公共Project Interface解析出的项目缓存。
 
 临床模式强制 `local_private_cache_only`。缓存：
 
@@ -57,7 +67,8 @@ SourceRegistry
 - fast 成功后从新 PPTX 重新扫描 master/layout、theme font 和 media registry；
   扫描失败时明确标记失效，不沿用旧 deck 的资产状态；
 - 临床 `full_validation` 在创建 project-key secret 或 cache 目录之前复用同一
-  `.gitignore` / repository-local gate；brief 中的 clinical/MDT 声明同样触发。
+  canonical containment gate；brief 中的 clinical/MDT 声明同样触发。项目外
+  只允许显式配置的`PPT_CACHE_HOME`，仓库内缓存还必须通过`.gitignore` gate。
 
 Delta 只有四种状态：
 

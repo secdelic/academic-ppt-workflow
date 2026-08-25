@@ -7,7 +7,8 @@
     "output_root": "output",
     "audit_root": "audit",
     "archive_root": "archive",
-    "project_cache_root": ".cache/project_state"
+    "project_cache_root": ".cache/project_state",
+    "repository_cache_mode": "DEV_TEST_ONLY"
   },
   "environment": {
     "workflow_home": "PPT_WORKFLOW_HOME",

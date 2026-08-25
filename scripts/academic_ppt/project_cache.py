@@ -50,6 +50,7 @@ _BLOCKED_CACHE_PARTS = frozenset(
 _PROJECT_KEY_RE = re.compile(r"^PRJ-[A-F0-9]{32}$")
 _GENERATION_ID_RE = re.compile(r"^GEN-[a-f0-9]{16,64}$")
 _SHA256_RE = re.compile(r"^[a-fA-F0-9]{64}$")
+REPOSITORY_CACHE_MODE_DEV_TEST_ONLY = "DEV_TEST_ONLY"
 
 
 class CachePolicyError(ValueError):
@@ -264,33 +265,101 @@ def _atomic_write_json(path: Path, value: Any) -> None:
             temporary.unlink()
 
 
-def validate_cache_root(repo_root: Path, cache_root: Path | None = None) -> Path:
-    """Return a safe repository-local cache root.
+def _reject_unsafe_cache_syntax(path: Path | str, *, label: str) -> None:
+    raw = Path(path).expanduser()
+    if ".." in raw.parts:
+        raise CachePolicyError(f"{label} must not contain parent traversal")
+    if _is_unc_path(path):
+        raise CachePolicyError(f"UNC {label.casefold()} paths are prohibited")
 
-    Clinical cache state is deliberately restricted to ``<repo>/.cache``.  This
-    also fails closed for common publication/test/output trees and UNC paths.
-    ``resolve`` is intentional: an existing symlink under ``.cache`` cannot be
-    used to redirect protected state outside the repository.
+
+def resolve_project_cache_root(
+    repo_root: Path,
+    *,
+    project_root: Path | None = None,
+    explicit_cache_root: Path | None = None,
+    cache_home: Path | None = None,
+    repository_cache_mode: str = REPOSITORY_CACHE_MODE_DEV_TEST_ONLY,
+    production: bool = True,
+) -> Path:
+    """Resolve the single cache authority for production and dev/test routes.
+
+    Production priority is explicit cache root, ``PPT_CACHE_HOME``, then
+    ``<ProjectRoot>/cache``.  Explicit locations still have to be contained by
+    the current project's cache tree or the configured shared cache home.
+    Repository ``.cache`` remains available only to explicitly non-production
+    dev/test callers.
     """
 
-    if _is_unc_path(repo_root):
-        raise CachePolicyError("UNC repositories cannot host clinical project cache")
-    repo = repo_root.resolve()
-    candidate_raw = cache_root or (repo / ".cache" / "project_state")
-    if _is_unc_path(candidate_raw):
-        raise CachePolicyError("UNC cache paths are prohibited")
-    candidate = Path(candidate_raw).resolve()
-    allowed_parent = (repo / ".cache").resolve()
-    if not _is_relative_to(candidate, allowed_parent):
-        raise CachePolicyError("Project cache must be inside the repository .cache tree")
-    relative_parts = {part.casefold() for part in candidate.relative_to(repo).parts}
-    blocked = sorted(relative_parts.intersection(_BLOCKED_CACHE_PARTS))
-    if blocked:
+    _reject_unsafe_cache_syntax(repo_root, label="Repository root")
+    repo = Path(repo_root).expanduser().resolve()
+    repo_cache = (repo / ".cache").resolve()
+
+    if project_root is None:
+        if production:
+            raise CachePolicyError(
+                "Production cache resolution requires an explicit project root"
+            )
+        if repository_cache_mode != REPOSITORY_CACHE_MODE_DEV_TEST_ONLY:
+            raise CachePolicyError("Repository cache is disabled")
+        candidate_raw = explicit_cache_root or (repo_cache / "project_state")
+        _reject_unsafe_cache_syntax(candidate_raw, label="Cache root")
+        candidate = Path(candidate_raw).expanduser().resolve()
+        if not _is_relative_to(candidate, repo_cache):
+            raise CachePolicyError(
+                "Dev/test repository cache must be inside the repository .cache tree"
+            )
+        relative_parts = {
+            part.casefold() for part in candidate.relative_to(repo).parts
+        }
+        blocked = sorted(relative_parts.intersection(_BLOCKED_CACHE_PARTS))
+        if blocked:
+            raise CachePolicyError(
+                "Project cache path contains prohibited tree component(s): "
+                + ", ".join(blocked)
+            )
+        return candidate
+
+    _reject_unsafe_cache_syntax(project_root, label="Project root")
+    project = Path(project_root).expanduser().resolve()
+    project_cache = (project / "cache").resolve()
+    configured_home_raw = cache_home or os.environ.get("PPT_CACHE_HOME")
+    configured_home = None
+    if configured_home_raw:
+        _reject_unsafe_cache_syntax(configured_home_raw, label="PPT_CACHE_HOME")
+        configured_home = Path(configured_home_raw).expanduser().resolve()
+
+    candidate_raw = explicit_cache_root or configured_home or project_cache
+    _reject_unsafe_cache_syntax(candidate_raw, label="Cache root")
+    candidate = Path(candidate_raw).expanduser().resolve()
+
+    allowed = _is_relative_to(candidate, project_cache)
+    if configured_home is not None:
+        allowed = allowed or _is_relative_to(candidate, configured_home)
+    if not allowed:
         raise CachePolicyError(
-            "Project cache path contains prohibited tree component(s): "
-            + ", ".join(blocked)
+            "Production cache must be inside the current project cache tree "
+            "or configured PPT_CACHE_HOME"
         )
+    if _is_relative_to(candidate, repo):
+        raise CachePolicyError(
+            "Repository paths cannot host production cache; repository .cache "
+            "is DEV_TEST_ONLY"
+        )
+    if candidate == project or _is_relative_to(project, candidate):
+        raise CachePolicyError("Cache root must not contain the project root")
     return candidate
+
+
+def validate_cache_root(repo_root: Path, cache_root: Path | None = None) -> Path:
+    """Compatibility wrapper for repository-local DEV/TEST cache only."""
+
+    return resolve_project_cache_root(
+        repo_root,
+        explicit_cache_root=cache_root,
+        repository_cache_mode=REPOSITORY_CACHE_MODE_DEV_TEST_ONLY,
+        production=False,
+    )
 
 
 def _load_or_create_key_secret(cache_root: Path) -> bytes:
@@ -532,7 +601,7 @@ def validate_project_state(state: Mapping[str, Any]) -> None:
 
 
 class ProjectCache:
-    """Repository-local immutable-generation cache for incremental workflows.
+    """Project-isolated immutable-generation cache for incremental workflows.
 
     Generations are immutable JSON directories.  Promotion changes one small
     ``pointers.json`` document with ``os.replace``; this makes the logical
@@ -545,6 +614,9 @@ class ProjectCache:
         project_key: str,
         *,
         cache_root: Path | None = None,
+        project_root: Path | None = None,
+        cache_home: Path | None = None,
+        production: bool = False,
         clinical_privacy_mode: bool = True,
     ) -> None:
         if not clinical_privacy_mode:
@@ -555,7 +627,26 @@ class ProjectCache:
         if not _PROJECT_KEY_RE.fullmatch(project_key):
             raise CachePolicyError("project_key must be an opaque PRJ-<32 hex> value")
         self.repo_root = repo_root.resolve()
-        self.cache_root = validate_cache_root(self.repo_root, cache_root)
+        self.cache_root = resolve_project_cache_root(
+            self.repo_root,
+            project_root=project_root,
+            explicit_cache_root=cache_root,
+            cache_home=cache_home,
+            production=production,
+        )
+        if production:
+            if project_root is None:
+                raise CachePolicyError(
+                    "Production ProjectCache requires an explicit project root"
+                )
+            expected_key = derive_opaque_project_key(
+                str(Path(project_root).expanduser().resolve()),
+                secret=_load_or_create_key_secret(self.cache_root),
+            )
+            if project_key != expected_key:
+                raise CachePolicyError(
+                    "Project cache key does not match the current project boundary"
+                )
         self.project_key = project_key
         self.project_dir = self.cache_root / project_key
         self.generations_dir = self.project_dir / "generations"
@@ -583,15 +674,33 @@ class ProjectCache:
         project_identity: str,
         *,
         cache_root: Path | None = None,
+        project_root: Path | None = None,
+        cache_home: Path | None = None,
+        production: bool = False,
         clinical_privacy_mode: bool = True,
     ) -> "ProjectCache":
-        safe_root = validate_cache_root(repo_root, cache_root)
+        safe_root = resolve_project_cache_root(
+            repo_root,
+            project_root=project_root,
+            explicit_cache_root=cache_root,
+            cache_home=cache_home,
+            production=production,
+        )
         secret = _load_or_create_key_secret(safe_root)
-        project_key = derive_opaque_project_key(project_identity, secret=secret)
+        opaque_identity = str(project_identity)
+        if production and project_root is not None:
+            # Production identity is the canonical project boundary.  Display
+            # names (including patient-like labels) never influence paths, and
+            # the resulting key can be independently verified by __init__.
+            opaque_identity = str(Path(project_root).expanduser().resolve())
+        project_key = derive_opaque_project_key(opaque_identity, secret=secret)
         return cls(
             repo_root,
             project_key,
             cache_root=safe_root,
+            project_root=project_root,
+            cache_home=cache_home,
+            production=production,
             clinical_privacy_mode=clinical_privacy_mode,
         )
 

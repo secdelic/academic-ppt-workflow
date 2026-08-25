@@ -1315,6 +1315,12 @@ def execute_full_validation(args: Any) -> Path:
                 output_pptx=pptx_path,
                 brief=brief,
                 cache_root=cache_root,
+                project_root=Path(_arg(args, "project_root")).expanduser().resolve()
+                if _arg(args, "project_root")
+                else None,
+                cache_home=Path(os.environ["PPT_CACHE_HOME"]).expanduser()
+                if os.environ.get("PPT_CACHE_HOME")
+                else None,
                 clinical_privacy_mode=bool(
                     _arg(args, "clinical_privacy_mode", False)
                     or brief.get("clinical_privacy_mode") is True

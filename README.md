@@ -31,6 +31,11 @@ powershell -ExecutionPolicy Bypass -File scripts/doctor.ps1
 The bootstrap uses project-local Python and Node dependencies. It does not
 modify global Python or Node installations.
 
+The application and user workspace are separate authorities. Production cache
+defaults to `<PPT_WORKSPACE_HOME>/projects/<PROJECT_ID>/cache/`; an explicitly
+configured `PPT_CACHE_HOME` provides a shared parent with opaque, isolated
+project keys. Repository `.cache` is reserved for development and tests.
+
 ## Start a project
 
 ```powershell

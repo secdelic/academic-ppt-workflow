@@ -267,6 +267,63 @@ class OutputContractTests(unittest.TestCase):
             self.assertFalse(public_contract["internal_workflow_objects_exposed"])
             self.assertNotIn("hash", json.dumps(public_contract).casefold())
 
+    def test_configure_project_args_uses_external_project_cache_for_all_routes(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            base = Path(temporary)
+            for route in ("generate", "enhance", "template-fill"):
+                with self.subTest(route=route):
+                    root = base / route
+                    scaffold(root, route=route, quality="validated")
+                    if route == "enhance":
+                        existing = root / "input/existing/existing.pptx"
+                        existing.write_bytes(b"synthetic")
+                        write_mapping(
+                            root / "brief/presentation_brief.yaml",
+                            {
+                                "project_name": "External cache fixture",
+                                "route": route,
+                                "quality": "validated",
+                                "inputs": {"existing_deck_path": str(existing)},
+                            },
+                        )
+                    elif route == "template-fill":
+                        template = root / "input/template/template.pptx"
+                        template.write_bytes(b"synthetic")
+                        write_mapping(
+                            root / "brief/presentation_brief.yaml",
+                            {
+                                "project_name": "External cache fixture",
+                                "route": route,
+                                "quality": "validated",
+                                "inputs": {"template_path": str(template)},
+                            },
+                        )
+                    args = normalise_public_request(
+                        build_parser().parse_args(
+                            [
+                                "--project",
+                                str(root),
+                                "--route",
+                                route,
+                                "--quality",
+                                "validated",
+                                "--run-id",
+                                f"RUN_{route.replace('-', '_').upper()}",
+                            ]
+                        )
+                    )
+                    with patch(
+                        "academic_ppt.project_interface.parse_reference_style",
+                        return_value={"visual_motif": "synthetic"},
+                    ):
+                        configured, _ = configure_project_args(args)
+                    self.assertTrue(
+                        paths_equal(configured.project_cache_root, root / "cache")
+                    )
+                    self.assertFalse(
+                        path_is_within(configured.project_cache_root, ROOT / ".cache")
+                    )
+
 
     def test_enhance_project_without_visual_brief_inherits_existing_style(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

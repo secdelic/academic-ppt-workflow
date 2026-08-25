@@ -31,7 +31,7 @@ from .project_cache import (
     build_cache_contract_fingerprints,
     build_project_state,
     build_source_manifest,
-    validate_cache_root,
+    resolve_project_cache_root,
     validate_project_state,
 )
 from .style_reference import parse_reference_style
@@ -119,7 +119,12 @@ def _resolve_declared(raw: str | Path | None, repo_root: Path) -> Path | None:
 
 
 def _assert_clinical_cache_is_ignored(
-    repo_root: Path, cache_root: Path | None
+    repo_root: Path,
+    cache_root: Path | None,
+    *,
+    project_root: Path | None = None,
+    cache_home: Path | None = None,
+    production: bool = False,
 ) -> Path:
     """Validate local placement and Git exclusion before creating cache state.
 
@@ -128,7 +133,21 @@ def _assert_clinical_cache_is_ignored(
     metadata in an unprotected repository tree.
     """
 
-    resolved = validate_cache_root(repo_root, cache_root)
+    resolved = resolve_project_cache_root(
+        repo_root,
+        project_root=project_root,
+        explicit_cache_root=cache_root,
+        cache_home=cache_home,
+        production=production,
+    )
+    repo = repo_root.resolve()
+    try:
+        resolved.relative_to(repo)
+    except ValueError:
+        # An external project cache or configured PPT_CACHE_HOME is already
+        # contained by the canonical production policy and is not publishable
+        # through this repository.
+        return resolved
     gitignore = repo_root / ".gitignore"
     if not gitignore.is_file():
         raise FastEnhanceError(
@@ -145,16 +164,27 @@ def _assert_clinical_cache_is_ignored(
         raise FastEnhanceError(
             "Clinical fast cache has a conflicting .gitignore negation"
         )
-    normalized = {line.lstrip("/").rstrip("/") for line in lines if not line.startswith("!")}
-    protected = any(
-        pattern in normalized
-        for pattern in {
-            ".cache",
-            ".cache/**",
-            ".cache/project_state",
-            ".cache/project_state/**",
+    try:
+        relative = resolved.relative_to(repo).as_posix()
+    except ValueError:  # pragma: no cover - returned above
+        relative = ""
+    protected = subprocess.run(
+        ["git", "-C", str(repo), "check-ignore", "--no-index", "-q", relative],
+        check=False,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+    ).returncode == 0
+    if not protected:
+        normalized = {
+            line.lstrip("/").removesuffix("/**").rstrip("/")
+            for line in lines
+            if not line.startswith("!")
         }
-    )
+        protected = any(
+            relative == pattern or relative.startswith(pattern + "/")
+            for pattern in normalized
+            if pattern
+        )
     if not protected:
         raise FastEnhanceError(
             "Clinical fast cache is not protected by repository .gitignore"
@@ -1160,6 +1190,8 @@ def promote_full_validation_cache(
     output_pptx: Path,
     brief: Mapping[str, Any],
     cache_root: Path | None = None,
+    project_root: Path | None = None,
+    cache_home: Path | None = None,
     clinical_privacy_mode: bool = False,
 ) -> dict[str, Any]:
     """Promote one successful full-validation run for later fast updates."""
@@ -1167,9 +1199,21 @@ def promote_full_validation_cache(
     # The privacy/local-cache gate must run before ProjectCache can create its
     # key secret or project directory.
     resolved_cache_root = (
-        _assert_clinical_cache_is_ignored(repo_root, cache_root)
+        _assert_clinical_cache_is_ignored(
+            repo_root,
+            cache_root,
+            project_root=project_root,
+            cache_home=cache_home,
+            production=project_root is not None,
+        )
         if clinical_privacy_mode
-        else validate_cache_root(repo_root, cache_root)
+        else resolve_project_cache_root(
+            repo_root,
+            project_root=project_root,
+            explicit_cache_root=cache_root,
+            cache_home=cache_home,
+            production=project_root is not None,
+        )
     )
     contract_fingerprints = build_cache_contract_fingerprints(
         repo_root=repo_root,
@@ -1222,6 +1266,9 @@ def promote_full_validation_cache(
         repo_root,
         project_identity,
         cache_root=resolved_cache_root,
+        project_root=project_root,
+        cache_home=cache_home,
+        production=project_root is not None,
         clinical_privacy_mode=clinical_privacy_mode,
     )
     return cache.commit_generation(state)
@@ -1248,6 +1295,9 @@ def execute_fast_enhance(args: Any) -> Path:
     paths_cfg = workflow_config["paths"]
     env_cfg = workflow_config["environment"]
     workspace_home_raw = os.environ.get("PPT_WORKSPACE_HOME") or local_cfg.get("workspace_home")
+    project_root = _resolve_declared(_arg(args, "project_root"), repo_root)
+    cache_home_raw = os.environ.get("PPT_CACHE_HOME") or local_cfg.get("cache_home")
+    cache_home = Path(cache_home_raw).expanduser() if cache_home_raw else None
     workspace_home = Path(workspace_home_raw).expanduser().resolve() if workspace_home_raw else None
     input_root = resolve_runtime_path(cli_value=_arg(args,"input_root"),env_name="PPT_INPUT_HOME",legacy_env_name=env_cfg["input_root"],local_value=local_cfg.get("input_root"),workspace_home=workspace_home,workspace_child="input",repo_root=repo_root,repo_default=paths_cfg["input_root"])
     staging_base = resolve_runtime_path(cli_value=_arg(args,"staging_root"),env_name="PPT_STAGING_HOME",legacy_env_name=env_cfg["staging_root"],local_value=local_cfg.get("staging_root"),workspace_home=workspace_home,workspace_child="staging",repo_root=repo_root,repo_default=paths_cfg["staging_root"])
@@ -1337,12 +1387,19 @@ def execute_fast_enhance(args: Any) -> Path:
             cache_root = _resolve_declared(_arg(args, "project_cache_root"), repo_root)
             if clinical_privacy_mode:
                 cache_root = _assert_clinical_cache_is_ignored(
-                    repo_root, cache_root
+                    repo_root,
+                    cache_root,
+                    project_root=project_root,
+                    cache_home=cache_home,
+                    production=project_root is not None,
                 )
             cache = ProjectCache.from_identity(
                 repo_root,
                 project_name,
                 cache_root=cache_root,
+                project_root=project_root,
+                cache_home=cache_home,
+                production=project_root is not None,
                 clinical_privacy_mode=clinical_privacy_mode,
             )
 
@@ -1945,10 +2002,27 @@ def execute_fast_production(args: Any) -> Path:
 
     presentation_type = str(brief.get("presentation_type", "")).casefold()
     clinical_privacy_mode = bool(_arg(args, "clinical_privacy_mode", False) or brief.get("clinical_privacy_mode") is True or "clinical" in presentation_type or "mdt" in presentation_type)
+    project_root = _resolve_declared(_arg(args, "project_root"), repo_root)
+    cache_home_raw = os.environ.get("PPT_CACHE_HOME")
+    cache_home = Path(cache_home_raw).expanduser() if cache_home_raw else None
     cache_root = _resolve_declared(_arg(args, "project_cache_root"), repo_root)
     if clinical_privacy_mode:
-        cache_root = _assert_clinical_cache_is_ignored(repo_root, cache_root)
-    cache = ProjectCache.from_identity(repo_root, project_name, cache_root=cache_root, clinical_privacy_mode=clinical_privacy_mode)
+        cache_root = _assert_clinical_cache_is_ignored(
+            repo_root,
+            cache_root,
+            project_root=project_root,
+            cache_home=cache_home,
+            production=project_root is not None,
+        )
+    cache = ProjectCache.from_identity(
+        repo_root,
+        project_name,
+        cache_root=cache_root,
+        project_root=project_root,
+        cache_home=cache_home,
+        production=project_root is not None,
+        clinical_privacy_mode=clinical_privacy_mode,
+    )
     cached_state = cache.load_current()
     if cached_state is None:
         raise FastEnhanceError("No payload/2 cache exists; run full_validation once")

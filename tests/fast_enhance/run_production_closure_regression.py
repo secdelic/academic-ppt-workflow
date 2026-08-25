@@ -112,6 +112,8 @@ def run(root: Path, *, clinical: bool = False, retry_slide: str = "") -> dict:
     if root.exists():
         raise FileExistsError(root)
     root.mkdir(parents=True)
+    project_root = root / "workspace" / "projects" / "SYNTHETIC_PROJECT"
+    project_root.mkdir(parents=True)
     fixture = generate_synthetic_pptx(materialize_synthetic_fixture(root / "fixture"))
     definition = build_fixture_definition()
     prior_input, current_input = _materialize_sources(root)
@@ -167,13 +169,24 @@ def run(root: Path, *, clinical: bool = False, retry_slide: str = "") -> dict:
             "pptx_state": {"sha256": sha256_file(fixture.baseline_pptx), "slide_count": 21},
         },
     )
-    cache_root = Path(os.environ.get("PPT_CACHE_HOME", root / "cache")) / "project_state"
-    cache = ProjectCache.from_identity(REPO_ROOT, project_name, cache_root=cache_root, clinical_privacy_mode=True)
+    cache_home_raw = os.environ.get("PPT_CACHE_HOME")
+    cache_home = Path(cache_home_raw).expanduser() if cache_home_raw else None
+    cache_root = cache_home or (project_root / "cache")
+    cache = ProjectCache.from_identity(
+        REPO_ROOT,
+        project_name,
+        cache_root=cache_root,
+        project_root=project_root,
+        cache_home=cache_home,
+        production=True,
+        clinical_privacy_mode=True,
+    )
     cache.commit_generation(cache_state)
     args = SimpleNamespace(
         repo_root=str(REPO_ROOT), brief=str(brief_path), existing_pptx=str(fixture.baseline_pptx),
         input_root=str(current_input), staging_root=str(root / "staging"), output_root=str(root / "output"),
-        run_id="production_e2e", project_cache_root=str(cache_root), clinical_privacy_mode=False,
+        run_id="production_e2e", project_root=str(project_root),
+        project_cache_root=str(cache_root), clinical_privacy_mode=False,
         reference_mode="style-only", node=None, node_modules=None, soffice=None,
         route="enhance-existing", workflow_mode="fast_enhance", auto_approve_content=False,
         final_delivery=False, cross_renderer_validation=False, audit_full=False,

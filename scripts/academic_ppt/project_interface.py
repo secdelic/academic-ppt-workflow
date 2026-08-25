@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import Any, Iterable, Mapping
 
 from .style_reference import parse_reference_style
+from .project_cache import resolve_project_cache_root
 from .utils import load_yaml_compatible, output_timestamp, safe_slug, write_json
 from .visual_brief import (
     load_visual_brief,
@@ -392,7 +393,34 @@ def configure_project_args(args: Any) -> tuple[Any, RunOutputPaths]:
     args.staging_root = str(run.staging)
     args.output_root = str(run.engine_output)
     args.audit_root = str(run.engine_audit)
-    args.project_cache_root = str(project.cache_root)
+    repo_root = Path(__file__).resolve().parents[2]
+    explicit_cache = getattr(args, "project_cache_root", None)
+    if explicit_cache:
+        explicit_path = Path(explicit_cache).expanduser()
+        explicit_cache = (
+            explicit_path.resolve()
+            if explicit_path.is_absolute()
+            else (project.root / explicit_path).resolve()
+        )
+    cache_home_raw = os.environ.get("PPT_CACHE_HOME")
+    cache_home = None
+    if cache_home_raw:
+        cache_home_path = Path(cache_home_raw).expanduser()
+        cache_home = (
+            cache_home_path.resolve()
+            if cache_home_path.is_absolute()
+            else (project.root / cache_home_path).resolve()
+        )
+    args.project_cache_root = str(
+        resolve_project_cache_root(
+            repo_root,
+            project_root=project.root,
+            explicit_cache_root=explicit_cache,
+            cache_home=cache_home,
+            production=True,
+        )
+    )
+    args.project_root = str(project.root)
 
     def resolve_declared(keys: Iterable[str]) -> str | None:
         for key in keys:

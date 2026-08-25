@@ -161,6 +161,8 @@ def run(root: Path) -> Path:
         REPO_ROOT,
         project_identity,
         cache_root=cache_root,
+        project_root=root,
+        production=True,
         clinical_privacy_mode=True,
     )
     cache.commit_generation(cache_state)
@@ -231,6 +233,7 @@ def run(root: Path) -> Path:
         retry_stage=None,
         operation_plan=str(plan_path),
         changed_candidate_pptx=str(fixture.candidate_pptx),
+        project_root=str(root),
         project_cache_root=str(cache_root),
         clinical_privacy_mode=True,
         export_pdf=False,

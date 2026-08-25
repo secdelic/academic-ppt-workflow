@@ -1,5 +1,18 @@
 # Changelog
 
+## v2.7.0-rc2
+
+- Corrected the production project-cache authority for deployments where the
+  application and user workspace are separate.
+- Production now resolves cache by explicit project cache root, configured
+  `PPT_CACHE_HOME`, then `<ProjectRoot>/cache`; repository `.cache` remains
+  available only for development, tests, and legacy compatibility.
+- Added synthetic cross-device, containment, traversal, project-isolation, and
+  public-route regression coverage. Scientific, visual, renderer, source-binding,
+  and external-Skill contracts are unchanged.
+- `v2.7.0-rc1` remains preserved as the historical candidate whose local RC
+  validation passed but second-device deployment exposed the cache conflict.
+
 ## v2.7.0-rc1
 
 - Standardized the user-facing interface around four routes (`generate`,

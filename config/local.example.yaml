@@ -7,6 +7,6 @@
     "output_root": "../academic-ppt-workspace/output",
     "audit_root": "../academic-ppt-workspace/audit",
     "asset_home": "visual_workspaces",
-    "cache_home": "../academic-ppt-workspace/cache"
+    "cache_home": null
   }
 }

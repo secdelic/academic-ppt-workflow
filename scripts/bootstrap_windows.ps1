@@ -46,10 +46,10 @@ Push-Location $repo
 try { & $npm ci --ignore-scripts --no-audit --no-fund } finally { Pop-Location }
 if ($LASTEXITCODE -ne 0) { throw "BLOCKED: npm ci failed" }
 
-foreach ($name in "input","staging","output","audit","cache") { New-Item -ItemType Directory -Force -Path (Join-Path $workspace $name) | Out-Null }
+foreach ($name in "input","staging","output","audit","projects") { New-Item -ItemType Directory -Force -Path (Join-Path $workspace $name) | Out-Null }
 $local = Join-Path $repo "config\local.yaml"
 if (-not (Test-Path $local)) {
-    $config = [ordered]@{schema_version="academic-ppt-local-config/1";paths=[ordered]@{workspace_home=$workspace;input_root=(Join-Path $workspace "input");staging_root=(Join-Path $workspace "staging");output_root=(Join-Path $workspace "output");audit_root=(Join-Path $workspace "audit");asset_home=(Join-Path $repo "visual_workspaces");cache_home=(Join-Path $workspace "cache")}}
+    $config = [ordered]@{schema_version="academic-ppt-local-config/1";paths=[ordered]@{workspace_home=$workspace;input_root=(Join-Path $workspace "input");staging_root=(Join-Path $workspace "staging");output_root=(Join-Path $workspace "output");audit_root=(Join-Path $workspace "audit");asset_home=(Join-Path $repo "visual_workspaces");cache_home=$null}}
     $config | ConvertTo-Json -Depth 4 | Set-Content -LiteralPath $local -Encoding utf8
 }
 

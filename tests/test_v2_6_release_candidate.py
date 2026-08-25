@@ -93,7 +93,7 @@ class PortabilityTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as raw:
             out=Path(raw)
             subprocess.run([__import__('sys').executable,str(ROOT/"scripts/build_release_bundle.py"),"--output-root",str(out)],cwd=ROOT,check=True)
-            bundle=out/"academic-ppt-workflow-v2.7.0-rc1.zip"
+            bundle=out/f"academic-ppt-workflow-{VERSION}.zip"
             with zipfile.ZipFile(bundle) as zf:
                 names=[n.split("/",1)[1] for n in zf.namelist() if "/" in n]
             self.assertFalse(any(n.startswith(("input/","output/","staging/","audit/","benchmark/","private/","release/",".cache/")) for n in names))  # self-containment: documentation-only
