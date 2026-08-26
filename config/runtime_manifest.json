@@ -1,6 +1,6 @@
 {
-  "schema_version": "academic-ppt-runtime-manifest/2.7.0-rc3",
-  "validation_date": "2026-08-13",
+  "schema_version": "academic-ppt-runtime-manifest/2.7.0-rc4",
+  "validation_date": "2026-08-26",
   "os": {
     "family": "Windows 11",
     "version": "10.0.26200",
@@ -20,7 +20,7 @@
     "environment": "project-local node_modules",
     "lock": "package-lock.json"
   },
-  "powerpoint": "16.0",
+  "powerpoint": "16.0 build 19328",
   "libreoffice": "26.2.4.2",
   "fonts": {
     "Microsoft YaHei": "AVAILABLE",

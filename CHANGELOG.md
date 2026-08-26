@@ -1,5 +1,19 @@
 # Changelog
 
+## v2.7.0-rc4
+
+- Replaced raw shape-tree equality as the sole KEEP gate with three fail-closed
+  checks: presentation identity, editable semantic identity, and render identity.
+- Added one canonical semantic-manifest helper and an explicit normalization
+  allowlist for PowerPoint SaveAs serialization behavior. Raw OOXML hashes remain
+  diagnostic and true text, table, image, geometry, z-order, Master/Layout, and
+  chart-data mutations still fail.
+- Added the fully synthetic `SECOND_DEVICE_COM_KEEP_TABLE_NORMALIZATION`
+  regression with real local PowerPoint COM SaveAs and exact render comparison.
+- Scientific semantics, StoryGraph, ArtDirection, renderer drawing semantics,
+  cache/lineage contracts, native PptxGenJS, and `NO_GO_EXTERNAL_SKILL` remain
+  unchanged. RC1, RC2, and RC3 remain immutable historical candidates.
+
 ## v2.7.0-rc3
 
 - Separated enhance presentation lineage from scientific claim lineage.

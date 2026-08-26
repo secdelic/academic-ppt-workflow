@@ -5,11 +5,12 @@ import fnmatch
 import hashlib
 import json
 import shutil
+import subprocess
 import zipfile
 from datetime import datetime, timezone
 from pathlib import Path
 
-VERSION = "v2.7.0-rc3"
+VERSION = "v2.7.0-rc4"
 INCLUDE = [
     "run_ppt_workflow.py", "pyproject.toml", "package.json", "package-lock.json", "requirements-lock.txt",
     "README.md", "README_使用说明.md", "README_中文使用说明.md",
@@ -44,6 +45,14 @@ def digest(path: Path) -> str:
         for block in iter(lambda:f.read(1024*1024),b""):h.update(block)
     return h.hexdigest()
 
+def git_value(repo: Path, *arguments: str) -> str:
+    completed=subprocess.run(
+        ["git", *arguments], cwd=repo, capture_output=True, text=True, check=False
+    )
+    if completed.returncode != 0 or not completed.stdout.strip():
+        return "NOT_AVAILABLE"
+    return completed.stdout.strip()
+
 def build(repo: Path, output_root: Path) -> dict:
     output_root.mkdir(parents=True,exist_ok=True)
     files=selected(repo); bundle=output_root/f"academic-ppt-workflow-{VERSION}.zip"; prefix=f"academic-ppt-workflow-{VERSION}"
@@ -52,7 +61,8 @@ def build(repo: Path, output_root: Path) -> dict:
         for path in files:
             rel=path.relative_to(repo).as_posix(); zf.write(path,f"{prefix}/{rel}"); manifest_files.append({"path":rel,"size":path.stat().st_size,"sha256":digest(path)})
     bootstrap=output_root/"bootstrap_windows.ps1"; shutil.copy2(repo/"scripts/bootstrap_windows.ps1",bootstrap)
-    manifest={"schema_version":"academic-ppt-release-manifest/1","version":VERSION,"status":"RELEASE_CANDIDATE_NOT_PUBLISHED","created_at":datetime.now(timezone.utc).isoformat(),"canonical_backend":"native_pptxgenjs","external_skill_used":False,"file_count":len(files),"files":manifest_files,"bundle":{"name":bundle.name,"size":bundle.stat().st_size,"sha256":digest(bundle)},"gates":{"case_b":"NOT_RUN","case_c":"NOT_RUN","second_device":"NOT_RUN","human_workspace_scores":"PENDING","github_actions":"NOT_RUN"}}
+    package_lock=repo/"package-lock.json"; python_lock=repo/"requirements-lock.txt"
+    manifest={"schema_version":"academic-ppt-release-manifest/2","version":VERSION,"release_type":"release_candidate","status":"RELEASE_CANDIDATE_NOT_PUBLISHED","repository":"secdelic/academic-ppt-workflow","candidate_branch":git_value(repo,"branch","--show-current"),"candidate_commit":git_value(repo,"rev-parse","HEAD"),"build_timestamp":datetime.now(timezone.utc).isoformat(),"python_lock_hash":digest(python_lock),"npm_lock_hash":digest(package_lock),"workflow_schema_version":"2.7","cache_schema_version":"2","default_backend":"native_pptxgenjs","external_skill_status":"NO_GO_EXTERNAL_SKILL","file_count":len(files),"files":manifest_files,"archive_sha256":digest(bundle),"bundle":{"name":bundle.name,"size":bundle.stat().st_size,"sha256":digest(bundle)},"gates":{"case_b":"NOT_RUN","case_c":"NOT_RUN","second_device":"PENDING_RC4_CLEAN_INSTALL","human_workspace_scores":"PENDING","github_actions":"NOT_RUN"}}
     (output_root/"release_manifest.json").write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
     checksum_rows=[]
     for path in sorted([bundle,bootstrap,output_root/"release_manifest.json"]):checksum_rows.append(f"{digest(path)}  {path.name}")

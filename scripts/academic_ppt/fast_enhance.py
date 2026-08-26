@@ -2021,6 +2021,7 @@ def execute_fast_production(args: Any) -> Path:
         FastStateMachine,
         build_automatic_operation_plan,
         build_keep_baseline_fingerprints,
+        build_keep_render_identity_evidence,
         build_changed_slide_plans,
         candidate_attempt_record,
         content_review_status,
@@ -2208,9 +2209,30 @@ def execute_fast_production(args: Any) -> Path:
         expected_final_order=plan["expected_final_order"],
         operation_plan=plan,
     )
+    keep_render_runtime = 0.0
+    if keep_integrity["status"] == "RENDER_IDENTITY_REQUIRED":
+        keep_render = build_keep_render_identity_evidence(
+            source_pptx=existing_pptx,
+            updated_pptx=updated_pptx,
+            baseline=keep_baseline,
+            expected_final_order=plan["expected_final_order"],
+            slide_ids=keep_integrity["render_required_slide_ids"],
+            output_dir=staging_root / "keep_render_identity",
+            powershell_script=repo_root / "scripts" / "powerpoint_compare_keep_render.ps1",
+            timeout_seconds=int(config.get("render_timeout_seconds", 120)) + 60,
+        )
+        write_json(staging_root / "keep_render_identity.json", keep_render)
+        keep_render_runtime = float(keep_render["runtime_seconds"])
+        keep_integrity = validate_keep_baseline_fingerprints(
+            baseline=keep_baseline,
+            updated_pptx=updated_pptx,
+            expected_final_order=plan["expected_final_order"],
+            operation_plan=plan,
+            render_identity=keep_render["slides"],
+        )
     write_json(staging_root / "keep_fingerprint_report.json", keep_integrity)
     if keep_integrity["status"] != "PASS":
-        raise FastEnhanceError("KEEP slide structural fingerprint changed")
+        raise FastEnhanceError("KEEP three-tier preservation contract failed")
     machine.checkpoint("CHANGED_SLIDE_QA", {"changed_slide_qa": sha256_file(produced / "changed_slide_qa.md").lower()})
     machine.checkpoint("INCREMENTAL_APPLY", {"updated_pptx": sha256_file(updated_pptx).lower()})
     machine.checkpoint("WHOLE_DECK_LIGHT_QA", {"keep_fingerprint_report": sha256_file(staging_root / "keep_fingerprint_report.json").lower()})
@@ -2230,6 +2252,8 @@ def execute_fast_production(args: Any) -> Path:
         "cache_hit_rate": round(parse_stats["reused"] / max(1, parse_stats["reused"] + parse_stats["parsed"]), 6),
         "content_review_status": review_status, "candidate_spec_sha256": sha256_file(candidate_spec),
         "candidate_pptx_sha256": sha256_file(candidate_path), "input_hashes_unchanged": not verify_input_hashes(input_root, manifest),
+        "keep_render_validation_time_seconds": keep_render_runtime,
+        "keep_raw_ooxml_role": "DIAGNOSTIC_ONLY",
     }
     write_json(staging_root / "production_runtime_profile.json", runtime)
     with (produced / "execution_summary.md").open("a", encoding="utf-8") as handle:

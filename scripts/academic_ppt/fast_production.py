@@ -6,6 +6,7 @@ import os
 import posixpath
 import re
 import subprocess
+import time
 import zipfile
 from dataclasses import dataclass
 from pathlib import Path
@@ -20,6 +21,7 @@ from .inventory import (
     source_role,
 )
 from .layout_contract import LayoutContract, plan_slide_geometry, validate_planned_geometry
+from .keep_preservation import build_deck_semantic_manifests
 from .source_display import short_source_label
 from .utils import load_yaml_compatible
 from .utils import sha256_file, write_json
@@ -764,9 +766,14 @@ def _layout_semantic_hash(payload: bytes) -> str:
     return _semantic_xml_hash(common_slide, omit_slide_number=True)
 
 
-def slide_structure_fingerprints(path: Path) -> list[dict[str, Any]]:
-    """Create shallow structural fingerprints without reading slide prose."""
+def slide_structure_fingerprints(
+    path: Path, *, protected_by_order: Mapping[int, bool] | None = None
+) -> list[dict[str, Any]]:
+    """Create raw diagnostics plus the canonical editable semantic manifest."""
 
+    semantic_rows = build_deck_semantic_manifests(
+        path, protected_by_order=protected_by_order
+    )
     with zipfile.ZipFile(path, "r") as package:
         names = set(package.namelist())
         presentation = ET.fromstring(package.read("ppt/presentation.xml"))
@@ -800,59 +807,97 @@ def slide_structure_fingerprints(path: Path) -> list[dict[str, Any]]:
                 else:
                     rel_targets[role] = ""
             background = root.find(f"{{{namespace}}}cSld/{{{namespace}}}bg")
+            semantic = semantic_rows[index - 1]
             rows.append(
                 {
                     "index": index,
                     "powerpoint_slide_id": str(slide_id.get("id", "")),
                     "slide_part": slide_part,
+                    # Retained for historical consumers and diagnostics only.
                     "shape_tree_hash": _semantic_xml_hash(sp_tree, omit_slide_number=True),
+                    "raw_shape_tree_hash": hashlib.sha256(shape_payload).hexdigest(),
                     "background_hash": _semantic_xml_hash(background),
                     "relationships": rel_targets,
                     "footer_placeholder_present": b"ftr" in shape_payload,
                     "page_number_placeholder_present": b"sldNum" in shape_payload,
+                    "presentation_identity": semantic["presentation_identity"],
+                    "semantic_manifest": semantic,
+                    "semantic_fingerprint_sha256": semantic["semantic_fingerprint_sha256"],
                 }
             )
         return rows
 
 
+_PRESENTATION_IDENTITY_FIELDS = (
+    "powerpoint_slide_id",
+    "layout_relationship_target",
+    "master_relationship_target",
+    "media_relationship_targets",
+    "notes_role",
+    "protected_slide_designation",
+)
+
+
+def _canonical_ooxml_shortcut_match(before: Mapping[str, Any], after: Mapping[str, Any]) -> bool:
+    return all(
+        before.get(field) == after.get(field)
+        for field in (
+            "powerpoint_slide_id", "shape_tree_hash", "background_hash", "relationships",
+            "footer_placeholder_present", "page_number_placeholder_present",
+        )
+    )
+
+
+def _raw_ooxml_diagnostic_match(before: Mapping[str, Any], after: Mapping[str, Any]) -> bool:
+    return (
+        before.get("powerpoint_slide_id") == after.get("powerpoint_slide_id")
+        and before.get("raw_shape_tree_hash") == after.get("raw_shape_tree_hash")
+    )
+
+
+def _presentation_identity_match(
+    before: Mapping[str, Any], after: Mapping[str, Any], *, expected_order: int
+) -> bool:
+    before_identity = before.get("presentation_identity", {})
+    after_identity = after.get("presentation_identity", {})
+    if not isinstance(before_identity, Mapping) or not isinstance(after_identity, Mapping):
+        return False
+    if int(after_identity.get("slide_order", -1)) != expected_order:
+        return False
+    return all(
+        before_identity.get(field) == after_identity.get(field)
+        for field in _PRESENTATION_IDENTITY_FIELDS
+    )
+
+
 def compare_keep_fingerprints(
     *, source_pptx: Path, updated_pptx: Path, operation_plan: Mapping[str, Any]
 ) -> dict[str, Any]:
-    source = slide_structure_fingerprints(source_pptx)
-    updated = slide_structure_fingerprints(updated_pptx)
-    source_ids = list(operation_plan["source_slide_ids"])
-    final_ids = list(operation_plan["expected_final_order"])
-    source_by_id = dict(zip(source_ids, source))
-    updated_by_id = dict(zip(final_ids, updated))
-    findings = []
-    for operation in operation_plan["operations"]:
-        if operation["action"] != "KEEP":
-            continue
-        slide_id = operation["slide_id"]
-        before = source_by_id[slide_id]
-        after = updated_by_id[slide_id]
-        matched = all(
-            before[field] == after[field]
-            for field in (
-                "powerpoint_slide_id", "shape_tree_hash", "background_hash", "relationships",
-                "footer_placeholder_present", "page_number_placeholder_present",
-            )
-        )
-        findings.append({"slide_id": slide_id, "matched": matched})
-    return {
-        "schema_version": "academic-ppt-keep-fingerprints/1",
-        "keep_slide_count": len(findings),
-        "matched_count": sum(row["matched"] for row in findings),
-        "findings": findings,
-        "status": "PASS" if all(row["matched"] for row in findings) else "FAIL",
-    }
+    baseline = build_keep_baseline_fingerprints(
+        source_pptx=source_pptx, operation_plan=operation_plan
+    )
+    return validate_keep_baseline_fingerprints(
+        baseline=baseline,
+        updated_pptx=updated_pptx,
+        expected_final_order=operation_plan["expected_final_order"],
+        operation_plan=operation_plan,
+    )
 
 
 def build_keep_baseline_fingerprints(
     *, source_pptx: Path, operation_plan: Mapping[str, Any]
 ) -> dict[str, Any]:
-    source_rows = slide_structure_fingerprints(source_pptx)
     source_ids = list(operation_plan["source_slide_ids"])
+    operation_by_id = {
+        str(row["slide_id"]): row for row in operation_plan["operations"]
+    }
+    protected = {
+        index: bool(operation_by_id.get(str(slide_id), {}).get("protected_slide_designation", False))
+        for index, slide_id in enumerate(source_ids, 1)
+    }
+    source_rows = slide_structure_fingerprints(
+        source_pptx, protected_by_order=protected
+    )
     by_id = dict(zip(source_ids, source_rows))
     keep = {
         str(row["slide_id"]): by_id[str(row["slide_id"])]
@@ -860,7 +905,7 @@ def build_keep_baseline_fingerprints(
         if row["action"] == "KEEP"
     }
     return {
-        "schema_version": "academic-ppt-keep-baseline/1",
+        "schema_version": "academic-ppt-keep-baseline/2",
         "source_pptx_sha256": sha256_file(source_pptx).lower(),
         "keep_slides": keep,
     }
@@ -868,27 +913,235 @@ def build_keep_baseline_fingerprints(
 
 def validate_keep_baseline_fingerprints(
     *, baseline: Mapping[str, Any], updated_pptx: Path,
-    expected_final_order: Iterable[str], operation_plan: Mapping[str, Any]
+    expected_final_order: Iterable[str], operation_plan: Mapping[str, Any],
+    render_identity: Mapping[str, Mapping[str, Any]] | None = None,
 ) -> dict[str, Any]:
-    updated_rows = slide_structure_fingerprints(updated_pptx)
-    updated_by_id = dict(zip(list(expected_final_order), updated_rows))
+    final_ids = list(expected_final_order)
+    operation_by_id = {
+        str(row["slide_id"]): row for row in operation_plan["operations"]
+    }
+    protected = {
+        index: bool(operation_by_id.get(str(slide_id), {}).get("protected_slide_designation", False))
+        for index, slide_id in enumerate(final_ids, 1)
+    }
+    updated_rows = slide_structure_fingerprints(
+        updated_pptx, protected_by_order=protected
+    )
+    updated_by_id = dict(zip(final_ids, updated_rows))
+    render_identity = render_identity or {}
     findings = []
     for slide_id, before in dict(baseline.get("keep_slides", {})).items():
         after = updated_by_id.get(slide_id)
-        matched = isinstance(after, Mapping) and all(
-            before[field] == after[field]
-            for field in (
-                "powerpoint_slide_id", "shape_tree_hash", "background_hash", "relationships",
-                "footer_placeholder_present", "page_number_placeholder_present",
-            )
+        expected_order = final_ids.index(slide_id) + 1 if slide_id in final_ids else -1
+        canonical_ooxml_match = isinstance(after, Mapping) and _canonical_ooxml_shortcut_match(before, after)
+        raw_ooxml_match = isinstance(after, Mapping) and _raw_ooxml_diagnostic_match(before, after)
+        presentation_match = isinstance(after, Mapping) and _presentation_identity_match(
+            before, after, expected_order=expected_order
         )
-        findings.append({"slide_id": slide_id, "matched": bool(matched)})
+        semantic_match = isinstance(after, Mapping) and (
+            before.get("semantic_fingerprint_sha256")
+            == after.get("semantic_fingerprint_sha256")
+        )
+        render_row = render_identity.get(slide_id, {})
+        if canonical_ooxml_match:
+            render_status = "PASS_CANONICAL_OOXML_EQUIVALENT"
+            render_match = True
+        elif str(render_row.get("status", "")) == "PASS":
+            render_status = "PASS_POWERPOINT_RENDER_EQUIVALENT"
+            render_match = True
+        else:
+            render_status = "RENDER_IDENTITY_REQUIRED"
+            render_match = False
+        matched = bool(presentation_match and semantic_match and render_match)
+        findings.append(
+            {
+                "slide_id": slide_id,
+                "matched": matched,
+                "presentation_identity": "PASS" if presentation_match else "FAIL",
+                "semantic_editable_identity": "PASS" if semantic_match else "FAIL",
+                "render_identity": render_status,
+                "raw_ooxml": "MATCH" if raw_ooxml_match else "RAW_OOXML_CHANGED",
+                "canonical_ooxml": "MATCH" if canonical_ooxml_match else "DIFFERENT",
+                "before_semantic_fingerprint_sha256": before.get("semantic_fingerprint_sha256", ""),
+                "after_semantic_fingerprint_sha256": (
+                    after.get("semantic_fingerprint_sha256", "") if isinstance(after, Mapping) else ""
+                ),
+            }
+        )
+    requires_render = [
+        row["slide_id"]
+        for row in findings
+        if row["render_identity"] == "RENDER_IDENTITY_REQUIRED"
+        and row["presentation_identity"] == "PASS"
+        and row["semantic_editable_identity"] == "PASS"
+    ]
+    hard_failures = [
+        row["slide_id"]
+        for row in findings
+        if row["presentation_identity"] == "FAIL"
+        or row["semantic_editable_identity"] == "FAIL"
+    ]
+    status = (
+        "FAIL" if hard_failures
+        else "RENDER_IDENTITY_REQUIRED" if requires_render
+        else "PASS" if findings and all(row["matched"] for row in findings)
+        else "FAIL"
+    )
     return {
-        "schema_version": "academic-ppt-keep-fingerprints/1",
+        "schema_version": "academic-ppt-keep-fingerprints/2",
+        "contract": [
+            "PRESENTATION_IDENTITY",
+            "SEMANTIC_EDITABLE_IDENTITY",
+            "RENDER_IDENTITY",
+        ],
+        "raw_shape_tree_hash_role": "DIAGNOSTIC_ONLY",
         "keep_slide_count": len(findings),
         "matched_count": sum(row["matched"] for row in findings),
+        "render_required_slide_ids": requires_render,
+        "hard_failure_slide_ids": hard_failures,
         "findings": findings,
-        "status": "PASS" if findings and all(row["matched"] for row in findings) else "FAIL",
+        "status": status,
+    }
+
+
+def build_keep_render_identity_evidence(
+    *, source_pptx: Path, updated_pptx: Path, baseline: Mapping[str, Any],
+    expected_final_order: Iterable[str], slide_ids: Iterable[str],
+    output_dir: Path, powershell_script: Path, timeout_seconds: int = 180,
+) -> dict[str, Any]:
+    """Export only ambiguous KEEP pairs and require exact same-session pixels."""
+
+    try:
+        from PIL import Image, ImageChops, ImageDraw, ImageStat
+    except ImportError as exc:  # pragma: no cover - locked runtime includes Pillow
+        raise FastProductionError("Pillow is required for KEEP render identity") from exc
+    final_ids = list(expected_final_order)
+    updated_rows = slide_structure_fingerprints(updated_pptx)
+    updated_by_id = dict(zip(final_ids, updated_rows))
+    requested = [str(value) for value in slide_ids]
+    if not requested:
+        return {
+            "schema_version": "academic-ppt-keep-render-identity/1",
+            "status": "PASS",
+            "runtime_seconds": 0.0,
+            "slides": {},
+        }
+    if output_dir.exists():
+        raise FastProductionError("KEEP render evidence directory must be new")
+    output_dir.parent.mkdir(parents=True, exist_ok=True)
+    pairs = []
+    for ordinal, slide_id in enumerate(requested, 1):
+        before = dict(baseline.get("keep_slides", {})).get(slide_id)
+        if not isinstance(before, Mapping) or slide_id not in final_ids:
+            raise FastProductionError("KEEP render request does not map to both decks")
+        after = updated_by_id.get(slide_id)
+        if not isinstance(after, Mapping):
+            raise FastProductionError("KEEP render request is missing updated semantics")
+
+        def dynamic_masks(row: Mapping[str, Any]) -> list[dict[str, int]]:
+            manifest = row.get("semantic_manifest", {})
+            shapes = manifest.get("shapes", []) if isinstance(manifest, Mapping) else []
+            masks = []
+            for shape in shapes:
+                if not isinstance(shape, Mapping) or shape.get("registered_dynamic_placeholder") != "SLIDE_NUMBER":
+                    continue
+                bbox = shape.get("bbox_emu", {})
+                if not isinstance(bbox, Mapping):
+                    continue
+                if any(bbox.get(key) is None for key in ("x", "y", "cx", "cy")):
+                    continue
+                masks.append({key: int(bbox[key]) for key in ("x", "y", "cx", "cy")})
+            return masks
+
+        pairs.append(
+            {
+                "ordinal": ordinal,
+                "slide_id": slide_id,
+                "source_index": int(before["index"]),
+                "updated_index": final_ids.index(slide_id) + 1,
+                "before_dynamic_masks_emu": dynamic_masks(before),
+                "after_dynamic_masks_emu": dynamic_masks(after),
+            }
+        )
+    pairs_path = output_dir.parent / f"{output_dir.name}_pairs.json"
+    # PowerShell expects the array itself, keeping the script deliberately
+    # independent from Python package internals.
+    pairs_path.write_text(
+        json.dumps(pairs, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+    )
+    started = time.perf_counter()
+    command = [
+        "powershell.exe", "-NoProfile", "-ExecutionPolicy", "Bypass",
+        "-File", str(powershell_script),
+        "-SourcePptx", str(source_pptx),
+        "-UpdatedPptx", str(updated_pptx),
+        "-PairsJson", str(pairs_path),
+        "-OutputDir", str(output_dir),
+    ]
+    completed = subprocess.run(
+        command, capture_output=True, text=True, timeout=timeout_seconds, check=False
+    )
+    runtime = round(time.perf_counter() - started, 6)
+    if completed.returncode != 0 or "KEEP_RENDER_EXPORT_PASS" not in completed.stdout:
+        raise FastProductionError("PowerPoint KEEP render identity export failed")
+    with zipfile.ZipFile(source_pptx, "r") as package:
+        presentation = ET.fromstring(package.read("ppt/presentation.xml"))
+        namespace = "http://schemas.openxmlformats.org/presentationml/2006/main"
+        slide_size = presentation.find(f"{{{namespace}}}sldSz")
+        if slide_size is None:
+            raise FastProductionError("PPTX has no slide-size declaration")
+        slide_width_emu = int(slide_size.get("cx", "0"))
+        slide_height_emu = int(slide_size.get("cy", "0"))
+    if slide_width_emu <= 0 or slide_height_emu <= 0:
+        raise FastProductionError("PPTX slide-size declaration is invalid")
+
+    evidence: dict[str, dict[str, Any]] = {}
+    for pair in pairs:
+        ordinal = int(pair["ordinal"])
+        before_png = output_dir / f"keep_{ordinal:04d}_before.png"
+        after_png = output_dir / f"keep_{ordinal:04d}_after.png"
+        if not before_png.is_file() or not after_png.is_file():
+            raise FastProductionError("PowerPoint KEEP render export is incomplete")
+        with Image.open(before_png) as left, Image.open(after_png) as right:
+            left_rgb, right_rgb = left.convert("RGB"), right.convert("RGB")
+            same_dimensions = left_rgb.size == right_rgb.size
+            if same_dimensions:
+                def apply_masks(image: Image.Image, masks: Iterable[Mapping[str, int]]) -> None:
+                    draw = ImageDraw.Draw(image)
+                    width, height = image.size
+                    for mask in masks:
+                        x0 = round(int(mask["x"]) / slide_width_emu * width)
+                        y0 = round(int(mask["y"]) / slide_height_emu * height)
+                        x1 = round((int(mask["x"]) + int(mask["cx"])) / slide_width_emu * width)
+                        y1 = round((int(mask["y"]) + int(mask["cy"])) / slide_height_emu * height)
+                        draw.rectangle((x0, y0, x1, y1), fill=(255, 255, 255))
+
+                apply_masks(left_rgb, pair["before_dynamic_masks_emu"])
+                apply_masks(right_rgb, pair["after_dynamic_masks_emu"])
+                difference = ImageChops.difference(left_rgb, right_rgb)
+                extrema = difference.getextrema()
+                exact = all(high == 0 for _, high in extrema)
+                stats = ImageStat.Stat(difference)
+                mean_absolute_error = sum(stats.mean) / len(stats.mean)
+            else:
+                exact = False
+                mean_absolute_error = float("inf")
+            evidence[str(pair["slide_id"])] = {
+                "status": "PASS" if exact and same_dimensions else "FAIL",
+                "source_index": pair["source_index"],
+                "updated_index": pair["updated_index"],
+                "dimensions_match": same_dimensions,
+                "pixel_exact_after_registered_masks": exact,
+                "mean_absolute_error": round(mean_absolute_error, 9),
+                "before_png_sha256": sha256_file(before_png).lower(),
+                "after_png_sha256": sha256_file(after_png).lower(),
+                "dynamic_placeholder_masks": len(pair["before_dynamic_masks_emu"]),
+            }
+    return {
+        "schema_version": "academic-ppt-keep-render-identity/1",
+        "status": "PASS" if all(row["status"] == "PASS" for row in evidence.values()) else "FAIL",
+        "runtime_seconds": runtime,
+        "slides": evidence,
     }
 
 
@@ -944,6 +1197,7 @@ __all__ = [
     "FastStateMachine",
     "build_automatic_operation_plan",
     "build_keep_baseline_fingerprints",
+    "build_keep_render_identity_evidence",
     "build_changed_slide_plans",
     "candidate_attempt_record",
     "compare_keep_fingerprints",
