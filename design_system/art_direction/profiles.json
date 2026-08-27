@@ -1,0 +1,29 @@
+{
+  "version": "2.5",
+  "authority": "internal_presentation_layer",
+  "default_backend": "native_pptxgenjs",
+  "external_skill_enabled": false,
+  "profiles": {
+    "clinical_methods": {
+      "signature_motif": "dual_strategy_branch",
+      "emphasis": ["CCW schematic", "absolute risk", "sensitivity"],
+      "strategy_colors": ["008A8A", "E76F51"]
+    },
+    "bioinformatics": {
+      "signature_motif": "cell_identity_molecular_state",
+      "max_highlight_colors_per_slide": 3,
+      "predicted_interaction_line_style": "dash"
+    },
+    "evidence_synthesis": {
+      "signature_motif": "evidence_aggregation",
+      "core_visual": "forest_plus_pooled_diamond",
+      "rob_style": "traffic_light",
+      "grade_style": "certainty_hierarchy"
+    },
+    "clinical_protocol": {
+      "signature_motif": "planned_pathway_timeline",
+      "planning_palette": ["173B5E", "1C8C8C"],
+      "observed_result_semantics_allowed": false
+    }
+  }
+}

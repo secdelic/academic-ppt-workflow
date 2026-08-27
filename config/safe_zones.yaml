@@ -1,0 +1,26 @@
+{
+  "schema_version": "2.1",
+  "footer_intrusion_tolerance_in": 0.0,
+  "off_slide_tolerance_in": 0.0,
+  "minimum_text_gutter_in": 0.08,
+  "overlap_types": {
+    "allowed": [
+      "text_on_background_shape",
+      "icon_inside_card",
+      "label_inside_chart",
+      "intentional_overlay"
+    ],
+    "prohibited": [
+      "body_text_vs_footer",
+      "body_text_vs_page_number",
+      "text_vs_unrelated_text",
+      "chart_vs_footer",
+      "picture_vs_title",
+      "off_slide_clipping"
+    ]
+  },
+  "intentional_overlap_contract": {
+    "requires_declaration": true,
+    "required_fields": ["object_a", "object_b", "overlap_type", "reason"]
+  }
+}

@@ -1,0 +1,12 @@
+workspace_id: thesis_defense
+visual_tone: rigorous, calm, decision-oriented
+signature_motif: "question → evidence → contribution"
+palette:
+  primary: 253858
+  accent: 6D78B7
+  comparison: D08C60
+  canvas: F8F7FB
+typography:
+  zh: Microsoft YaHei
+  latin: Aptos
+prohibited_styles: [glow, decorative_gradient, unrelated_photo, entertainment_illustration]

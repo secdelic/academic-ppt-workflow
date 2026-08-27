@@ -1,0 +1,26 @@
+{
+  "schema_version": "2.1",
+  "rules": [
+    {"content_type": "problem_gap_objective", "preferred_visual": "problem_gap_objective", "required_fields": ["problem", "objective"]},
+    {"content_type": "temporal_study_design", "preferred_visual": "timeline", "required_fields": ["milestones"]},
+    {"content_type": "cohort_inclusion_exclusion", "preferred_visual": "native_flow", "required_fields": ["nodes"]},
+    {"content_type": "two_binary_dimensions", "preferred_visual": "matrix_2x2", "required_fields": ["row_dimension", "column_dimension"]},
+    {"content_type": "categorical_event_rates", "preferred_visual": "event_rate_chart", "required_fields": ["categories", "values", "denominator"]},
+    {"content_type": "effect_estimates", "preferred_visual": "forest_plot", "required_fields": ["categories", "values", "confidence_interval", "reference_value"]},
+    {"content_type": "longitudinal_measurements", "preferred_visual": "line_chart", "required_fields": ["categories", "values"]},
+    {"content_type": "sensitivity_analyses", "preferred_visual": "forest_plot", "required_fields": ["categories", "values", "confidence_interval", "reference_value"]},
+    {"content_type": "subgroup_results", "preferred_visual": "subgroup_forest_plot", "required_fields": ["categories", "values", "confidence_interval", "reference_value"]},
+    {"content_type": "missingness", "preferred_visual": "missingness_chart", "required_fields": ["categories", "values"]},
+    {"content_type": "strengths_limitations", "preferred_visual": "comparison", "required_fields": ["left_items", "right_items"]},
+    {"content_type": "allowed_prohibited_wording", "preferred_visual": "comparison", "required_fields": ["left_items", "right_items"]},
+    {"content_type": "final_conclusions", "preferred_visual": "takeaway", "required_fields": ["takeaways"]},
+    {"content_type": "source_registry", "preferred_visual": "source_registry", "required_fields": ["rows"]},
+    {"content_type": "conflict_resolution", "preferred_visual": "audit_table", "required_fields": ["rows"]}
+  ],
+  "fallback_order": ["structured_table", "number_cards", "comparison", "timeline", "section_divider", "justified_text"],
+  "text_page_guard": {
+    "maximum_short_text_characters": 120,
+    "maximum_consecutive_text_only": 2,
+    "maximum_consecutive_same_layout": 2
+  }
+}

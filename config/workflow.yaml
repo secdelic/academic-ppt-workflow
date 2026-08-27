@@ -1,29 +1,60 @@
 {
   "schema_version": "1.0",
+  "cache_schema_version": 2,
   "paths": {
     "input_root": "input",
     "staging_root": "staging",
     "output_root": "output",
     "audit_root": "audit",
-    "archive_root": "archive"
+    "archive_root": "archive",
+    "project_cache_root": ".cache/project_state",
+    "repository_cache_mode": "DEV_TEST_ONLY"
   },
   "environment": {
+    "workflow_home": "PPT_WORKFLOW_HOME",
+    "workspace_home": "PPT_WORKSPACE_HOME",
+    "asset_home": "PPT_ASSET_HOME",
+    "cache_home": "PPT_CACHE_HOME",
     "input_root": "ACADEMIC_PPT_INPUT_ROOT",
     "staging_root": "ACADEMIC_PPT_STAGING_ROOT",
     "output_root": "ACADEMIC_PPT_OUTPUT_ROOT",
+    "audit_root": "ACADEMIC_PPT_AUDIT_ROOT",
     "node_executable": "ACADEMIC_PPT_NODE",
     "node_modules": "ACADEMIC_PPT_NODE_MODULES",
     "soffice_executable": "ACADEMIC_PPT_SOFFICE",
     "pdftoppm_executable": "ACADEMIC_PPT_PDFTOPPM"
   },
   "supported_extensions": [
-    ".docx", ".pdf", ".pptx", ".xlsx", ".csv", ".tsv", ".md", ".txt",
-    ".png", ".jpg", ".jpeg", ".svg"
+    ".docx", ".pdf", ".pptx", ".potx", ".xlsx", ".csv", ".tsv", ".md", ".txt",
+    ".png", ".jpg", ".jpeg", ".svg", ".ris"
   ],
   "default_backend": "pptxgenjs",
   "render_timeout_seconds": 120,
   "resume": true,
   "hash_algorithm": "sha256",
+  "workflow_modes": {
+    "full_validation": {
+      "deep_scientific_qa": true,
+      "deep_ooxml_qa": true,
+      "full_deck_powerpoint_geometry": true,
+      "libreoffice_default": true,
+      "audit_full_default": true
+    },
+    "fast_enhance": {
+      "default_for_routes": ["enhance-existing"],
+      "changed_slide_qa": true,
+      "whole_deck_lightweight_qa": true,
+      "libreoffice_default": false,
+      "audit_full_default": false,
+      "local_private_cache_only": true
+    }
+  },
+  "runtime_budget_minutes": {
+    "S": 15,
+    "M": 45,
+    "L": 90,
+    "M_bottleneck_report_threshold": 60
+  },
   "ocr": {
     "enabled_by_default": false,
     "require_scanned_pdf_confirmation": true

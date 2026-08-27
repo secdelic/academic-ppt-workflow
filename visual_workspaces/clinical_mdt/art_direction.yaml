@@ -1,0 +1,12 @@
+workspace_id: clinical_mdt
+visual_tone: rigorous, calm, decision-oriented
+signature_motif: "system map + decision cards"
+palette:
+  primary: 17324D
+  accent: 178A8A
+  comparison: E76F51
+  canvas: F6F9FB
+typography:
+  zh: Microsoft YaHei
+  latin: Aptos
+prohibited_styles: [glow, decorative_gradient, unrelated_photo, entertainment_illustration]

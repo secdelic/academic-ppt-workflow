@@ -1,0 +1,11 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Academic PPT SlideSpec v2.4",
+  "type": "object",
+  "required": [
+    "slide_id", "slide_role", "narrative_purpose", "title", "language",
+    "key_message", "claim_bindings", "source_bindings", "conflict_bindings",
+    "unresolved_bindings", "visual_specs", "layout_family", "design_profile",
+    "appendix_status", "review_flags"
+  ]
+}

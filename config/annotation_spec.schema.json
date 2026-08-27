@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "academic-ppt/annotation-spec/2.5",
+  "title": "Academic PPT AnnotationSpec",
+  "type": "object",
+  "required": ["annotation_type", "priority", "text"],
+  "properties": {
+    "annotation_type": {
+      "enum": ["direct_label", "key_value_callout", "delta_annotation", "threshold_annotation", "confidence_annotation", "caution_annotation", "evidence_boundary_annotation", "reference_line_label", "highlight_band", "bracket_comparison"]
+    },
+    "priority": {"enum": ["primary", "secondary"]},
+    "text": {"type": "string", "minLength": 1}
+  },
+  "additionalProperties": true
+}

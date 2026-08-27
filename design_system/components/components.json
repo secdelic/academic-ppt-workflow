@@ -1,0 +1,21 @@
+{
+  "version": "2.4",
+  "components": [
+    "key_number",
+    "delta_badge",
+    "evidence_badge",
+    "certainty_badge",
+    "caution_callout",
+    "direct_annotation",
+    "comparison_bracket",
+    "highlight_band",
+    "source_footnote",
+    "review_marker"
+  ],
+  "rules": {
+    "decorative_icons": false,
+    "glow": false,
+    "large_gradients": false,
+    "complex_shadows": false
+  }
+}

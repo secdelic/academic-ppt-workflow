@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.0",
+  "schema_version": "2.7.0-rc4",
   "lock_purpose": "Auditable exact runtime contract; no automatic global installation",
   "node": {
     "runtime_version": "24.14.0",
@@ -7,13 +7,7 @@
       "name": "pptxgenjs",
       "version": "4.0.1",
       "license": "MIT",
-      "package_json_sha256": "A4FC694898EF6F7DA4C5840B799B593A0A74E9E05B7490B2AC5EE144762DB477"
-    },
-    "internal_validation_backend": {
-      "name": "@oai/artifact-tool",
-      "version": "2.8.33",
-      "license": "Proprietary and confidential; internal evaluation/testing only",
-      "package_json_sha256": "F10A779E1000C1D2E2C99F676C2BD22367D0964950B4E0876AAC04D0CF3E82D4"
+      "package_json_sha256": "280AD4F82C2272A96166350EBEADA960779D23B2A8DCA550211ABFADF9498765"
     }
   },
   "python": {
@@ -21,14 +15,19 @@
     "packages": {
       "pypdf": "6.10.0",
       "python-docx": "1.2.0",
+      "python-pptx": "1.0.2",
       "openpyxl": "3.1.5",
       "Pillow": "12.2.0",
-      "lxml": "6.0.2"
+      "lxml": "6.0.2",
+      "typing-extensions": "4.16.0",
+      "et-xmlfile": "2.0.0",
+      "XlsxWriter": "3.2.9",
+      "PyYAML": "6.0.3"
     }
   },
   "renderers": {
     "Microsoft PowerPoint": "16.0",
-    "LibreOffice": "auto-discovered fallback",
-    "Poppler pdftoppm": "auto-discovered fallback"
+    "LibreOffice": "26.2.4.2 validated; auto-discovered optional",
+    "Poppler pdftoppm": "optional; not available in primary validation environment"
   }
 }

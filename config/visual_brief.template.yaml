@@ -1,0 +1,35 @@
+{
+  "schema_version": "academic-ppt-visual-brief/1",
+  "visual_brief_id": "replace-with-approved-direction-id",
+  "approval": {
+    "status": "draft",
+    "approved_by": null,
+    "approved_at": null
+  },
+  "scope": {
+    "route": "generate",
+    "redesign_requested": true
+  },
+  "direction": {
+    "direction_name": "克制的学术证据叙事",
+    "visual_tone": ["清晰", "克制", "可信"],
+    "visual_motif": "单一证据主轴配合有限强调",
+    "primary_palette": ["#14324B", "#147D80"],
+    "secondary_palette": ["#DCECEE", "#F2B5A7"],
+    "background_strategy": "mixed",
+    "typography_personality": "现代学术无衬线，中英文字符字重协调",
+    "hero_style": "一个主视觉中心，最多两个辅助标注",
+    "figure_treatment": "来源图保留比例，统一边界和说明层级",
+    "chart_treatment": "低装饰、直接标注、语义色克制",
+    "annotation_style": "短句、证据边界明确、避免遮挡数据",
+    "card_style": "平面边框和充分留白",
+    "divider_style": "低密度章节转场",
+    "density_pattern": "低—中—高的非机械节奏",
+    "signature_components": ["证据徽标", "边界提示"],
+    "allowed_variants": ["chart-led", "figure-led", "split-screen"],
+    "prohibited_styles": ["无意义图标", "大面积渐变", "复杂阴影"]
+  },
+  "style_reference_ids": [],
+  "approved_asset_ids": [],
+  "workspace_hint": null
+}

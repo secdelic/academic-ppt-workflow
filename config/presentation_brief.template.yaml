@@ -1,0 +1,56 @@
+schema_version: academic-ppt-presentation-brief/1
+
+# This template is instantiated by scripts/new_project.ps1. Paths are always
+# relative to the project root so that the project can move between devices.
+project_id: "__PROJECT_ID__"
+project_name: __PROJECT_TITLE_JSON__
+route: "__ROUTE__" # generate | enhance | template-fill | template-create
+quality: "__QUALITY__" # quick | validated | full
+
+presentation:
+  type: research_report
+  objective: INFORMATION_REQUIRED
+  audience: INFORMATION_REQUIRED
+  language: "__LANGUAGE__"
+  duration_minutes: 20
+  target_slide_count: 15
+  aspect_ratio: "16:9"
+
+content_contract:
+  must_include: []
+  must_not_claim: []
+  key_message: INFORMATION_REQUIRED
+  speaker_notes_required: true
+  appendix_required: true
+
+privacy:
+  mode: standard # standard | clinical_private
+  local_private_cache_only: true
+  direct_identifiers_allowed: false
+  third_party_upload_allowed: false
+
+inputs:
+  documents_dir: input/documents
+  data_dir: input/data
+  figures_dir: input/figures
+  references_dir: input/references
+  style_reference_dir: input/style_reference
+  template_path: __TEMPLATE_PATH_JSON__
+  existing_deck_path: __EXISTING_DECK_PATH_JSON__
+
+visual_direction:
+  # Only brief/visual_brief.yaml is approved. A *.DRAFT.yaml file is not active.
+  approved_visual_brief: brief/visual_brief.yaml
+  approved_assets_registry: approved_assets/asset_registry.yaml
+  inherit_existing_deck_style: __INHERIT_EXISTING_STYLE__
+  preserve_template_brand_rules: __PRESERVE_TEMPLATE_BRAND__
+
+# Optional presentation-only overrides. Do not place facts, results, numbers,
+# source bindings or scientific conclusions here.
+explicit_visual_instruction: {}
+redesign_requested: false
+
+human_gates:
+  visual_brief_approval_required: __VISUAL_APPROVAL_REQUIRED__
+  scientific_uncertainty_review_required: true
+  final_visual_review_required: true

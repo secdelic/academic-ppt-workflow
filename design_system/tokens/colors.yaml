@@ -1,0 +1,29 @@
+version: 2.4
+shared:
+  canvas: F6F9FB
+  ink: 17324D
+  muted: 627D98
+  white: FFFFFF
+  warning: D97706
+  danger: B23A48
+profiles:
+  clinical_methods:
+    primary: 17324D
+    accent: 178A8A
+    comparison: E76F51
+  bioinformatics:
+    primary: 213A5C
+    accent: 2A9D8F
+    positive: D95F59
+    negative: 3B82C4
+  evidence_synthesis:
+    primary: 263B57
+    accent: 6B7F9E
+    low_risk: 4C956C
+    some_concerns: E9A23B
+    high_risk: C74B50
+  clinical_protocol:
+    primary: 1D3B46
+    accent: 3A8D8A
+    planning: 6C8EBF
+    unresolved: E9A23B

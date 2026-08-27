@@ -1,0 +1,225 @@
+{
+  "schema_version": "2.0",
+  "default_mode": "neutral_briefing",
+  "modes": {
+    "scientific_problem": {
+      "recommended_slide_order": [
+        "cover",
+        "scientific_problem",
+        "current_evidence",
+        "knowledge_gap",
+        "objective_or_hypothesis",
+        "study_design",
+        "population_and_data",
+        "analysis_framework",
+        "primary_results",
+        "secondary_or_sensitivity_results",
+        "interpretation",
+        "strengths_and_limitations",
+        "implications",
+        "conclusion",
+        "references",
+        "appendix"
+      ],
+      "title_rules": [
+        "Use one source-supported action title per slide when evidence permits.",
+        "Use a neutral descriptive title when the source does not support a conclusion."
+      ],
+      "evidence_requirements": [
+        "Every claim and number requires claim_id and source_id.",
+        "Observational associations must not be expressed as causal effects.",
+        "Computational inference must not be presented as experimental validation."
+      ],
+      "conclusion_strength": "match the strongest wording explicitly supported by registered evidence",
+      "limitations_page_requirement": "required",
+      "citation_density": "cite every important fact, result, and external visual on-slide",
+      "speaker_pacing": "move from problem to evidence to bounded interpretation; approximately one key message per minute",
+      "appendix_strategy": "retain supporting methods, sensitivity analyses, and full references in backup slides"
+    },
+    "conclusion_first": {
+      "recommended_slide_order": [
+        "cover",
+        "source_supported_takeaway",
+        "why_it_matters",
+        "question_and_gap",
+        "design",
+        "key_results",
+        "interpretation",
+        "limitations",
+        "conclusion",
+        "appendix"
+      ],
+      "title_rules": [
+        "Lead with a source-supported takeaway, not an unverified claim.",
+        "Use neutral wording when evidence strength is uncertain."
+      ],
+      "evidence_requirements": [
+        "The opening takeaway must map to at least one claim_id and source_id.",
+        "All numbers and citations remain traceable after reordering.",
+        "Causal language requires causal evidence explicitly present in the source."
+      ],
+      "conclusion_strength": "concise but no stronger than the registered source wording",
+      "limitations_page_requirement": "required",
+      "citation_density": "high on takeaway and result slides; source-bound elsewhere",
+      "speaker_pacing": "state the bounded takeaway early, then establish how the evidence supports it",
+      "appendix_strategy": "move detailed methods and secondary analyses to labeled backup slides"
+    },
+    "thesis_defense": {
+      "recommended_slide_order": [
+        "cover",
+        "problem_and_significance",
+        "literature",
+        "knowledge_gap",
+        "aims_and_hypotheses",
+        "methods",
+        "results_by_aim",
+        "integrated_interpretation",
+        "original_contribution",
+        "strengths_and_limitations",
+        "future_work",
+        "conclusion",
+        "acknowledgements",
+        "references",
+        "appendix"
+      ],
+      "title_rules": [
+        "Use claim-bearing titles only where the thesis evidence supports them.",
+        "Separate original results from literature-derived context."
+      ],
+      "evidence_requirements": [
+        "Each aim, method, result, and limitation must be traceable to the thesis package.",
+        "Original contribution claims require manual review.",
+        "Mechanism hypotheses must be labeled by evidence strength."
+      ],
+      "conclusion_strength": "integrate across aims without exceeding any source result",
+      "limitations_page_requirement": "required",
+      "citation_density": "high for literature; direct source mapping for thesis results",
+      "speaker_pacing": "allocate the largest share to methods and results, with explicit transitions between aims",
+      "appendix_strategy": "include detailed methods, diagnostics, supplementary results, and anticipated questions"
+    },
+    "journal_club": {
+      "recommended_slide_order": [
+        "citation_and_context",
+        "research_question",
+        "design",
+        "population",
+        "exposure_or_intervention",
+        "outcomes",
+        "statistical_methods",
+        "primary_results",
+        "secondary_results",
+        "risk_of_bias",
+        "applicability",
+        "discussion",
+        "references"
+      ],
+      "title_rules": [
+        "Distinguish what the paper reports from the presenter's appraisal.",
+        "Use neutral titles for appraisal when certainty is unresolved."
+      ],
+      "evidence_requirements": [
+        "Reported results must map to the paper location.",
+        "Critical appraisal statements must be labeled as interpretation.",
+        "Do not invent missing methods, denominators, or confidence intervals."
+      ],
+      "conclusion_strength": "separate authors' conclusion from the reviewer's evidence-bounded assessment",
+      "limitations_page_requirement": "required",
+      "citation_density": "cite the focal paper on result slides and source external context separately",
+      "speaker_pacing": "reserve substantial time for bias, applicability, and discussion",
+      "appendix_strategy": "include extraction details, supplementary tables, and reporting-checklist items"
+    },
+    "clinical_protocol": {
+      "recommended_slide_order": [
+        "cover",
+        "clinical_rationale",
+        "objective_and_hypothesis",
+        "design",
+        "setting_and_population",
+        "eligibility",
+        "intervention_or_exposure",
+        "outcomes",
+        "sample_size",
+        "statistical_plan",
+        "safety_and_ethics",
+        "data_management",
+        "timeline",
+        "limitations_and_feasibility",
+        "decision_requests",
+        "appendix"
+      ],
+      "title_rules": [
+        "Describe planned methods as planned, not completed.",
+        "Do not imply efficacy or safety results before evidence exists."
+      ],
+      "evidence_requirements": [
+        "Planned sample size, endpoints, time windows, and models require protocol sources.",
+        "Ethics approval must be INFORMATION_REQUIRED unless explicitly documented.",
+        "Distinguish feasibility assumptions from observed evidence."
+      ],
+      "conclusion_strength": "state protocol readiness and unresolved decisions, not clinical effectiveness",
+      "limitations_page_requirement": "required",
+      "citation_density": "cite rationale, design standards, and protocol-defined quantities",
+      "speaker_pacing": "prioritize design decisions, operational risks, and explicit approval questions",
+      "appendix_strategy": "include detailed definitions, schedule of events, statistical details, and governance documents"
+    },
+    "methods_teaching": {
+      "recommended_slide_order": [
+        "learning_objectives",
+        "problem_setup",
+        "conceptual_model",
+        "assumptions",
+        "method_steps",
+        "worked_synthetic_example",
+        "diagnostics",
+        "failure_modes",
+        "interpretation",
+        "summary",
+        "references",
+        "appendix"
+      ],
+      "title_rules": [
+        "Use instructional titles that state the operation or decision.",
+        "Label all examples as synthetic unless they trace to registered sources."
+      ],
+      "evidence_requirements": [
+        "Method claims require source citations.",
+        "Synthetic values must be labeled and kept separate from study results.",
+        "Do not present a computational demonstration as clinical evidence."
+      ],
+      "conclusion_strength": "summarize methodological use conditions and limitations",
+      "limitations_page_requirement": "required",
+      "citation_density": "cite method definitions and recommendations; label synthetic examples",
+      "speaker_pacing": "alternate concise concepts with worked steps and checks",
+      "appendix_strategy": "include extended derivations, code references, and additional synthetic examples"
+    },
+    "neutral_briefing": {
+      "recommended_slide_order": [
+        "cover",
+        "scope_and_evidence_boundary",
+        "known_information",
+        "open_questions",
+        "methods_or_process",
+        "source_supported_findings",
+        "limitations",
+        "decisions_required",
+        "next_steps",
+        "references",
+        "appendix"
+      ],
+      "title_rules": [
+        "Prefer descriptive titles over conclusions when support is incomplete.",
+        "Use INFORMATION_REQUIRED for missing scientific content."
+      ],
+      "evidence_requirements": [
+        "Clearly distinguish reported facts, summaries, interpretations, and confirmation requests.",
+        "Every formal claim must retain source_id traceability.",
+        "Do not infer missing facts or citations."
+      ],
+      "conclusion_strength": "neutral and explicitly bounded by available registered evidence",
+      "limitations_page_requirement": "recommended",
+      "citation_density": "source-bound for facts and results; no placeholder citations",
+      "speaker_pacing": "state the boundary early and pause at unresolved decisions",
+      "appendix_strategy": "retain detailed evidence registers and unresolved items for manual review"
+    }
+  }
+}

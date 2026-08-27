@@ -1,0 +1,12 @@
+workspace_id: bioinformatics
+visual_tone: rigorous, calm, decision-oriented
+signature_motif: "cell identity + molecular state"
+palette:
+  primary: 213A5C
+  accent: 2A9D8F
+  comparison: D95F59
+  canvas: F6F9FB
+typography:
+  zh: Microsoft YaHei
+  latin: Aptos
+prohibited_styles: [glow, decorative_gradient, unrelated_photo, entertainment_illustration]

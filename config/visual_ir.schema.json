@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "academic-ppt-workflow/visual-ir/2.2",
+  "title": "Academic PPT Visual IR",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "visual_id",
+    "slide_id",
+    "visual_type",
+    "semantic_role",
+    "data_contract_id",
+    "outcome",
+    "estimand",
+    "unit",
+    "scale",
+    "categories",
+    "series",
+    "estimate",
+    "ci_low",
+    "ci_high",
+    "p_value",
+    "interaction_p",
+    "numerator",
+    "denominator",
+    "sample_size",
+    "reference_group",
+    "reference_value",
+    "analysis_label",
+    "highlight_rule",
+    "annotation_rule",
+    "source_ids",
+    "wording_boundary",
+    "editability_requirement",
+    "preferred_backend",
+    "fallback_backend"
+  ],
+  "properties": {
+    "visual_id": {"type": "string", "pattern": "^VIS-[A-F0-9]{16}$"},
+    "slide_id": {"type": "string", "pattern": "^SLD-[A-F0-9]{20}$"},
+    "visual_type": {"type": "string", "minLength": 1},
+    "semantic_role": {"type": "string", "minLength": 1},
+    "data_contract_id": {"type": ["string", "null"]},
+    "outcome": {"type": ["string", "null"]},
+    "estimand": {"type": ["string", "null"]},
+    "unit": {"type": ["string", "null"]},
+    "scale": {"enum": ["linear", "log", "log10", "categorical", "timeline", null]},
+    "categories": {"type": "array", "items": {"type": "string"}},
+    "series": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {"type": "string"},
+          "values": {"type": "array", "items": {"type": ["number", "null"]}},
+          "outcome": {"type": ["string", "null"]},
+          "estimand": {"type": ["string", "null"]},
+          "reference_group": {"type": ["string", "null"]},
+          "analysis_label": {"type": ["string", "null"]}
+        },
+        "additionalProperties": true
+      }
+    },
+    "estimate": {"type": "array", "items": {"type": ["number", "null"]}},
+    "ci_low": {"type": "array", "items": {"type": ["number", "null"]}},
+    "ci_high": {"type": "array", "items": {"type": ["number", "null"]}},
+    "p_value": {"type": "array", "items": {"type": ["number", "null"]}},
+    "interaction_p": {"type": "array", "items": {"type": ["number", "null"]}},
+    "numerator": {"type": "array", "items": {"type": ["number", "null"]}},
+    "denominator": {"type": "array", "items": {"type": ["number", "null"]}},
+    "sample_size": {"type": ["number", "null"], "minimum": 0},
+    "reference_group": {"type": ["string", "null"]},
+    "reference_value": {"type": ["number", "null"]},
+    "analysis_label": {"type": "array", "items": {"type": "string"}},
+    "highlight_rule": {"type": "object"},
+    "annotation_rule": {"type": "object"},
+    "source_ids": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "wording_boundary": {"type": "string", "minLength": 1},
+    "editability_requirement": {
+      "enum": ["native_required", "vector_acceptable", "raster_acceptable"]
+    },
+    "preferred_backend": {
+      "enum": [
+        "native_pptxgenjs",
+        "svg_drawingml_adapter",
+        "graphviz_adapter",
+        "mermaid_adapter",
+        "latex_omml_adapter"
+      ]
+    },
+    "fallback_backend": {"const": "native_pptxgenjs"}
+  }
+}

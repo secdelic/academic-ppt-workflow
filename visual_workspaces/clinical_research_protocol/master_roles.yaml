@@ -1,0 +1,31 @@
+roles:
+  cover:
+    master_family: cover
+    source_footer: optional
+  section_divider:
+    master_family: section_divider
+    source_footer: required
+  problem_gap_objective:
+    master_family: chart_led
+    source_footer: required
+  method_framework:
+    master_family: chart_led
+    source_footer: required
+  primary_result:
+    master_family: chart_led
+    source_footer: required
+  secondary_result:
+    master_family: chart_led
+    source_footer: required
+  hero_result:
+    master_family: chart_led
+    source_footer: required
+  limitation:
+    master_family: chart_led
+    source_footer: required
+  conclusion:
+    master_family: chart_led
+    source_footer: required
+  appendix:
+    master_family: appendix_audit
+    source_footer: required

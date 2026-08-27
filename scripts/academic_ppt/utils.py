@@ -89,6 +89,51 @@ def resolve_path(
     return path.resolve() if path.is_absolute() else (repo_root / path).resolve()
 
 
+def resolve_workflow_home(cli_value: str | None, code_default: Path) -> Path:
+    """Resolve the repository authority without a fixed drive assumption."""
+
+    raw = cli_value or os.environ.get("PPT_WORKFLOW_HOME")
+    return Path(raw).expanduser().resolve() if raw else code_default.resolve()
+
+
+def load_local_runtime_config(repo_root: Path) -> dict[str, Any]:
+    """Load the ignored machine-local path overlay when present."""
+
+    local_path = repo_root / "config" / "local.yaml"
+    if not local_path.is_file():
+        return {}
+    value = load_yaml_compatible(local_path)
+    paths = value.get("paths", {})
+    if not isinstance(paths, dict):
+        raise ValueError("config/local.yaml paths must be a mapping")
+    return dict(paths)
+
+
+def resolve_runtime_path(
+    *,
+    cli_value: str | None,
+    env_name: str,
+    legacy_env_name: str | None,
+    local_value: str | None,
+    workspace_home: Path | None,
+    workspace_child: str,
+    repo_root: Path,
+    repo_default: str,
+) -> Path:
+    """Resolve a portable runtime path using the v2.6 precedence contract."""
+
+    env_value = os.environ.get(env_name) or (
+        os.environ.get(legacy_env_name) if legacy_env_name else None
+    )
+    raw = cli_value or env_value or local_value
+    if raw:
+        candidate = Path(raw).expanduser()
+        return candidate.resolve() if candidate.is_absolute() else (repo_root / candidate).resolve()
+    if workspace_home is not None:
+        return (workspace_home / workspace_child).resolve()
+    return (repo_root / repo_default).resolve()
+
+
 def fingerprint_paths(paths: Iterable[Path]) -> str:
     digest = hashlib.sha256()
     for path in sorted(paths, key=lambda p: str(p).lower()):

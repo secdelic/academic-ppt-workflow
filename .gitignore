@@ -1,0 +1,38 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.cache/
+config/local.yaml
+.venv/
+node_modules/
+*.tmp
+~$*.pptx
+*.pptx~
+
+# Machine-local workspaces and install receipts.
+workspace/
+projects/
+private/
+cache/
+runtime_logs/
+install_receipts/
+
+# Generated and immutable run products are governed by manifests, not Git.
+input/
+output/
+staging/
+audit/
+benchmark/
+archive/
+brief/
+
+# Generated Office documentation and release products are local artifacts.
+docs/*.docx
+release/
+~$*
+
+# Upstream source checkouts are isolated evidence and must never enter canonical code.
+audit/upstream_review/sources/
+
+# Real-world clinical shadow artifacts may contain protected health information.
+audit/real_world_mdt/

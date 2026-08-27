@@ -1,0 +1,26 @@
+{
+  "schema_version": "2.0",
+  "promotion_target": "controlled v2 capabilities",
+  "checks": [
+    {"id": "PG-01", "requirement": "no scientific content accuracy regression", "status": "PENDING_BENCHMARK"},
+    {"id": "PG-02", "requirement": "every formal claim maps to source_id", "status": "PENDING_BENCHMARK"},
+    {"id": "PG-03", "requirement": "input hashes remain unchanged", "status": "PENDING_BENCHMARK"},
+    {"id": "PG-04", "requirement": "PPTX opens in Microsoft PowerPoint", "status": "PENDING_BENCHMARK"},
+    {"id": "PG-05", "requirement": "PDF and PNG page counts agree", "status": "PENDING_BENCHMARK"},
+    {"id": "PG-06", "requirement": "no unapproved network access", "status": "PASS_BY_IMPLEMENTATION_POLICY"},
+    {"id": "PG-07", "requirement": "no third-party API relay", "status": "PASS_BY_IMPLEMENTATION_POLICY"},
+    {"id": "PG-08", "requirement": "license compatible", "status": "PASS_CLEAN_ROOM_NO_COPY"},
+    {"id": "PG-09", "requirement": "dependencies locked or capability-gated", "status": "PENDING_RUNTIME_CHECK"},
+    {"id": "PG-10", "requirement": "fallback to PptxGenJS v1 remains available", "status": "PASS"},
+    {"id": "PG-11", "requirement": "visual or functional benefit is measured", "status": "PENDING_BENCHMARK"},
+    {"id": "PG-12", "requirement": "maintenance cost remains acceptable", "status": "PENDING_BENCHMARK"}
+  ],
+  "determinism_evidence": [
+    "Deck IR canonical hash",
+    "slide content hash",
+    "object manifest",
+    "claim-source map",
+    "rendered image perceptual comparison",
+    "binary file hash as integrity evidence only"
+  ]
+}

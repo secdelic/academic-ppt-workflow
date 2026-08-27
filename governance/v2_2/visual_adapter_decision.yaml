@@ -1,0 +1,39 @@
+version: '2.2'
+final_decision: NO_GO_EXTERNAL_SKILL
+canonical_authority: current_repository
+default_backend: native_pptxgenjs
+external_adapters_default_enabled: false
+production_registration_performed: false
+decisions:
+  - capability_id: visual_ir_semantic_layer
+    decision: RETAIN_EXPERIMENTAL_INTERNAL
+    evidence: 'Arm B reduced semantic critical issues from 2 to 0.'
+  - capability_id: graphviz_adapter
+    decision: BENCHMARK_ONLY
+    evidence: 'Editable native translation passed, but runtime and scientific gates failed.'
+  - capability_id: mermaid_adapter
+    decision: REJECT_PRODUCTION
+    evidence: 'CLI unavailable; fallback only.'
+  - capability_id: latex_omml_adapter
+    decision: BENCHMARK_ONLY
+    evidence: 'Artifact unit-tested; OOXML injection not deck-tested.'
+  - capability_id: svg_drawingml_adapter
+    decision: BENCHMARK_ONLY
+    evidence: 'Manifest path unit-tested; native DrawingML path incomplete.'
+promotion_gate:
+  critical_scientific_regression_zero: false
+  claim_source_regression_zero: false
+  canonical_number_regression_zero: not_fully_assessed
+  cross_project_leakage_zero: true
+  ground_truth_leakage_zero: true
+  style_cache_leakage_zero: true
+  severe_overlap_clipping_zero: true
+  powerpoint_open_rate_100_percent: true
+  key_visual_editability_passed: partial
+  external_service_usage_zero: true
+  global_installation_zero: true
+  native_fallback_passed: true
+  runtime_within_2x_arm_b: false
+  blinded_visual_gain_at_least_8: not_assessed
+  license_and_attribution_complete: false
+next_gate: 'Repair canonical claim/conflict/unresolved extraction, then complete blinded human review.'

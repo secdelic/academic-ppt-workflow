@@ -1,0 +1,42 @@
+schema_version: academic-ppt-model-routing-policy/1
+workflow_mode: fast_enhance
+tiers:
+  tier_0:
+    authority: deterministic_code
+    tasks:
+      - file_discovery
+      - hashing
+      - ppt_parsing
+      - xml
+      - master_layout
+      - coordinates
+      - font
+      - geometry
+      - rendering
+      - qa
+      - packaging
+  tier_1:
+    authority: rules_or_standard_model
+    tasks:
+      - text_compression
+      - title_length_adjustment
+      - low_risk_layout_copy
+  tier_2:
+    authority: high_reasoning_model
+    batch_mode: one_call_per_changed_slide_set
+    target_calls_m: 1
+    maximum_calls_m: 2
+    forbidden_triggers:
+      - per_slide_call
+      - layout_repair
+      - unchanged_slide_reanalysis
+    tasks:
+      - scientific_fact_integration
+      - conflict_and_uncertainty
+      - narrative_decision
+      - changed_slide_scientific_review
+telemetry_required:
+  - model_calls
+  - input_tokens
+  - output_tokens
+  - model_elapsed_seconds

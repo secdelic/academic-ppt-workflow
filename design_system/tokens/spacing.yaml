@@ -1,0 +1,10 @@
+version: 2.4
+slide_margin_x: 0.72
+title_y: 0.34
+title_h: 0.62
+section_label_y: 1.02
+content_y: 1.38
+content_bottom: 7.05
+footer_y: 7.18
+grid_columns: 12
+gutter: 0.18

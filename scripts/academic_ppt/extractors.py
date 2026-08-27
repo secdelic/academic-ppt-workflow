@@ -4,6 +4,8 @@ import csv
 import re
 import zipfile
 from pathlib import Path
+
+from .inventory import is_scientific_source, source_role
 from xml.etree import ElementTree as ET
 
 
@@ -91,6 +93,14 @@ def extract_source(path: Path) -> tuple[str, int | str, list[str]]:
     if suffix == ".svg":
         text = _xml_text(path.read_bytes())
         return f"[SVG]\n{text}", 1, warnings
+    if suffix == ".ris":
+        text = path.read_text(encoding="utf-8-sig", errors="replace")
+        records = sum(
+            1 for line in text.splitlines() if line.strip().upper() == "ER  -"
+        )
+        if records == 0:
+            warnings.append("RIS contained no ER record terminators")
+        return text, records, warnings
     raise ValueError(f"Unsupported source type: {suffix}")
 
 
@@ -100,6 +110,18 @@ def extract_all(input_root: Path, staging_root: Path, manifest: list[dict[str, s
     extracted_dir.mkdir(parents=True, exist_ok=True)
     for row in manifest:
         path = input_root / row["relative_path"]
+        if not is_scientific_source(row):
+            row["parsed_successfully"] = "yes"
+            row["page_or_sheet_count"] = ""
+            row["parse_warning"] = (
+                f"{source_role(row)}: content and notes "
+                "intentionally excluded from the evidence stream"
+            )
+            extracted[row["source_id"]] = ""
+            (extracted_dir / f"{row['source_id']}.txt").write_text(
+                "[REFERENCE CONTENT EXCLUDED]\n", encoding="utf-8"
+            )
+            continue
         try:
             text, count, warnings = extract_source(path)
             row["parsed_successfully"] = "yes"
@@ -112,3 +134,69 @@ def extract_all(input_root: Path, staging_root: Path, manifest: list[dict[str, s
             row["parse_warning"] = f"{type(exc).__name__}: {exc}"
             extracted[row["source_id"]] = ""
     return extracted
+
+
+def extract_selected(
+    input_root: Path,
+    staging_root: Path,
+    manifest: list[dict[str, str]],
+    source_ids: set[str],
+    *,
+    cached_extractions: dict[str, str] | None = None,
+) -> tuple[dict[str, str], dict[str, int]]:
+    """Parse only selected sources and reuse validated cached extractions.
+
+    The caller is responsible for proving that every cached value belongs to
+    the same source SHA-256 and parser/config fingerprint.  This function never
+    treats a missing cache entry as unchanged: an unselected source without a
+    supplied cached value is omitted and reported in ``missing``.
+    """
+
+    cached = cached_extractions or {}
+    extracted: dict[str, str] = {}
+    extracted_dir = staging_root / "extracted"
+    extracted_dir.mkdir(parents=True, exist_ok=True)
+    parsed_count = 0
+    reused_count = 0
+    missing_count = 0
+    for row in manifest:
+        source_id = str(row.get("source_id", ""))
+        if not source_id:
+            continue
+        if source_id not in source_ids:
+            if source_id in cached:
+                text = cached[source_id]
+                extracted[source_id] = text
+                row["parsed_successfully"] = "yes"
+                row["parse_warning"] = "REUSED_VALIDATED_PROJECT_CACHE"
+                reused_count += 1
+            else:
+                missing_count += 1
+            continue
+        path = input_root / row["relative_path"]
+        if not is_scientific_source(row):
+            text = ""
+            row["parsed_successfully"] = "yes"
+            row["page_or_sheet_count"] = ""
+            row["parse_warning"] = (
+                f"{source_role(row)}: content and notes "
+                "intentionally excluded from the evidence stream"
+            )
+        else:
+            try:
+                text, count, warnings = extract_source(path)
+                row["parsed_successfully"] = "yes"
+                row["page_or_sheet_count"] = str(count)
+                row["parse_warning"] = "; ".join(warnings)
+            except Exception as exc:
+                row["parsed_successfully"] = "no"
+                row["parse_warning"] = f"{type(exc).__name__}: {exc}"
+                text = ""
+        extracted[source_id] = text
+        (extracted_dir / f"{source_id}.txt").write_text(text, encoding="utf-8")
+        parsed_count += 1
+    return extracted, {
+        "parsed": parsed_count,
+        "reused": reused_count,
+        "missing": missing_count,
+    }

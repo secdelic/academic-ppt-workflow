@@ -1,0 +1,6 @@
+version: 2.4
+hairline_pt: 0.75
+standard_pt: 1.1
+emphasis_pt: 2.0
+corner_radius: 0.04
+shadow: none

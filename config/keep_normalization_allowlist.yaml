@@ -1,0 +1,68 @@
+schema_version: academic-ppt-keep-normalization-allowlist/1
+rules:
+  - id: xml_namespace_prefix
+    field: XML namespace prefix spelling
+    reason: Namespace URI, not prefix spelling, defines the element or attribute.
+    before_after_evidence: audit/v2_7_rc4/keep_slide_ooxml_diff.md
+    powerpoint_behavior: PowerPoint may rewrite namespace declarations and prefix choices on SaveAs.
+    semantic_impact: NONE
+  - id: xml_attribute_order
+    field: XML attribute ordering
+    reason: OOXML attribute order has no data-model meaning.
+    before_after_evidence: audit/v2_7_rc4/keep_slide_ooxml_diff.md
+    powerpoint_behavior: PowerPoint emits attributes in serializer-defined order.
+    semantic_impact: NONE
+  - id: xml_serialization_whitespace
+    field: Inter-element serialization whitespace
+    reason: Formatting whitespace outside text-bearing nodes is not visible or editable content.
+    before_after_evidence: audit/v2_7_rc4/keep_slide_ooxml_diff.md
+    powerpoint_behavior: PowerPoint rewrites indentation and line breaks on SaveAs.
+    semantic_impact: NONE
+  - id: relationship_id_same_target
+    field: Relationship Id when type target mode and resolved target are identical
+    reason: The package-local relationship label is not the relationship target semantics.
+    before_after_evidence: audit/v2_7_rc4/keep_slide_ooxml_diff.md
+    powerpoint_behavior: PowerPoint may renumber relationship labels while preserving the same target.
+    semantic_impact: NONE
+  - id: empty_effect_list
+    field: Empty DrawingML effectLst element
+    reason: An effect list with no child effect has no rendered or editable effect.
+    before_after_evidence: audit/v2_7_rc4/keep_slide_ooxml_diff.md
+    powerpoint_behavior: PowerPoint materializes empty effect lists on SaveAs.
+    semantic_impact: NONE
+  - id: table_column_id_extension
+    field: DrawingML table gridCol ext uri 9D8B030D-6E8A-4147-A177-3AD203B41FA5 colId
+    reason: PowerPoint-generated column bookkeeping does not alter width content style or editability.
+    before_after_evidence: audit/v2_7_rc4/keep_slide_ooxml_diff.md
+    powerpoint_behavior: PowerPoint adds deterministic a16 column ids when serializing a table.
+    semantic_impact: NONE
+  - id: table_row_id_extension
+    field: DrawingML table tr ext uri 0D108BD9-81ED-4DB2-BD59-A6C34878D82A rowId
+    reason: PowerPoint-generated row bookkeeping does not alter height content style or editability.
+    before_after_evidence: audit/v2_7_rc4/keep_slide_ooxml_diff.md
+    powerpoint_behavior: PowerPoint adds deterministic a16 row ids when serializing a table.
+    semantic_impact: NONE
+  - id: table_cell_default_vertical_margins
+    field: DrawingML tcPr marT and marB explicit 45720 versus omitted default
+    reason: PowerPoint reports 3.6 point vertical margins in both representations.
+    before_after_evidence: audit/v2_7_rc4/keep_semantic_equivalence.md
+    powerpoint_behavior: PowerPoint omits explicit vertical margins equal to its effective table-cell default.
+    semantic_impact: NONE
+  - id: shape_native_id_powerpoint_normalization
+    field: p cNvPr id when logical index name z-order references and actions are preserved
+    reason: Duplicate generator ids are resolved in the PowerPoint in-memory object model before save.
+    before_after_evidence: audit/v2_7_rc4/keep_semantic_equivalence.md
+    powerpoint_behavior: PowerPoint serializes the already-exposed in-memory shape id on SaveAs.
+    semantic_impact: NONE
+  - id: media_part_renaming_same_binary
+    field: Internal OOXML media part name when relationship type target mode media SHA and crop are identical
+    reason: The package-local media filename is not the image content or its editable placement semantics.
+    before_after_evidence: audit/v2_7_rc4/keep_semantic_equivalence.md
+    powerpoint_behavior: PowerPoint may deduplicate identical media binaries and rewrite their internal part names on SaveAs.
+    semantic_impact: NONE
+  - id: registered_slide_number_placeholder_value
+    field: Visible text value of p ph type sldNum while placeholder role geometry and formatting are unchanged
+    reason: A registered slide-number placeholder displays the final presentation order rather than authored scientific content.
+    before_after_evidence: audit/v2_7_rc4/keep_semantic_equivalence.md
+    powerpoint_behavior: PowerPoint updates the displayed slide number when unchanged slides shift after insertion.
+    semantic_impact: NONE

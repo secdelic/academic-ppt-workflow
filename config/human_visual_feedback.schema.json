@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "academic-ppt/human-visual-feedback/2.5",
+  "title": "Academic PPT HumanVisualFeedbackRegistry entry",
+  "type": "object",
+  "required": ["slide_id", "issue_type", "severity", "comment", "recommended_action", "accepted_rejected"],
+  "properties": {
+    "slide_id": {"type": "string", "minLength": 1},
+    "issue_type": {
+      "enum": ["hierarchy", "composition", "readability", "chart_style", "density", "monotony", "color", "typography", "narrative_flow", "visual_focus"]
+    },
+    "severity": {"enum": ["critical", "major", "minor", "suggestion"]},
+    "comment": {"type": "string", "minLength": 1},
+    "recommended_action": {"type": "string", "minLength": 1},
+    "accepted_rejected": {"enum": ["accepted", "rejected", "pending"]}
+  },
+  "additionalProperties": true
+}

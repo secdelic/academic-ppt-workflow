@@ -1,0 +1,62 @@
+{
+  "version": "2.3",
+  "backend": "native_pptxgenjs",
+  "external_skill_required": false,
+  "templates": {
+    "statistical": [
+      "covariate_balance_love_plot",
+      "weighted_risk_curve",
+      "estimand_summary_panel",
+      "sensitivity_forest"
+    ],
+    "methods": [
+      "target_trial_specification_table",
+      "clone_censor_weight_flow",
+      "grace_period_timeline",
+      "assumptions_failure_modes_matrix"
+    ],
+    "bioinformatics": [
+      "sc_qc_funnel",
+      "umap_with_callouts",
+      "composition_grouped_bar_or_delta_plot",
+      "pseudobulk_volcano_with_top_gene_labels",
+      "pathway_enrichment_bar",
+      "cell_communication_network",
+      "evidence_ladder_computation_to_validation",
+      "validation_gap_cards"
+    ],
+    "evidence_synthesis": [
+      "prisma_flow_native",
+      "study_characteristics_compact_table",
+      "full_forest_plot_with_pooled_effect",
+      "pooled_effect_summary_card",
+      "heterogeneity_prediction_interval_panel",
+      "funnel_plot_with_caution_label",
+      "risk_of_bias_matrix",
+      "grade_summary_table",
+      "evidence_certainty_ladder"
+    ],
+    "protocol": [
+      "protocol_design_schema",
+      "eligibility_split_panel",
+      "assessment_schedule_timeline",
+      "exposure_outcome_definition_panel",
+      "sample_size_assumption_cards",
+      "dag_native_or_fallback_diagram",
+      "analysis_plan_flow",
+      "operational_risk_matrix",
+      "milestone_timeline",
+      "no_result_boundary_card"
+    ],
+    "audit": [
+      "conflict_resolution_table",
+      "unresolved_review_checklist",
+      "source_registry_appendix"
+    ],
+    "conclusion": [
+      "problem_gap_objective",
+      "evidence_boundary_dual_panel",
+      "take_home_message_cards"
+    ]
+  }
+}

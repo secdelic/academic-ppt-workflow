@@ -1,0 +1,112 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "academic-ppt/visual-brief/1",
+  "title": "Academic PPT user-approved visual direction brief",
+  "description": "Presentation-layer direction only. Scientific facts, data, claims, source bindings and template brand overrides are outside this contract.",
+  "type": "object",
+  "required": ["schema_version", "visual_brief_id", "approval", "direction"],
+  "properties": {
+    "schema_version": {
+      "const": "academic-ppt-visual-brief/1"
+    },
+    "visual_brief_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{2,79}$"
+    },
+    "approval": {
+      "type": "object",
+      "required": ["status"],
+      "properties": {
+        "status": {"enum": ["draft", "approved", "rejected"]},
+        "approved_by": {"type": ["string", "null"], "maxLength": 120},
+        "approved_at": {
+          "type": ["string", "null"],
+          "format": "date-time"
+        }
+      },
+      "additionalProperties": false
+    },
+    "scope": {
+      "type": "object",
+      "properties": {
+        "route": {
+          "enum": ["generate", "enhance", "template-fill", "template-create"]
+        },
+        "redesign_requested": {"type": "boolean"}
+      },
+      "additionalProperties": false
+    },
+    "direction": {
+      "type": "object",
+      "required": ["direction_name", "visual_tone", "visual_motif"],
+      "properties": {
+        "direction_name": {"type": "string", "minLength": 1, "maxLength": 120},
+        "visual_tone": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 6,
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1, "maxLength": 60}
+        },
+        "visual_motif": {"type": "string", "minLength": 1, "maxLength": 120},
+        "primary_palette": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 6,
+          "uniqueItems": true,
+          "items": {"type": "string", "pattern": "^#[A-Fa-f0-9]{6}$"}
+        },
+        "secondary_palette": {
+          "type": "array",
+          "maxItems": 8,
+          "uniqueItems": true,
+          "items": {"type": "string", "pattern": "^#[A-Fa-f0-9]{6}$"}
+        },
+        "background_strategy": {
+          "enum": ["light", "tinted", "mixed", "dark-emphasis", "inherit"]
+        },
+        "typography_personality": {"type": "string", "maxLength": 120},
+        "hero_style": {"type": "string", "maxLength": 120},
+        "figure_treatment": {"type": "string", "maxLength": 120},
+        "chart_treatment": {"type": "string", "maxLength": 120},
+        "annotation_style": {"type": "string", "maxLength": 120},
+        "card_style": {"type": "string", "maxLength": 120},
+        "divider_style": {"type": "string", "maxLength": 120},
+        "density_pattern": {"type": "string", "maxLength": 120},
+        "signature_components": {
+          "type": "array",
+          "maxItems": 12,
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1, "maxLength": 80}
+        },
+        "allowed_variants": {
+          "type": "array",
+          "maxItems": 20,
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1, "maxLength": 80}
+        },
+        "prohibited_styles": {
+          "type": "array",
+          "maxItems": 20,
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1, "maxLength": 80}
+        }
+      },
+      "additionalProperties": false
+    },
+    "style_reference_ids": {
+      "type": "array",
+      "maxItems": 10,
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1, "maxLength": 120}
+    },
+    "approved_asset_ids": {
+      "type": "array",
+      "maxItems": 30,
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1, "maxLength": 120}
+    },
+    "workspace_hint": {"type": ["string", "null"], "maxLength": 120}
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,12 @@
+{
+  "schema_version": "academic-ppt-local-config/1",
+  "paths": {
+    "workspace_home": "../academic-ppt-workspace",
+    "input_root": "../academic-ppt-workspace/input",
+    "staging_root": "../academic-ppt-workspace/staging",
+    "output_root": "../academic-ppt-workspace/output",
+    "audit_root": "../academic-ppt-workspace/audit",
+    "asset_home": "visual_workspaces",
+    "cache_home": null
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "version": "2.4",
+  "data_roles": [
+    "entity", "x", "y", "group", "facet", "color", "label",
+    "error_low", "error_high", "reference", "time",
+    "edge_source", "edge_target", "weight", "size"
+  ],
+  "charts": {
+    "forest": {"required": ["entity", "x", "error_low", "error_high", "reference"], "pagination": true},
+    "love": {"required": ["entity", "before", "after", "reference"], "ordered": true},
+    "grouped_composition": {"required": ["entity", "group", "y"], "direct_labels": true},
+    "diverging_enrichment": {"required": ["entity", "x", "facet", "label"], "zero_line": true},
+    "communication_network": {"required": ["edge_source", "edge_target", "label", "weight"], "directed": true, "sequential": false},
+    "risk_of_bias_matrix": {"required": ["entity", "facet", "color"], "matrix": true},
+    "dag": {"required": ["edge_source", "edge_target", "semantic_role"], "directed": true},
+    "risk_matrix": {"required": ["entity", "x", "y"], "matrix": true},
+    "timeline_gantt": {"required": ["entity", "start", "end"], "proportional_time": true}
+  }
+}

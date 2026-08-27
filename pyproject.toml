@@ -1,0 +1,25 @@
+[project]
+name = "academic-ppt-workflow"
+version = "2.7.0rc1"
+description = "Local, source-bound, render-verified academic PowerPoint workflow"
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+license = { text = "Proprietary" }
+dependencies = [
+  "pypdf==6.10.0",
+  "python-docx==1.2.0",
+  "python-pptx==1.0.2",
+  "openpyxl==3.1.5",
+  "Pillow==12.2.0",
+  "lxml==6.0.2",
+  "typing-extensions==4.16.0",
+  "et-xmlfile==2.0.0",
+  "XlsxWriter==3.2.9",
+  "PyYAML==6.0.3",
+]
+
+[tool.setuptools]
+py-modules = ["run_ppt_workflow"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

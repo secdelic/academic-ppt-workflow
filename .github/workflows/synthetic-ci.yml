@@ -1,0 +1,51 @@
+name: synthetic-ci
+on:
+  workflow_dispatch:
+  pull_request:
+  push:
+    branches: [main, "workflow/**", "codex/**"]
+permissions:
+  contents: read
+jobs:
+  synthetic-validation:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12", cache: pip}
+      - uses: actions/setup-node@v4
+        with: {node-version: "24", cache: npm}
+      - name: Install locked dependencies
+        shell: pwsh
+        run: |
+          python -m pip install -r requirements-lock.txt
+          npm.cmd ci --ignore-scripts --no-audit --no-fund
+      - name: Test self-containment
+        run: python scripts/ci/verify_test_self_containment.py --output "$env:RUNNER_TEMP\ci_self_containment_report.json"
+      - name: Unit and schema tests
+        run: python -m unittest discover -s tests -p "test*.py"
+      - name: Static privacy and path audit
+        run: python scripts/audit_repository_content.py --output repository_content_audit.json
+      - name: Secret detection
+        shell: pwsh
+        run: |
+          $matches = git grep -n -I -E 'sk-[A-Za-z0-9_-]{16,}|api[_-]?key[[:space:]]*[:=][[:space:]]*["''][^"'']+' -- . ':!tests' 2>$null
+          $grepExit = $LASTEXITCODE
+          if ($grepExit -eq 1) { Write-Host 'Secret scan PASS: no matches'; exit 0 }
+          if ($grepExit -ne 0) { Write-Error "git grep failed with exit code $grepExit"; exit $grepExit }
+          if ($matches) { $matches; exit 2 }
+          exit 0
+      - name: Synthetic workspace smoke
+        shell: pwsh
+        run: |
+          $env:PPT_NODE_MODULES = Join-Path $PWD 'node_modules'
+          node scripts/build_visual_workspaces.mjs "$env:RUNNER_TEMP\visual_workspaces"
+      - name: Lock and SHA validation
+        shell: pwsh
+        run: |
+          npm.cmd ls --depth=0
+          Get-FileHash package-lock.json,requirements-lock.txt -Algorithm SHA256 | Format-Table
+      - name: Validate local release builder
+        run: python scripts/build_release_bundle.py --output-root "$env:RUNNER_TEMP\release"
+      - name: Validate bundle
+        run: python scripts/validate_release_bundle.py "$env:RUNNER_TEMP\release\academic-ppt-workflow-v2.7.0-rc4.zip"
