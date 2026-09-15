@@ -1,0 +1,65 @@
+{
+  "fixture_id": "VISUAL_FIDELITY_EXPERIMENT_001",
+  "synthetic_only": true,
+  "boundary": "Software validation only. No clinical or causal interpretation.",
+  "brief": {
+    "project_name": "Synthetic composition study",
+    "presentation_type": "research_report",
+    "language": "en-US",
+    "presentation_objective": "Compare explicit compositions with frozen synthetic content"
+  },
+  "source_figure_svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"1200\" height=\"700\" viewBox=\"0 0 1200 700\"><rect width=\"1200\" height=\"700\" fill=\"#eef4f8\"/><rect x=\"80\" y=\"80\" width=\"1040\" height=\"540\" rx=\"32\" fill=\"#ffffff\" stroke=\"#627d98\" stroke-width=\"4\"/><circle cx=\"330\" cy=\"350\" r=\"155\" fill=\"#0f766e\"/><circle cx=\"820\" cy=\"240\" r=\"85\" fill=\"#2563eb\"/><rect x=\"670\" y=\"390\" width=\"300\" height=\"95\" fill=\"#d97706\"/></svg>",
+  "chart": {"categories": ["Set A", "Set B", "Set C"], "values": [20, 35, 50], "units": "percent"},
+  "slides": [
+    {
+      "key": "S01", "title": "A frozen four-stage sequence",
+      "message": "The fixture explicitly defines the order from intake to archive.",
+      "visual_type": "takeaway",
+      "takeaways": ["01 Intake\n02 Check", "03 Compose", "04 Archive"],
+      "diagram_spec": {
+        "nodes": [{"node_id":"a","label":"01 Intake"},{"node_id":"b","label":"02 Check"},{"node_id":"c","label":"03 Compose"},{"node_id":"d","label":"04 Archive"}],
+        "edges": [{"source":"a","target":"b","directed":true},{"source":"b","target":"c","directed":true},{"source":"c","target":"d","directed":true}]
+      },
+      "assignment": {"archetype":"PROCESS_HORIZONTAL","node_order":["a","b","c","d"]}
+    },
+    {
+      "key": "S02", "title": "One framework, three dimensions",
+      "message": "Three listed dimensions surround a shared concept; links are undirected.",
+      "visual_type": "takeaway",
+      "takeaways": ["Shared framework\nTraceability", "Readability", "Editability"],
+      "diagram_spec": {
+        "nodes": [{"node_id":"core","label":"Shared framework"},{"node_id":"trace","label":"Traceability"},{"node_id":"read","label":"Readability"},{"node_id":"edit","label":"Editability"}],
+        "edges": [{"source":"core","target":"trace","directed":false},{"source":"core","target":"read","directed":false},{"source":"core","target":"edit","directed":false}]
+      },
+      "assignment": {"archetype":"FRAMEWORK_HUB","central_id":"core"}
+    },
+    {
+      "key": "S03", "title": "A quantitative control stays editable",
+      "message": "Synthetic values are 20%, 35%, and 50% for Sets A, B, and C.",
+      "visual_type": "editable_bar_chart", "chart_caption":"Synthetic fixture values; no clinical inference."
+    },
+    {
+      "key": "S04", "title": "An explicitly connected system",
+      "message": "Only the four undirected relationships in the fixture are shown.",
+      "visual_type": "takeaway",
+      "takeaways": ["Module Alpha\nModule Beta", "Module Gamma", "Module Delta"],
+      "diagram_spec": {
+        "nodes": [{"node_id":"alpha","label":"Module Alpha"},{"node_id":"beta","label":"Module Beta"},{"node_id":"gamma","label":"Module Gamma"},{"node_id":"delta","label":"Module Delta"}],
+        "edges": [{"source":"alpha","target":"beta","directed":false},{"source":"alpha","target":"gamma","directed":false},{"source":"beta","target":"delta","directed":false},{"source":"gamma","target":"delta","directed":false}]
+      },
+      "assignment": {"archetype":"SYSTEM_MAP","positions":{"alpha":[0.50,0.14],"beta":[0.14,0.50],"gamma":[0.86,0.50],"delta":[0.50,0.86]}}
+    },
+    {
+      "key": "S05", "title": "Six statements remain intact",
+      "message": "Every frozen statement must survive the change in composition.",
+      "visual_type": "takeaway",
+      "takeaways": ["01 Preserve every statement.\n02 Keep source links.", "03 Retain uncertainty.\n04 Keep values unchanged.", "05 Keep objects editable.\n06 Require human review."],
+      "assignment": {"archetype":"EDITORIAL_TAKEAWAY"}
+    },
+    {
+      "key": "S06", "title": "The source figure stays replaceable",
+      "message": "The original synthetic vector image is embedded without modification.",
+      "visual_type": "source_figure"
+    }
+  ]
+}
