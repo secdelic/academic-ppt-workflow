@@ -26,6 +26,8 @@ export function clippedEllipseEdge(a, b, gap = 0.045) {
 }
 
 export function compose(item, plan, contract) {
+  if (plan.revision === "B1_CJK") return composeCjk(item, plan, contract);
+  if (plan.revision) fail(item, plan, "unknown experimental revision");
   if (!ARCHETYPES.includes(plan.archetype)) fail(item, plan, "unknown archetype");
   // This experiment supports the explicitly frozen takeaway-container fixture.
   // Never silently replace a chart, source figure, template, or cover.
@@ -116,6 +118,107 @@ export function compose(item, plan, contract) {
     generic_fallback: false, frame, objects };
 }
 
+// One explicitly selected CJK calibration. The original B0 path remains an
+// immutable-behavior test oracle; this is not a canonical geometry algorithm.
+function composeCjk(item, plan, contract) {
+  if (!ARCHETYPES.includes(plan.archetype)) fail(item, plan, "unknown archetype");
+  if (item.visual_type !== "takeaway" || item.template_layout_id || item.slide_role === "cover") fail(item, plan, "protected renderer");
+  if (!plan.source_locator || !["equal", "equal_peripheral"].includes(plan.emphasis)) fail(item, plan, "explicit source and equal-weight semantics required");
+  const frame = item.planned_geometry?.find((o) => o.object_id.endsWith(":structure"))?.bounds;
+  const incompatible = (reason) => fail(item, plan, reason, "EXPERIMENTAL_ARCHETYPE_FRAME_INCOMPATIBLE");
+  if (!frame || frame.w < 10 || frame.h < 2.8) incompatible("safe frame too small");
+  const size = Number(plan.font_size_pt || 20), minimum = Math.max(18, contract.minimum_font_pt?.body || 18);
+  if (!Number.isFinite(size) || size < minimum) incompatible("font below approved minimum");
+  const units = item.takeaways.flatMap((s) => s.split("\n")).filter((s) => s.trim());
+  const objects = [], bounds = (x,y,w,h) => ({x:frame.x+x*frame.w,y:frame.y+y*frame.h,w:w*frame.w,h:h*frame.h});
+  function label(id, value, b, align = "center") {
+    // Conservative fixed-size load check, not a substitute for actual PowerPoint
+    // geometry. No shrinking, shortening, silent fallback, or automatic splitting.
+    const em = [...value].reduce((n,c) => n + (/[^\x00-\x7F]/u.test(c) ? 1 : 0.6), 0);
+    const capacity = b.w * 72 / size;
+    const lines = Math.ceil(em / capacity);
+    if (lines * size * 1.2 > b.h * 72 + 0.1) incompatible(`text ${id} requires ${lines} lines at ${size} pt; ${b.h.toFixed(3)} inch box`);
+    objects.push({kind:"text",id,text:value,bounds:b,font_size_pt:size,align,bold:false,hero:false,anchor:false});
+  }
+  if (plan.archetype === "EDITORIAL_TAKEAWAY") {
+    if (plan.emphasis !== "equal" || units.length < 4 || units.length > 6) fail(item,plan,"four to six equal statements required");
+    const rows = Math.ceil(units.length/2), h = 0.94/rows;
+    units.forEach((value,i) => {
+      const col = Math.floor(i/rows), row = i%rows;
+      const b = bounds(0.01+col*0.51,0.03+row*h,0.47,h-0.02);
+      objects.push({kind:"roundRect",id:`statement-${i+1}`,bounds:b,tone:"line",anchor:false,line_width:1});
+      label(`takeaway-${i+1}`,value,{x:b.x+0.13,y:b.y+0.055,w:b.w-0.26,h:b.h-0.11},"left");
+    });
+  } else {
+    const nodes=item.diagram_spec?.nodes, edges=item.diagram_spec?.edges;
+    if (!Array.isArray(nodes) || !Array.isArray(edges) || !nodes.length
+        || JSON.stringify(nodes)!==JSON.stringify(plan.nodes) || JSON.stringify(edges)!==JSON.stringify(plan.edges)) fail(item,plan,"nodes and edges must match the frozen hashed plan");
+    const ids=nodes.map((n)=>n.node_id), edgeKeys=edges.map((e)=>`${e.source}>${e.target}`);
+    if (new Set(ids).size!==ids.length || bag(nodes.map((n)=>n.label))!==bag(units)
+        || new Set(edgeKeys).size!==edgeKeys.length || edges.some((e)=>!ids.includes(e.source)||!ids.includes(e.target)||e.source===e.target||e.label)) fail(item,plan,"invalid nodes, text, or edges");
+    const positions=new Map();
+    if (plan.archetype==="PROCESS_HORIZONTAL") {
+      if (nodes.length<2||nodes.length>6) incompatible("process supports two to six stages");
+      if (plan.emphasis!=="equal"||JSON.stringify(ids)!==JSON.stringify(plan.node_order)
+          ||JSON.stringify(edgeKeys)!==JSON.stringify(ids.slice(1).map((id,i)=>`${ids[i]}>${id}`))
+          ||edges.some((e)=>e.directed!==true)||plan.relationship_type!=="explicit_sequence") fail(item,plan,"only explicitly sourced stage order is permitted");
+      const gap=0.027,w=(0.98-gap*(nodes.length-1))/nodes.length;
+      nodes.forEach((n,i)=>positions.set(n.node_id,bounds(0.01+i*(w+gap),0.12,w,0.76)));
+    } else if (plan.archetype==="FRAMEWORK_HUB") {
+      if (nodes.length!==4 || plan.emphasis!=="equal_peripheral" || !ids.includes(plan.central_id)
+          ||edges.length!==3||edges.some((e)=>e.source!==plan.central_id||e.directed!==false)
+          ||new Set(edges.map((e)=>e.target)).size!==3||plan.relationship_type!=="equal_dimensions") fail(item,plan,"one explicit center and three undirected equal dimensions required");
+      positions.set(plan.central_id,bounds(0.37,0.31,0.26,0.27));
+      const outer=[bounds(0.01,0.02,0.30,0.34),bounds(0.69,0.02,0.30,0.34),bounds(0.35,0.65,0.30,0.34)];
+      nodes.filter((n)=>n.node_id!==plan.central_id).forEach((n,i)=>positions.set(n.node_id,outer[i]));
+    } else {
+      if (nodes.length<4||nodes.length>5) incompatible("system supports four to five nodes");
+      if (plan.emphasis!=="equal"||!plan.positions||bag(Object.keys(plan.positions))!==bag(ids)
+          ||edges.some((e)=>e.directed!==false)||plan.relationship_type!=="explicit_nondirectional_association") fail(item,plan,"explicit equal, undirected system topology required");
+      for (const n of nodes) {
+        const p=plan.positions[n.node_id];
+        if (!Array.isArray(p)||p.length!==2||!p.every(Number.isFinite)) fail(item,plan,"invalid explicit position");
+        positions.set(n.node_id,bounds(p[0]-0.145,p[1]-0.15,0.29,0.30));
+      }
+    }
+    // Rectangle boundary clipping is local presentation logic. Connectors remain
+    // independent native lines, not attachment-bound PowerPoint connectors.
+    edges.forEach((edge,i)=>{
+      const a=positions.get(edge.source),b=positions.get(edge.target);
+      const dx=b.x+b.w/2-a.x-a.w/2,dy=b.y+b.h/2-a.y-a.h/2,len=Math.hypot(dx,dy);
+      const ta=Math.min(dx ? a.w/2/Math.abs(dx) : Infinity,dy ? a.h/2/Math.abs(dy) : Infinity);
+      const tb=Math.min(dx ? b.w/2/Math.abs(dx) : Infinity,dy ? b.h/2/Math.abs(dy) : Infinity);
+      if (!len||ta+tb+0.09/len>=1) incompatible(`overlapping edge endpoints ${edge.source}/${edge.target}`);
+      const x1=a.x+a.w/2+dx*(ta+0.045/len), y1=a.y+a.h/2+dy*(ta+0.045/len);
+      const x2=b.x+b.w/2-dx*(tb+0.045/len), y2=b.y+b.h/2-dy*(tb+0.045/len);
+      // Reject routes crossing another node instead of inventing a reroute.
+      for (const n of nodes.filter((n)=>![edge.source,edge.target].includes(n.node_id))) {
+        const r=positions.get(n.node_id);
+        for (let t=0;t<=1;t+=0.01) {
+          const x=x1+(x2-x1)*t,y=y1+(y2-y1)*t;
+          if(x>r.x&&x<r.x+r.w&&y>r.y&&y<r.y+r.h) incompatible(`edge crosses node ${n.node_id}`);
+        }
+      }
+      objects.push({kind:"line",id:`edge-${i+1}`,bounds:{x:Math.min(x1,x2),y:Math.min(y1,y2),w:Math.abs(x2-x1),h:Math.abs(y2-y1)},tone:"muted",line_width:1.8,
+        flipH:x2<x1,flipV:y2<y1,directed:edge.directed,edge:{...edge},relationship_type:plan.relationship_type,source_locator:plan.source_locator});
+    });
+    nodes.forEach((n)=>{
+      const b=positions.get(n.node_id);
+      objects.push({kind:"roundRect",id:`node-${n.node_id}`,bounds:b,tone:"primary",line_width:1.4,anchor:false,
+        semantic_role:n.node_id===plan.central_id?"center":"equal_member",source_locator:plan.node_locators?.[n.node_id]||plan.source_locator});
+      label(`label-${n.node_id}`,n.label,{x:b.x+0.09,y:b.y+0.045,w:b.w-0.18,h:b.h-0.09});
+    });
+  }
+  if(bag(objects.filter((o)=>o.kind==="text").map((o)=>o.text))!==bag(units)) fail(item,plan,"scientific text mutation");
+  for(const o of objects){
+    const b=o.bounds;
+    if(![b.x,b.y,b.w,b.h].every(Number.isFinite)||b.w<0||b.h<0||b.x<frame.x||b.y<frame.y||b.x+b.w>frame.x+frame.w+1e-8||b.y+b.h>frame.y+frame.h+1e-8
+        ||b.x<0||b.y<0||b.x+b.w>contract.slide.width_in||b.y+b.h>contract.zones.footer_exclusion.y) incompatible(`object ${o.id} outside approved frame`);
+  }
+  return {slide_id:item.slide_id,archetype_requested:plan.archetype,archetype_rendered:plan.archetype,generic_fallback:false,revision:"B1_CJK",frame,objects,
+    semantics:{relationship_type:plan.relationship_type,emphasis:plan.emphasis,source_locator:plan.source_locator},font_size_pt:size};
+}
+
 export function prepareExperiment(spec) {
   if (spec.experiment?.id !== EXPERIMENT_ID || spec.experiment?.enabled !== true) throw new Error("EXPERIMENT_NOT_ENABLED");
   const plan = spec.visual_execution_plan;
@@ -135,12 +238,12 @@ export function prepareExperiment(spec) {
         const common = { ...o.bounds, objectName: `vf001:${item.slide_id}:${o.id}` };
         if (o.kind === "text") {
           slide.addText(o.text, { ...common, fontFace: font, fontSize: o.font_size_pt,
-            bold: o.hero || c.archetype_rendered !== "EDITORIAL_TAKEAWAY", color: o.hero ? C.primary : C.ink,
-            margin: 0, valign: "mid", align: c.archetype_rendered === "EDITORIAL_TAKEAWAY" ? "left" : "center" });
+            bold: o.bold ?? (o.hero || c.archetype_rendered !== "EDITORIAL_TAKEAWAY"), color: o.hero ? C.primary : C.ink,
+            margin: 0, valign: "mid", align: o.align || (c.archetype_rendered === "EDITORIAL_TAKEAWAY" ? "left" : "center") });
         } else {
           slide.addShape(pptx.ShapeType[o.kind], { ...common, flipH: o.flipH, flipV: o.flipV,
             fill: { color: o.kind === "rect" ? C.primary : C.white },
-            line: { color: C[o.tone], width: o.anchor ? 2.2 : 1.4, ...(o.directed ? { endArrowType: "triangle" } : {}) } });
+            line: { color: C[o.tone], width: o.line_width ?? (o.anchor ? 2.2 : 1.4), ...(o.directed ? { endArrowType: "triangle" } : {}) } });
         }
       }
       rendered.push({ ...c, runtime_seconds: (performance.now() - start) / 1000,

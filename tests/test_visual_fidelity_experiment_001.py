@@ -10,7 +10,7 @@ import unittest
 import zipfile
 
 from scripts.experiments.visual_fidelity_001 import (
-    BASELINE, GENERATOR, ROOT, arm_spec, generate, normalized_tokens, package_snapshot, prepare,
+    BASELINE, GENERATOR, ROOT, ZH_FIXTURE, arm_spec, canonical_json_hash, frozen_project_binding_issues, generate, normalized_tokens, package_snapshot, prepare,
 )
 
 
@@ -202,6 +202,116 @@ class VisualFidelityExperimentTests(unittest.TestCase):
         spec = copy.deepcopy(self.b_spec)
         spec["visual_execution_plan"][spec["slides"][2]["slide_id"]] = {"archetype": "SYSTEM_MAP"}
         self.assert_rejected(spec, "scientific/template renderers are protected")
+
+
+class CjkCalibrationTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.temp = tempfile.TemporaryDirectory(prefix="vf001-cjk-")
+        cls.addClassCleanup(cls.temp.cleanup)
+        cls.root = Path(cls.temp.name)
+        cls.bundle = prepare(cls.root, ZH_FIXTURE)
+        cls.spec = arm_spec(cls.bundle, True)
+        cls.snapshot = package_snapshot(generate(cls.spec, cls.root / "cjk"))
+        cls.execution = json.loads((cls.root / "cjk/preview/experimental-execution.json").read_text(encoding="utf-8"))
+
+    def reject(self, spec, phrase):
+        module = (ROOT / "scripts/experiments/visual_fidelity_001.mjs").as_uri()
+        code = f'import fs from "node:fs"; import {{prepareExperiment}} from {json.dumps(module)}; prepareExperiment(JSON.parse(fs.readFileSync(0,"utf8")));'
+        result = subprocess.run([shutil.which("node"), "--input-type=module", "-e", code], input=json.dumps(spec), capture_output=True, text=True, timeout=30)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn(phrase, result.stderr)
+
+    def test_six_chinese_stages_equal_sizes_and_exact_order(self):
+        row = self.execution["slides"][0]
+        nodes = [o for o in row["objects"] if o["id"].startswith("node-")]
+        self.assertEqual(len(nodes), 6)
+        self.assertEqual(len({(o["bounds"]["w"], o["bounds"]["h"]) for o in nodes}), 1)
+        self.assertEqual([o["edge"] for o in row["objects"] if "edge" in o], self.spec["slides"][0]["diagram_spec"]["edges"])
+
+    def test_hub_three_equal_peripheral_nodes_no_causal_arrows(self):
+        row = self.execution["slides"][1]
+        peripheral = [o for o in row["objects"] if o.get("semantic_role") == "equal_member"]
+        self.assertEqual(len(peripheral), 3)
+        self.assertEqual(len({(o["bounds"]["w"],o["bounds"]["h"],o["tone"],o["line_width"]) for o in peripheral}), 1)
+        self.assertTrue(all(not o["directed"] for o in row["objects"] if "edge" in o))
+
+    def test_five_node_system_has_no_terminal_highlight(self):
+        row = self.execution["slides"][2]
+        nodes = [o for o in row["objects"] if o["id"].startswith("node-")]
+        self.assertEqual(len(nodes), 5)
+        self.assertTrue(all(not o["anchor"] and o["semantic_role"] == "equal_member" for o in nodes))
+        self.assertEqual(len({(o["tone"],o["line_width"]) for o in nodes}),1)
+        self.assertEqual([o["edge"] for o in row["objects"] if "edge" in o], self.spec["slides"][3]["diagram_spec"]["edges"])
+
+    def test_six_full_chinese_statements_equal_typography(self):
+        row = self.execution["slides"][3]
+        texts = [o for o in row["objects"] if o["kind"] == "text"]
+        expected = [t for group in self.spec["slides"][4]["takeaways"] for t in group.splitlines()]
+        self.assertEqual([o["text"] for o in texts],expected)
+        self.assertEqual(len(texts),6)
+        self.assertTrue(all(o["font_size_pt"]==20 and not o["hero"] and not o["bold"] for o in texts))
+
+    def test_oversized_chinese_case_is_expected_rejection(self):
+        spec = copy.deepcopy(self.spec)
+        negative = self.bundle["fixture"]["capacity_negative"]
+        sentence = negative["paragraph"] * negative["repeat_per_statement"]
+        spec["slides"][4]["takeaways"] = [sentence+"\n"+sentence]*3
+        self.reject(spec, "EXPERIMENTAL_ARCHETYPE_FRAME_INCOMPATIBLE")
+
+    def test_no_font_reduction_below_approved_minimum(self):
+        spec = copy.deepcopy(self.spec)
+        next(iter(spec["visual_execution_plan"].values()))["font_size_pt"] = 17
+        self.reject(spec, "font below approved minimum")
+
+    def test_plan_labels_and_directions_cannot_drift(self):
+        for key in ("nodes", "edges"):
+            spec = copy.deepcopy(self.spec)
+            plan = next(iter(spec["visual_execution_plan"].values()))
+            if key == "nodes": plan[key][0]["label"] = "未经批准的标签"
+            else: plan[key][0]["directed"] = False
+            self.reject(spec, "must match the frozen hashed plan")
+
+    def test_missing_semantic_source_rejected(self):
+        spec=copy.deepcopy(self.spec)
+        next(iter(spec["visual_execution_plan"].values())).pop("source_locator")
+        self.reject(spec,"explicit source")
+
+    def test_crossing_an_unrelated_node_is_rejected(self):
+        spec=copy.deepcopy(self.spec)
+        plan=spec["visual_execution_plan"][spec["slides"][3]["slide_id"]]
+        plan["positions"]={"a":[0.16,0.19],"b":[0.50,0.19],"c":[0.84,0.19],"d":[0.32,0.80],"e":[0.68,0.80]}
+        self.reject(spec,"edge crosses node")
+
+    def test_plan_hash_covers_roles_emphasis_and_direction(self):
+        plan=self.spec["visual_execution_plan"]
+        original=canonical_json_hash(plan)
+        for field in ("emphasis","relationship_type","source_locator","central_id"):
+            changed=copy.deepcopy(plan)
+            next(iter(changed.values()))[field]="changed"
+            self.assertNotEqual(original,canonical_json_hash(changed))
+
+    def test_chinese_subscripts_slashes_and_abbreviations_preserved(self):
+        text="\n".join(self.snapshot["slides"][1]["texts"])
+        for value in ("rSO₂/PbtO₂","TCD/TCCD","cEEG/qEEG","共同主题"):
+            self.assertIn(value,text)
+
+    def test_preserved_full_excerpt_binding_does_not_require_claim_to_equal_title(self):
+        slide={"slide_id":"SLD-SYNTHETIC","single_key_message":"原有主信息","source_ids":["SRC-SYNTHETIC"],"claim_ids":["CLM-SYNTHETIC"]}
+        claim={"claim_id":"CLM-SYNTHETIC","source_id":"SRC-SYNTHETIC","claim_text":"这是登记的完整模拟摘录。","source_sha256":"hash"}
+        manifest=[{"source_id":"SRC-SYNTHETIC","sha256":"hash"}]
+        notes={"SLD-SYNTHETIC":"这是登记的完整模拟摘录。\n原有主信息"}
+        self.assertEqual(frozen_project_binding_issues([slide],[copy.deepcopy(slide)],[claim],manifest,notes),[])
+        changed=copy.deepcopy(slide);changed["single_key_message"]="新的科学主张"
+        self.assertTrue(frozen_project_binding_issues([changed],[slide],[claim],manifest,notes))
+
+    def test_excerpt_or_source_hash_mutation_is_rejected(self):
+        slide={"slide_id":"SLD-SYNTHETIC","source_ids":["SRC-SYNTHETIC"],"claim_ids":["CLM-SYNTHETIC"]}
+        claim={"claim_id":"CLM-SYNTHETIC","source_id":"SRC-SYNTHETIC","claim_text":"冻结摘录","source_sha256":"hash"}
+        manifest=[{"source_id":"SRC-SYNTHETIC","sha256":"hash"}]
+        self.assertTrue(frozen_project_binding_issues([slide],[slide],[claim],manifest,{"SLD-SYNTHETIC":"不匹配"}))
+        claim["source_sha256"]="changed"
+        self.assertTrue(frozen_project_binding_issues([slide],[slide],[claim],manifest,{"SLD-SYNTHETIC":"冻结摘录"}))
 
 
 if __name__ == "__main__":
