@@ -24,6 +24,15 @@ exclude:
   - "**/__pycache__/**"
   - "**/*.pyc"
   - "**/~$*"
+  - "**/*.tmp"
+  - "**/candidate_inbox/**"
+  - "**/candidate_reviews/**"
+  - "**/candidate_runs/**"
+  - "**/approved_assets/**"
+  - "**/.env"
+  - "**/.env.*"
+  - "**/*credentials*"
+  - "**/*.pptx~"
 include:
   - run_ppt_workflow.py
   - pyproject.toml
@@ -31,9 +40,7 @@ include:
   - package-lock.json
   - requirements-lock.txt
   - README.md
-  - README_中文使用说明.md
-  - README_使用说明.md
-  - README_FIRST_INSTALL.md
+  - AGENTS.md
   - CHANGELOG.md
   - config/**
   - scripts/**

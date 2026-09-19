@@ -524,6 +524,7 @@ def execute_full_validation(args: Any) -> Path:
     project = safe_slug(str(brief.get("project_name", "INFORMATION_REQUIRED")))
     run_id = _arg(args, "run_id") or output_timestamp()
     staging_root = staging_base / project / run_id
+    args.effective_staging_root = str(staging_root)
     output_dir = output_base / project / run_id
 
     route_name = str(_arg(args, "route", "generate"))
@@ -869,6 +870,8 @@ def execute_full_validation(args: Any) -> Path:
         deck_ir_path = staging_root / "deck_ir.json"
         deck_ir = _load_json_mapping(deck_ir_path, "Deck IR")
         validate_deck_ir(deck_ir)
+        from .visual_workflow import prepare_generation, materialize, record_core_qa
+        visual_plan = prepare_generation(args, deck_ir, staging_root / "build_spec.json")
         state["deck_ir"] = {
             "deck_id": deck_ir["deck_id"],
             "deck_version": deck_ir["deck_version"],
@@ -1049,6 +1052,7 @@ def execute_full_validation(args: Any) -> Path:
                     int(workflow_config.get("render_timeout_seconds", 120)),
                 )
             _log(log_path, "generate", generator_log)
+            materialize(args, deck_ir, pptx_path, staging_root, visual_plan)
         elif not pptx_path.exists():
             raise WorkflowError("Cannot resume: generated PPTX is missing")
         state["stages"]["generate"] = "passed"
@@ -1215,6 +1219,8 @@ def execute_full_validation(args: Any) -> Path:
             density_issues=density_issues,
         )
         state["status"] = status
+        record_core_qa(staging_root, pptx_path, scientific_issues, visual_issues,
+                       file_issues, powerpoint_layout_report, deck_ir)
         state["stages"]["visual_qa"] = "passed" if not visual_issues else "failed"
         state["stages"]["scientific_qa"] = "passed" if not scientific_issues else "failed"
 

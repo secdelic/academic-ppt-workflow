@@ -1,0 +1,669 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:academic-ppt:quality:slide_quality_record",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": "visual-quality/1"
+    },
+    "slide_index": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "slide_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "page_role": {
+      "enum": [
+        "HERO",
+        "CONTEXT",
+        "EVIDENCE",
+        "FRAMEWORK",
+        "RESULTS",
+        "COMPARISON",
+        "IMPLEMENTATION",
+        "TIMELINE",
+        "CLOSING",
+        "APPENDIX"
+      ]
+    },
+    "role_reason": {
+      "type": "string",
+      "minLength": 1
+    },
+    "secondary_content_tags": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "semantic_mapping": {
+      "type": "object",
+      "properties": {
+        "source_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "claim_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "structure": {
+          "type": "string",
+          "minLength": 1
+        },
+        "mapping_status": {
+          "enum": [
+            "SOURCE_BOUND",
+            "NEEDS_AUTHOR_DECISION",
+            "NO_SAFE_MAPPING"
+          ]
+        },
+        "semantic_hash": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "limits": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "source_refs",
+        "claim_ids",
+        "structure",
+        "mapping_status",
+        "semantic_hash",
+        "limits"
+      ],
+      "additionalProperties": false
+    },
+    "composition_family": {
+      "type": "object",
+      "properties": {
+        "observed": {
+          "type": "string",
+          "minLength": 1
+        },
+        "recommended": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "selection_status": {
+          "enum": [
+            "RECOMMENDATION_ONLY",
+            "HOLD_EXISTING"
+          ]
+        },
+        "candidate_evaluation": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "family_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "eligible": {
+                "type": "boolean"
+              },
+              "score": {
+                "type": [
+                  "number",
+                  "null"
+                ]
+              },
+              "reasons": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "uniqueItems": true
+              }
+            },
+            "required": [
+              "family_id",
+              "eligible",
+              "score",
+              "reasons"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 2
+        },
+        "selector_inputs": {
+          "type": "object",
+          "properties": {
+            "content_density": {
+              "enum": [
+                "LOW",
+                "MEDIUM",
+                "HIGH"
+              ]
+            },
+            "visible_character_count": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "max_text_block_length": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "group_count": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "semantic_structure": {
+              "type": "string",
+              "minLength": 1
+            },
+            "figure_available": {
+              "type": "boolean"
+            },
+            "illustration_available": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "content_density",
+            "visible_character_count",
+            "max_text_block_length",
+            "group_count",
+            "semantic_structure",
+            "figure_available",
+            "illustration_available"
+          ],
+          "additionalProperties": false
+        },
+        "generic_fallback": {
+          "type": "boolean"
+        },
+        "fallback_reason": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "fallback_reason_provenance": {
+          "type": "string",
+          "minLength": 1
+        },
+        "applied_to_deck": {
+          "const": false
+        }
+      },
+      "required": [
+        "observed",
+        "recommended",
+        "selection_status",
+        "candidate_evaluation",
+        "selector_inputs",
+        "generic_fallback",
+        "fallback_reason",
+        "fallback_reason_provenance",
+        "applied_to_deck"
+      ],
+      "additionalProperties": false
+    },
+    "art_direction_execution": {
+      "type": "object",
+      "properties": {
+        "brief_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "recorded": {
+          "const": true
+        },
+        "execution_scope": {
+          "type": "string",
+          "minLength": 1
+        },
+        "matched_items": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "deviations_or_limits": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "human_approval": {
+          "const": "PENDING_HUMAN_REVIEW"
+        }
+      },
+      "required": [
+        "brief_ref",
+        "recorded",
+        "execution_scope",
+        "matched_items",
+        "deviations_or_limits",
+        "human_approval"
+      ],
+      "additionalProperties": false
+    },
+    "illustration_decision": {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": "visual-quality/1"
+        },
+        "slide_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "illustration_needed": {
+          "type": "boolean"
+        },
+        "illustration_role": {
+          "enum": [
+            "NONE",
+            "EVIDENCE_DISPLAY",
+            "CONCEPT_SUPPORT",
+            "BACKGROUND_ATMOSPHERE",
+            "EDITORIAL_CUE"
+          ]
+        },
+        "illustration_subject": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "source_priority": {
+          "const": [
+            "EXISTING_SCIENTIFIC_SOURCE_FIGURE",
+            "APPROVED_PROJECT_ASSET",
+            "APPROVED_DETERMINISTIC_LIBRARY",
+            "AI_CONCEPTUAL_CANDIDATE",
+            "NONE"
+          ]
+        },
+        "selected_source": {
+          "enum": [
+            "EXISTING_SCIENTIFIC_SOURCE_FIGURE",
+            "APPROVED_PROJECT_ASSET",
+            "APPROVED_DETERMINISTIC_LIBRARY",
+            "AI_CONCEPTUAL_CANDIDATE",
+            "NONE"
+          ]
+        },
+        "scientific_evidence": {
+          "type": "boolean"
+        },
+        "human_approval_required": {
+          "type": "boolean"
+        },
+        "prohibited_visual_types": {
+          "const": [
+            "ECG",
+            "EEG",
+            "ULTRASOUND",
+            "CT",
+            "MRI",
+            "PATHOLOGY",
+            "PATIENT_IMAGING",
+            "STATISTICAL_CHART",
+            "REAL_MONITORING_DATA",
+            "CLINICAL_EVIDENCE"
+          ]
+        },
+        "decision_reason": {
+          "type": "string",
+          "minLength": 1
+        },
+        "priority_evaluation": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "source_class": {
+                "enum": [
+                  "EXISTING_SCIENTIFIC_SOURCE_FIGURE",
+                  "APPROVED_PROJECT_ASSET",
+                  "APPROVED_DETERMINISTIC_LIBRARY",
+                  "AI_CONCEPTUAL_CANDIDATE",
+                  "NONE"
+                ]
+              },
+              "status": {
+                "enum": [
+                  "ELIGIBLE",
+                  "NO_REGISTERED_MATCH",
+                  "OUT_OF_SCOPE",
+                  "NOT_NEEDED",
+                  "DISABLED",
+                  "SKIPPED_LOWER_PRIORITY",
+                  "INFORMATION_REQUIRED"
+                ]
+              },
+              "evidence_refs": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "uniqueItems": true
+              },
+              "reason": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "source_class",
+              "status",
+              "evidence_refs",
+              "reason"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 5,
+          "prefixItems": [
+            {
+              "properties": {
+                "source_class": {
+                  "const": "EXISTING_SCIENTIFIC_SOURCE_FIGURE"
+                }
+              }
+            },
+            {
+              "properties": {
+                "source_class": {
+                  "const": "APPROVED_PROJECT_ASSET"
+                }
+              }
+            },
+            {
+              "properties": {
+                "source_class": {
+                  "const": "APPROVED_DETERMINISTIC_LIBRARY"
+                }
+              }
+            },
+            {
+              "properties": {
+                "source_class": {
+                  "const": "AI_CONCEPTUAL_CANDIDATE"
+                }
+              }
+            },
+            {
+              "properties": {
+                "source_class": {
+                  "const": "NONE"
+                }
+              }
+            }
+          ],
+          "maxItems": 5
+        },
+        "asset_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "approval_scope": {
+          "type": "string",
+          "minLength": 1
+        },
+        "insertion_allowed_now": {
+          "const": false
+        },
+        "scientific_figure_replacement_allowed": {
+          "const": false
+        }
+      },
+      "required": [
+        "schema_version",
+        "slide_id",
+        "illustration_needed",
+        "illustration_role",
+        "illustration_subject",
+        "source_priority",
+        "selected_source",
+        "scientific_evidence",
+        "human_approval_required",
+        "prohibited_visual_types",
+        "decision_reason",
+        "priority_evaluation",
+        "asset_ids",
+        "approval_scope",
+        "insertion_allowed_now",
+        "scientific_figure_replacement_allowed"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "illustration_needed": {
+                "const": false
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "illustration_role": {
+                "const": "NONE"
+              },
+              "illustration_subject": {
+                "const": null
+              },
+              "selected_source": {
+                "const": "NONE"
+              },
+              "scientific_evidence": {
+                "const": false
+              },
+              "asset_ids": {
+                "maxItems": 0
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "illustration_needed": {
+                "const": true
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "illustration_role": {
+                "not": {
+                  "const": "NONE"
+                }
+              },
+              "illustration_subject": {
+                "type": "string",
+                "minLength": 1
+              },
+              "human_approval_required": {
+                "const": true
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "selected_source": {
+                "const": "AI_CONCEPTUAL_CANDIDATE"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "scientific_evidence": {
+                "const": false
+              },
+              "human_approval_required": {
+                "const": true
+              },
+              "illustration_role": {
+                "enum": [
+                  "CONCEPT_SUPPORT",
+                  "BACKGROUND_ATMOSPHERE",
+                  "EDITORIAL_CUE"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "scientific_evidence": {
+                "const": true
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "selected_source": {
+                "const": "EXISTING_SCIENTIFIC_SOURCE_FIGURE"
+              },
+              "illustration_role": {
+                "const": "EVIDENCE_DISPLAY"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "visual_QA": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "check_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "severity": {
+            "enum": [
+              "BLOCK",
+              "WARN",
+              "HUMAN_REVIEW"
+            ]
+          },
+          "result": {
+            "enum": [
+              "PASS",
+              "FAIL",
+              "NOT_ASSESSED",
+              "PENDING"
+            ]
+          },
+          "basis": {
+            "type": "string",
+            "minLength": 1
+          },
+          "evidence_refs": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "uniqueItems": true
+          }
+        },
+        "required": [
+          "check_id",
+          "severity",
+          "result",
+          "basis",
+          "evidence_refs"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 1
+    },
+    "observed_artifact_refs": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    }
+  },
+  "required": [
+    "schema_version",
+    "slide_index",
+    "slide_id",
+    "title",
+    "page_role",
+    "role_reason",
+    "secondary_content_tags",
+    "semantic_mapping",
+    "composition_family",
+    "art_direction_execution",
+    "illustration_decision",
+    "visual_QA",
+    "observed_artifact_refs"
+  ],
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "composition_family": {
+            "properties": {
+              "generic_fallback": {
+                "const": true
+              }
+            }
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "composition_family": {
+            "properties": {
+              "fallback_reason": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

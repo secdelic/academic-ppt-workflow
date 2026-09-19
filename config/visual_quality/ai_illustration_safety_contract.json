@@ -1,0 +1,51 @@
+{
+  "schema_version": "visual-quality/1",
+  "generation_enabled": false,
+  "production_active": false,
+  "allowed_subject_classes": [
+    "ABSTRACT_MEDICAL_CONCEPT",
+    "BACKGROUND_SCENE",
+    "ORGAN_SILHOUETTE",
+    "RESEARCH_ENVIRONMENT",
+    "CARE_PATHWAY_ATMOSPHERE",
+    "REHABILITATION_CONCEPT",
+    "EDITORIAL_ILLUSTRATION"
+  ],
+  "forbidden_evidence_types": [
+    "ECG",
+    "EEG",
+    "ULTRASOUND",
+    "CT",
+    "MRI",
+    "PATHOLOGY",
+    "PATIENT_IMAGING",
+    "STATISTICAL_CHART",
+    "REAL_MONITORING_DATA",
+    "CLINICAL_EVIDENCE"
+  ],
+  "candidate_schema": "ai_illustration_candidate.schema.json",
+  "approval_event_schema": "asset_approval_event.schema.json",
+  "candidate_record_immutable": true,
+  "human_approval_required_before_real_deck": true,
+  "scientific_evidence_can_never_be_promoted": true,
+  "real_figure_substitution_allowed": false,
+  "privacy_policy": "No identifiers, private clinical data, raw notes, local file paths, documents or slide images in generation payload. Public visibility is not export permission. Human-reviewed minimal abstraction required before any future external dispatch. Automatic external dispatch is prohibited; only human-triggered generation of controlled packets is supported.",
+  "asset_lifecycle": [
+    "ephemeral reviewed request",
+    "generation only after separate enablement and export authorization",
+    "immutable CANDIDATE record",
+    "human visual and scientific safety review of exact asset plus placement preview",
+    "append approval event with exact scope",
+    "verify hashes, project, deck, slide, role, transforms, and revocation at insertion",
+    "render composite slide and require final deck review"
+  ],
+  "post_generation_rejection": [
+    "forbidden evidence-like appearance even if prompt was safe",
+    "misleading anatomy, laterality, instruments or care claims",
+    "generated text, numbers, traces or chart axes",
+    "PHI or identifiable persons",
+    "wrong palette or insufficient protected whitespace",
+    "source/rights provenance unknown"
+  ],
+  "failure_action": "Keep CANDIDATE quarantined; record decision. Missing optional illustration can yield explicit NONE. A missing scientific figure or unsafe semantic relationship remains INFORMATION_REQUIRED. No silent replacement or auto-approval."
+}

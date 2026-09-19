@@ -1,0 +1,166 @@
+{
+  "schema_version": "visual-quality/1",
+  "thresholds_status": "PROPOSED_NOT_AGREED",
+  "checks": [
+    {
+      "check_id": "Q01",
+      "dimension": "record_coverage",
+      "severity": "BLOCK",
+      "method": "All slide IDs unique; actual slide count equals records; all six mandatory fields; exactly one role and boolean illustration decision.",
+      "criterion": "100%",
+      "failure_handling": "Missing record or silent default"
+    },
+    {
+      "check_id": "Q02",
+      "dimension": "scientific_fidelity",
+      "severity": "BLOCK",
+      "method": "Compare scientific IR, literal numbers/units/conditions/negations, source bindings and rendered realization; no new unsourced statements.",
+      "criterion": "No regression; required evidence present",
+      "failure_handling": "Changed or unverifiable scientific content"
+    },
+    {
+      "check_id": "Q03",
+      "dimension": "semantic_fidelity",
+      "severity": "BLOCK",
+      "method": "Compare approved nodes, grouping, direction, endpoints, ordering and equal weights to native objects and render.",
+      "criterion": "No invented relation",
+      "failure_handling": "Ambiguous graph requires author decision; record retained limits"
+    },
+    {
+      "check_id": "Q04",
+      "dimension": "asset_authorization",
+      "severity": "BLOCK",
+      "method": "Check exact source/hash, asset provenance, scope/project/deck/slide/role, allowed transform, revocation and reviewed composite preview.",
+      "criterion": "All inserted assets authorized",
+      "failure_handling": "CANDIDATE, wrong scope or unknown evidence blocks insertion"
+    },
+    {
+      "check_id": "Q05",
+      "dimension": "unsafe_illustration",
+      "severity": "BLOCK",
+      "method": "AI flags immutable; no generated clinical traces/images/charts/evidence; source figure precedence.",
+      "criterion": "Zero violations",
+      "failure_handling": "Any attempted replacement or unsafe resemblance"
+    },
+    {
+      "check_id": "Q06",
+      "dimension": "silent_generic_fallback",
+      "severity": "BLOCK",
+      "method": "Every exception has rejected alternatives, reason, reason provenance and human review record.",
+      "criterion": "Zero silent fallback",
+      "failure_handling": "Retrospective reason is not an original selection receipt"
+    },
+    {
+      "check_id": "Q07",
+      "dimension": "typography_minimum",
+      "severity": "BLOCK",
+      "method": "Resolve role-specific minimum and compare realized font/size; check text geometry and exceptions.",
+      "criterion": "No minimum reduction",
+      "failure_handling": "Unknown resolved size or clipping prevents validation"
+    },
+    {
+      "check_id": "Q08",
+      "dimension": "render_contact_sheet",
+      "severity": "BLOCK",
+      "method": "PPTX, PDF, PNG count and hashes align; contact sheet exists with all pages; inspect each slide.",
+      "criterion": "N/N plus coherent contact sheet",
+      "failure_handling": "Missing/stale render or sheet"
+    },
+    {
+      "check_id": "Q09",
+      "dimension": "layout_repetition",
+      "severity": "WARN",
+      "method": "Dominant observed macro-family share and longest adjacent run; proposed limits, per-role detail.",
+      "criterion": "proposal: share <=0.35; run <=3",
+      "failure_handling": "Not an agreed aesthetic boundary; no optimizing by changing semantics"
+    },
+    {
+      "check_id": "Q10",
+      "dimension": "generic_card_dependence",
+      "severity": "WARN",
+      "method": "Generic-card slide count / all slides; reasons and adjacency reviewed.",
+      "criterion": "proposal: >0.25 flags review",
+      "failure_handling": "Cards with authentic table/semantic structure are not generic by shape alone"
+    },
+    {
+      "check_id": "Q11",
+      "dimension": "visual_focal_point",
+      "severity": "HUMAN_REVIEW",
+      "method": "Inspect one intended focal point against actual render, title/figure competition and reading order.",
+      "criterion": "Per-slide review",
+      "failure_handling": "No shape-count proxy"
+    },
+    {
+      "check_id": "Q12",
+      "dimension": "page_role_differentiation",
+      "severity": "HUMAN_REVIEW",
+      "method": "Compare communicative role and observed scene, including same-role variants.",
+      "criterion": "Role fit without forced variety",
+      "failure_handling": "No need to use all ten roles"
+    },
+    {
+      "check_id": "Q13",
+      "dimension": "typography_hierarchy",
+      "severity": "HUMAN_REVIEW",
+      "method": "Inspect title, body, units and caption hierarchy at projection scale and retained equality.",
+      "criterion": "Readable and faithful",
+      "failure_handling": "Equal scientific concepts must not gain spurious ranks"
+    },
+    {
+      "check_id": "Q14",
+      "dimension": "background_rhythm",
+      "severity": "HUMAN_REVIEW",
+      "method": "Review sheet for contrast, palette and spacing; use approved brief, not compulsory dark pages.",
+      "criterion": "Context-specific",
+      "failure_handling": "Counted color alternation is not quality"
+    },
+    {
+      "check_id": "Q15",
+      "dimension": "illustration_overuse",
+      "severity": "WARN",
+      "method": "Decorative illustrated slides/all slides; overlay intersection and focal competition reviewed.",
+      "criterion": "proposal: >0.40 flags review",
+      "failure_handling": "Authorized useful illustrations still require composite review"
+    },
+    {
+      "check_id": "Q16",
+      "dimension": "illustration_underuse",
+      "severity": "HUMAN_REVIEW",
+      "method": "Review eligible low/medium-density conceptual pages with no illustration against recorded rationale.",
+      "criterion": "No minimum quota",
+      "failure_handling": "Do not force image on evidence/dense/ambiguous pages"
+    },
+    {
+      "check_id": "Q17",
+      "dimension": "contact_sheet_coherence",
+      "severity": "HUMAN_REVIEW",
+      "method": "Inspect existing full contact sheet and representative slide renders; final owner review separate.",
+      "criterion": "Human signed decision on frozen hash",
+      "failure_handling": "No mathematical reference-grade aesthetics"
+    },
+    {
+      "check_id": "Q18",
+      "dimension": "visual_brief_execution",
+      "severity": "WARN",
+      "method": "Record every applicable directive as matched/deviated/not assessed; immutable brief hash and per-slide receipt.",
+      "criterion": "100% records; execution assessed separately",
+      "failure_handling": "Recorded coverage is not execution success"
+    },
+    {
+      "check_id": "Q19",
+      "dimension": "privacy_dispatch",
+      "severity": "BLOCK",
+      "method": "Allowlisted minimal abstraction, local trusted approval lookup, export policy and no raw notes/data/IDs.",
+      "criterion": "No dispatch this experiment",
+      "failure_handling": "Schema or keyword scan alone cannot certify deidentification"
+    },
+    {
+      "check_id": "Q20",
+      "dimension": "human_approval_floor",
+      "severity": "HUMAN_REVIEW",
+      "method": "Final scientific and visual approvals bound to exact deck/render hash and unresolved items.",
+      "criterion": "Required for future floor acceptance",
+      "failure_handling": "Pending approval holds acceptance without fabricating a reviewer decision"
+    }
+  ]
+}

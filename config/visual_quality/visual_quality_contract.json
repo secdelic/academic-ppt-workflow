@@ -1,0 +1,58 @@
+{
+  "schema_version": "visual-quality/1",
+  "contract_id": "VISUAL_QUALITY_FLOOR",
+  "lifecycle": {
+    "experimental": false,
+    "default_off": true,
+    "canonical": true,
+    "production_active": true,
+    "ai_generation_enabled": false,
+    "activation": "ENFORCED_BY_PUBLIC_VALIDATED_FULL; DIRECT_EVALUATOR_REQUIRES_EXPLICIT_MODE"
+  },
+  "required_slide_fields": [
+    "page_role",
+    "semantic_mapping",
+    "composition_family",
+    "art_direction_execution",
+    "illustration_decision",
+    "visual_QA"
+  ],
+  "coverage": {
+    "primary_page_role": 1.0,
+    "illustration_decision": 1.0,
+    "six_field_record": 1.0,
+    "visual_brief_execution_record": 1.0
+  },
+  "invariants": {
+    "no_scientific_regression": true,
+    "no_unsafe_illustration": true,
+    "no_silent_generic_fallback": true,
+    "contact_sheet_required": true,
+    "typography_minimum_retained": true,
+    "all_slides_rendered": true,
+    "scientific_human_approval_required": true,
+    "visual_human_approval_required": true
+  },
+  "typography_policy": {
+    "resolution_rule": "Resolve approved project/template minima before execution; absent authority uses versioned workflow typography tokens. Never silently lower a resolved minimum. Historical project minima are scoped, not global defaults. Record title/body/labels/footer separately and font substitutions.",
+    "new_project_without_resolved_minimum": "INFORMATION_REQUIRED"
+  },
+  "layout_repetition": {
+    "metric": "Observed macro-composition family after human-auditable normalization, including all card variants as GENERIC_CARD_GRID; denominator all slides, appendix included; report dominant share and longest adjacent run. Also report section/role breakdown.",
+    "proposed_max_family_fraction": 0.35,
+    "proposed_max_consecutive_family": 3,
+    "threshold_approval_status": "HUMAN_REVIEW_REQUIRED",
+    "enforcement_before_approval": "WARN",
+    "agreed_threshold_evaluation": "NOT_ASSESSED"
+  },
+  "guarantee": "WORKFLOW_PROCESS_FLOOR_PLUS_HUMAN_APPROVAL_FLOOR",
+  "aesthetic_mathematical_guarantee": false,
+  "missing_or_unknown_required_evidence": "INFORMATION_REQUIRED",
+  "readiness_aggregation": "Design readiness is separate from deck acceptance and production adoption. In validated/full runs any BLOCK failure => BLOCKED; required scientific/authorization evidence NOT_ASSESSED also blocks validation. Pending mandatory human approval => PARTIALLY_READY, never VALIDATED. Warnings require review but do not alone block. Only all hard checks plus signed human reviews can mark the process floor satisfied; existing assisted-use semantics remain separate.",
+  "cross_project_generalization_gate": {
+    "minimum_independent_real_projects": 2,
+    "independent_real_projects_observed": 1,
+    "human_adoption_approval": "HUMAN_REVIEW_REQUIRED",
+    "status": "BLOCKED_PENDING_SECOND_PROJECT"
+  }
+}

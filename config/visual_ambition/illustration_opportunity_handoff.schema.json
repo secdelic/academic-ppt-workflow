@@ -1,0 +1,188 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:academic-ppt:visual-ambition:illustration-opportunity-handoff",
+  "description": "Local planning metadata only. Closed fields and template-only summaries; no request/prompt or external approval.",
+  "type": "object",
+  "properties": {
+    "slide_id": {
+      "type": "string",
+      "pattern": "^(SLD-[A-F0-9]{20}|S[0-9]{3,6})$"
+    },
+    "page_role": {
+      "enum": [
+        "HERO",
+        "CONTEXT",
+        "EVIDENCE",
+        "FRAMEWORK",
+        "RESULTS",
+        "COMPARISON",
+        "IMPLEMENTATION",
+        "TIMELINE",
+        "CLOSING",
+        "APPENDIX"
+      ]
+    },
+    "quality_floor_status": {
+      "enum": [
+        "PASS",
+        "WARN",
+        "HUMAN_REVIEW",
+        "BLOCK"
+      ]
+    },
+    "deck_quality_floor_status": {
+      "enum": [
+        "VISUAL_QUALITY_PASS",
+        "VISUAL_QUALITY_PASS_WITH_WARNINGS",
+        "VISUAL_QUALITY_HUMAN_REVIEW_REQUIRED",
+        "VISUAL_QUALITY_BLOCKED"
+      ]
+    },
+    "illustration_enrichment_opportunity": {
+      "enum": [
+        "NONE",
+        "LOW",
+        "MEDIUM",
+        "HIGH",
+        "REFERENCE_GRADE_OPPORTUNITY"
+      ]
+    },
+    "illustration_role_candidate": {
+      "enum": [
+        "BACKGROUND_ATMOSPHERE",
+        "EDITORIAL_CUE",
+        "CONCEPT_SUPPORT",
+        null
+      ]
+    },
+    "illustration_subject_summary": {
+      "enum": [
+        "Abstract conceptual support; no clinical evidence, new mechanism, or diagnostic implication.",
+        "Muted editorial background atmosphere with protected space for native content; no geographic evidence.",
+        "Subordinate conceptual silhouette; no anatomical truth, laterality, diagnostic or causal claim.",
+        "Abstract research-process editorial cues; no invented study results or evidence-strength badges.",
+        "Abstract care-pathway atmosphere; preserve source-defined stages and conditions.",
+        "Abstract recovery-stage atmosphere; no promised outcome, patient portrayal, or invented duration.",
+        "Restrained editorial cue supporting reading order; no scientific or clinical evidence.",
+        null
+      ]
+    },
+    "allowed_visual_types": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "ABSTRACT_MEDICAL_CONCEPT",
+          "BACKGROUND_SCENE",
+          "ORGAN_SILHOUETTE",
+          "RESEARCH_ENVIRONMENT",
+          "CARE_PATHWAY_ATMOSPHERE",
+          "REHABILITATION_CONCEPT",
+          "EDITORIAL_ILLUSTRATION"
+        ]
+      },
+      "uniqueItems": true
+    },
+    "prohibited_visual_types": {
+      "const": [
+        "ECG",
+        "EEG",
+        "ULTRASOUND",
+        "CT",
+        "MRI",
+        "PATHOLOGY",
+        "PATIENT_IMAGING",
+        "STATISTICAL_CHART",
+        "REAL_MONITORING_DATA",
+        "CLINICAL_EVIDENCE"
+      ]
+    },
+    "source_priority": {
+      "const": [
+        "EXISTING_SCIENTIFIC_SOURCE_FIGURE",
+        "APPROVED_PROJECT_ASSET",
+        "APPROVED_DETERMINISTIC_LIBRARY",
+        "AI_CONCEPTUAL_CANDIDATE",
+        "NONE"
+      ]
+    },
+    "visual_brief_style_family": {
+      "const": "WARM_ACADEMIC_EDITORIAL"
+    },
+    "palette": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "pattern": "^#?[0-9a-fA-F]{6}$"
+      }
+    },
+    "negative_space_hint": {
+      "enum": [
+        null,
+        "LEFT_CANDIDATE_REQUIRES_REVIEW",
+        "RIGHT_CANDIDATE_REQUIRES_REVIEW",
+        "BACKGROUND_CANDIDATE_REQUIRES_REVIEW"
+      ]
+    },
+    "human_approval_required": {
+      "const": true
+    },
+    "execution_eligibility": {
+      "enum": [
+        "HOLD_FLOOR_BLOCK",
+        "HOLD_DECK_FLOOR_BLOCK",
+        "HUMAN_GATE_REQUIRED"
+      ]
+    },
+    "illustration_candidate_allowed": {
+      "type": "boolean"
+    },
+    "source_figure_required": {
+      "type": "boolean"
+    },
+    "local_only": {
+      "const": true
+    },
+    "external_export_approved": {
+      "const": false
+    },
+    "generation_authorized": {
+      "const": false
+    },
+    "is_generation_request": {
+      "const": false
+    },
+    "generated_candidate_scientific_evidence": {
+      "const": false
+    },
+    "may_replace_source_figure": {
+      "const": false
+    }
+  },
+  "required": [
+    "slide_id",
+    "page_role",
+    "quality_floor_status",
+    "deck_quality_floor_status",
+    "illustration_enrichment_opportunity",
+    "illustration_role_candidate",
+    "illustration_subject_summary",
+    "allowed_visual_types",
+    "prohibited_visual_types",
+    "source_priority",
+    "visual_brief_style_family",
+    "palette",
+    "negative_space_hint",
+    "human_approval_required",
+    "execution_eligibility",
+    "illustration_candidate_allowed",
+    "source_figure_required",
+    "local_only",
+    "external_export_approved",
+    "generation_authorized",
+    "is_generation_request",
+    "generated_candidate_scientific_evidence",
+    "may_replace_source_figure"
+  ],
+  "additionalProperties": false
+}

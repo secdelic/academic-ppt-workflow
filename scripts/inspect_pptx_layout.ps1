@@ -76,6 +76,19 @@ function Get-StringSha256([string]$Value) {
     }
 }
 
+function Get-InputFileSha256([string]$Path) {
+    # Works in Windows PowerShell when the parent process has a different module path.
+    $algorithm = [System.Security.Cryptography.SHA256]::Create()
+    $stream = [System.IO.File]::OpenRead($Path)
+    try {
+        return ([System.BitConverter]::ToString($algorithm.ComputeHash($stream))).Replace("-", "").ToLowerInvariant()
+    }
+    finally {
+        $stream.Dispose()
+        $algorithm.Dispose()
+    }
+}
+
 $powerPoint = $null
 $presentation = $null
 try {
@@ -237,7 +250,7 @@ try {
     $payload = [PSCustomObject]@{
         schema_version = "2.1"
         status = "PASS"
-        source_pptx_sha256 = (Get-FileHash -LiteralPath $inputPath -Algorithm SHA256).Hash.ToLowerInvariant()
+        source_pptx_sha256 = Get-InputFileSha256 $inputPath
         slide_width_pt = [double]$presentation.PageSetup.SlideWidth
         slide_height_pt = [double]$presentation.PageSetup.SlideHeight
         slide_count = [int]$presentation.Slides.Count

@@ -1,0 +1,12 @@
+{
+  "schema_version": "visual-ambition/1",
+  "authority": "ASSISTED_VISUAL_AMBITION",
+  "floor_contract": "visual-quality/1",
+  "floor_severity_policy": "UNCHANGED",
+  "quality_levels": [
+    "FLOOR",
+    "TARGET",
+    "STRETCH"
+  ],
+  "attainment_policy": "NOT_ASSESSED_HUMAN_REVIEW_REQUIRED"
+}

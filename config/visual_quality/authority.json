@@ -1,0 +1,15 @@
+{
+  "authority": "ASSISTED_VISUAL_QUALITY_CONTRACT",
+  "schema_version": "visual-quality/1",
+  "threshold_approval_status": "HUMAN_REVIEW_REQUIRED",
+  "cross_project_validation": "SECOND_INDEPENDENT_REAL_PROJECT_REQUIRED",
+  "contract_sha256": {
+    "ai_illustration_safety_contract.json": "1e8e8aa3a82c14de7986d66e6d7c1bd4b0c65a765b3304aa2ec6b1c6c6073011",
+    "evaluator_slide_record.schema.json": "fcbfb2abb89332a32009e4a3505b41ccd3e752197c93ac09ddc797e061916e96",
+    "illustration_decision.schema.json": "d36fc44d01f420f531f8e76c632c77948f8fd518e1714958f2bfd8753705a81e",
+    "page_role_and_composition_taxonomy.json": "40b1c330cae9ce6230ed1a0c9254f85627eabdf958bc90e73d79470df6d609e7",
+    "quality_floor_QA_matrix.json": "2092c487068fdf4579ed1cf87a97b58595fe359ed2df6530579a38711e8b8e5b",
+    "slide_quality_record.schema.json": "327003a52646c4cf31328a1b5be00a85fcc790d8c062980e6f0dfc4890c41213",
+    "visual_quality_contract.json": "d20567d90132fb40ff5cf7994c32c7549b7f9643e7a40640bbebd8fd914ffab7"
+  }
+}

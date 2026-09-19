@@ -1,69 +1,44 @@
 # Academic PPT Workflow
 
-Academic PPT Workflow is a local-first, source-bound production system for
-scientific PowerPoint decks. The repository remains the single canonical
-authority; native PptxGenJS is the default and only production rendering
-backend.
+Local, source-bound academic PowerPoint generation and assisted visual review.
+Scientific claims, numbers, figures and citations remain traceable to registered inputs;
+final scientific and visual decisions remain with the author.
 
-This checkout is a private release candidate. It is not approved for public
-distribution or unattended scientific delivery. Human scientific and visual
-review remain mandatory.
+Routes: **generate**, **enhance**, **template-fill**, **template-create**.
+The native PptxGenJS backend preserves editable text, semantic shapes and chart data.
+Approved visual plans can use role-aware real PowerPoint Masters/Layouts, a process
+quality floor, and optional manually generated presentation-only illustrations.
 
-## User interface
+| Quality | Delivery contract |
+|---|---|
+| quick | Draft; no visual-floor certification |
+| validated | Scientific QA, full render, roles/layouts, Floor and human gates |
+| full | validated plus provenance/privacy audit and Anchor/STRETCH opportunity review |
 
-Users choose one route and one quality level:
+## Start on Windows
 
-- Routes: `generate`, `enhance`, `template-fill`, `template-create`
-- Quality: `quick`, `validated`, `full`
-
-Internal evidence objects, hashes, checkpoints, and change-impact state are
-managed by the workflow and are not user inputs.
-
-## First install on Windows
+Requires Python 3.12, Node.js 20+ and Microsoft PowerPoint. From the repository root:
 
 ```powershell
-$env:PPT_WORKFLOW_HOME = (Resolve-Path .).Path
-$env:PPT_WORKSPACE_HOME = Join-Path $env:LOCALAPPDATA "AcademicPPTWorkspace"
-powershell -ExecutionPolicy Bypass -File scripts/bootstrap_windows.ps1
-powershell -ExecutionPolicy Bypass -File scripts/doctor.ps1
+$env:PPT_WORKFLOW_HOME = (Get-Location).Path
+$env:PPT_WORKSPACE_HOME = Join-Path (Split-Path $env:PPT_WORKFLOW_HOME -Parent) 'academic-ppt-workspace'
+& .\scripts\bootstrap_windows.ps1 -WorkflowHome $env:PPT_WORKFLOW_HOME -WorkspaceHome $env:PPT_WORKSPACE_HOME
+& .\scripts\new_project.ps1 -ProjectId 'academic-demo' -Route generate -Quality validated -WorkspaceHome $env:PPT_WORKSPACE_HOME
 ```
 
-The bootstrap uses project-local Python and Node dependencies. It does not
-modify global Python or Node installations.
+Complete the project brief, registered sources and approved visual brief before running.
+Follow the manual to prepare the source-bound visual plan and complete review.
+Unresolved science or visual evidence blocks delivery; unsigned review remains a draft.
 
-The application and user workspace are separate authorities. Production cache
-defaults to `<PPT_WORKSPACE_HOME>/projects/<PROJECT_ID>/cache/`; an explicitly
-configured `PPT_CACHE_HOME` provides a shared parent with opaque, isolated
-project keys. Repository `.cache` is reserved for development and tests.
+Keep project inputs, candidates, credentials and run outputs in the external private
+workspace. No image API, automatic image generation or external Skill is used.
+Candidates require explicit human approval and slide-specific authorization.
 
-## Start a project
+**Lifecycle:** assisted use; this consolidation is **UNRELEASED / NEXT**. Existing
+version metadata is aligned to `2.7.0-rc4`, not a new release. A second independent
+real project remains unvalidated. No aesthetic guarantee or stable-release claim.
 
-```powershell
-powershell -ExecutionPolicy Bypass -File scripts/new_project.ps1 `
-  -ProjectId "my-study" `
-  -Route generate `
-  -Quality validated
-```
-
-Then run the project through the single public entry point:
-
-```powershell
-.\.venv\Scripts\python.exe run_ppt_workflow.py --project "<project-directory>"
-```
-
-Do not place patient material, real clinical decks, private caches, runtime
-logs, or credentials inside the repository. Use the configured external
-workspace.
-
-## Documentation
-
-- [Quick guide (Chinese)](docs/README_%E5%BF%AB%E9%80%9F%E4%BD%BF%E7%94%A8.md)
-- [User manual (Chinese)](docs/%E7%94%A8%E6%88%B7%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E%E4%B9%A6.md)
-- [First install](README_FIRST_INSTALL.md)
-- [Architecture](docs/architecture_v2.md)
-
-## Release boundary
-
-The private GitHub release gate must pass privacy, synthetic CI, dependency
-lock, and bundle validation before a tag or release is created. A local commit
-or successful automated QA does not by itself authorize publication.
+- [中文操作说明书](docs/中文操作说明书.md)
+- [Architecture](docs/architecture.md)
+- [KEEP semantics](docs/KEEP_语义保留合同.md)
+- [Changelog](CHANGELOG.md)

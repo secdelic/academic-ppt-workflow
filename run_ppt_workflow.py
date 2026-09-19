@@ -55,15 +55,12 @@ def normalise_public_request(args: argparse.Namespace) -> argparse.Namespace:
     if getattr(args, "workflow_mode", None) is not None:
         if args.workflow_mode == "fast_enhance" and internal_route != "enhance-existing":
             raise ValueError("fast_enhance is restricted to the enhance route")
-    elif quality == "full":
+    elif quality in {"validated", "full"}:
         args.workflow_mode = "full_validation"
     elif internal_route == "enhance-existing":
         args.workflow_mode = "fast_enhance"
-        if quality == "validated":
-            args.final_delivery = True
     else:
-        # Generate/template routes currently retain the validated full path;
-        # no reduced generator or template engine is introduced in v2.5.3.
+        # Draft generation retains source integrity checks but makes no Floor claim.
         args.workflow_mode = "full_validation"
     return args
 
@@ -102,6 +99,8 @@ def build_parser() -> argparse.ArgumentParser:
         help="Validation depth exposed to users: quick, validated, or full",
     )
     parser.add_argument("--repo-root", help=argparse.SUPPRESS)
+    parser.add_argument("--visual-plan", help="Approved source-bound semantic and layout plan JSON")
+    parser.add_argument("--visual-evidence", help="Hash-bound rendered observations and human review JSON")
     parser.add_argument("--input-root", help=argparse.SUPPRESS)
     parser.add_argument("--staging-root", help=argparse.SUPPRESS)
     parser.add_argument("--output-root", help=argparse.SUPPRESS)
@@ -239,6 +238,9 @@ def main() -> int:
 
             args, public_run = configure_project_args(args)
         output = execute(args)
+        from academic_ppt.visual_workflow import finalize_run
+
+        gate = finalize_run(output, args)
         if public_run is not None:
             from academic_ppt.project_interface import publish_standard_outputs
 
@@ -247,7 +249,8 @@ def main() -> int:
         print(f"BLOCKED: {type(exc).__name__}: {exc}", file=sys.stderr)
         return 2
     print(f"OUTPUT_DIR={output}")
-    return 0
+    print(f"VISUAL_DELIVERY_STATUS={gate['status']}")
+    return 2 if gate['status'] == 'BLOCK' else 0
 
 
 if __name__ == "__main__":

@@ -1,0 +1,76 @@
+{
+  "fixture_id": "SEMANTIC_COMPOSITION",
+  "synthetic_only": true,
+  "boundary": "纯软件风格控制；不含患者数据或医学结果。",
+  "brief": {
+    "project_name": "NATIVE_STYLE 原生风格控制",
+    "presentation_type": "research_report",
+    "language": "zh-CN",
+    "presentation_objective": "检验原生样式与数值图不变量"
+  },
+  "style_profile": {
+    "theme_fonts": {
+      "major": {
+        "latin": "Microsoft YaHei"
+      },
+      "minor": {
+        "latin": "Microsoft YaHei"
+      }
+    }
+  },
+  "source_figure_svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"1200\" height=\"700\"><rect width=\"1200\" height=\"700\" fill=\"#eef4f8\"/><circle cx=\"350\" cy=\"350\" r=\"160\" fill=\"#0f766e\"/><rect x=\"720\" y=\"190\" width=\"280\" height=\"320\" fill=\"#2563eb\"/></svg>",
+  "chart": {
+    "categories": [
+      "模拟组甲",
+      "模拟组乙",
+      "模拟组丙"
+    ],
+    "values": [
+      20,
+      35,
+      50
+    ],
+    "units": "percent"
+  },
+  "slides": [
+    {
+      "key": "E01",
+      "title": "原生版式与风格控制样本",
+      "message": "仅验证文字与图形样式；来源清楚｜语义固定｜文字完整｜原生可编辑",
+      "slide_role": "cover",
+      "visual_type": "cover"
+    },
+    {
+      "key": "E02",
+      "title": "数值图样式控制",
+      "message": "模拟组甲、乙、丙的占位值分别为 20%、35% 和 50%。",
+      "visual_type": "editable_bar_chart",
+      "chart_caption": "纯软件测试数值。"
+    },
+    {
+      "key": "E03",
+      "title": "来源图形保持原样",
+      "message": "保持 SVG 的字节、比例及来源信息。",
+      "visual_type": "source_figure"
+    }
+  ],
+  "art_direction": {
+    "composition": "NATIVE_ART_DIRECTION",
+    "direction": "Editorial / Infographic / Warm-academic",
+    "font_family": "Microsoft YaHei",
+    "palette": {
+      "warm_light": "F6F2EA",
+      "warm_surface": "E8E1D7",
+      "dark_ink": "1F3A36",
+      "primary_green": "5B7F72",
+      "secondary_blue_gray": "7EA7B3",
+      "terracotta": "C97F63",
+      "sand": "C9B28A"
+    },
+    "synthetic_roles": {
+      "1": "hero",
+      "2": "chart_control",
+      "3": "source_figure_KEEP"
+    }
+  }
+}

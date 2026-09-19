@@ -1,0 +1,560 @@
+from __future__ import annotations
+
+import copy
+import json
+from pathlib import Path
+import shutil
+import subprocess
+import tempfile
+import unittest
+import zipfile
+
+from tests.support.composition_fixture import (
+    D_FIXTURE, E_FIXTURE, GENERATOR, ROOT, ZH_FIXTURE, apply_native_art_direction, arm_spec, canonical_json_hash, frozen_project_binding_issues, generate, normalized_tokens, package_snapshot, prepare, sha,
+)
+
+
+class SemanticCompositionTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.temp = tempfile.TemporaryDirectory(prefix="composition-tests-")
+        cls.addClassCleanup(cls.temp.cleanup)
+        cls.root = Path(cls.temp.name)
+        cls.bundle = prepare(cls.root)
+        cls.a_spec, cls.b_spec = arm_spec(cls.bundle, False), arm_spec(cls.bundle, True)
+        cls.a = package_snapshot(generate(cls.a_spec, cls.root / "a"))
+        cls.b = package_snapshot(generate(cls.b_spec, cls.root / "b"))
+        cls.execution = json.loads((cls.root / "b/preview/composition_execution.json").read_text())
+        cls.old = cls.a
+
+    def compose(self, spec):
+        module = (ROOT / "scripts/academic_ppt/semantic_composition.mjs").as_uri()
+        code = f'import fs from "node:fs"; import {{prepareComposition}} from {json.dumps(module)}; prepareComposition(JSON.parse(fs.readFileSync(0,"utf8")));'
+        return subprocess.run([shutil.which("node"), "--input-type=module", "-e", code], input=json.dumps(spec), capture_output=True, text=True, timeout=30)
+
+    def assert_rejected(self, spec, text):
+        result = self.compose(spec)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn(text, result.stderr)
+
+    def test_default_off_matches_stable_renderer(self):
+        spec = copy.deepcopy(self.a_spec)
+        spec.pop("composition")
+        actual = package_snapshot(generate(spec, self.root / "default"))
+        self.assertEqual(actual, self.old)
+        self.assertFalse((self.root / "default/preview/composition_execution.json").exists())
+
+    def test_disabled_matches_stable_renderer(self):
+        self.assertEqual(self.a, self.old)
+
+    def test_id_without_enabled_stays_off(self):
+        spec = copy.deepcopy(self.b_spec)
+        spec["composition"].pop("enabled")
+        actual = package_snapshot(generate(spec, self.root / "id-only"))
+        self.assertEqual(actual, self.old)
+
+    def test_enabled_with_wrong_id_fails_before_output(self):
+        for i, value in enumerate([{"enabled": True}, {"enabled": True, "id": "other"}]):
+            spec = copy.deepcopy(self.b_spec)
+            spec["composition"] = value
+            with self.assertRaisesRegex(RuntimeError, "INVALID_VISUAL_FIDELITY_COMPOSITION_ID"):
+                generate(spec, self.root / f"wrong-{i}")
+            self.assertFalse((self.root / f"wrong-{i}/deck.pptx").exists())
+
+    def test_unknown_archetype_fails(self):
+        spec = copy.deepcopy(self.b_spec)
+        next(iter(spec["visual_execution_plan"].values()))["archetype"] = "INFERRED"
+        self.assert_rejected(spec, "unknown archetype")
+
+    def test_unknown_slide_fails(self):
+        spec = copy.deepcopy(self.b_spec)
+        spec["visual_execution_plan"]["UNKNOWN"] = {"archetype": "PROCESS_HORIZONTAL"}
+        self.assert_rejected(spec, "Unknown composition slide")
+
+    def test_process_steps_and_only_frozen_edges(self):
+        row = self.execution["slides"][0]
+        objects = row["objects"]
+        self.assertEqual([o["text"] for o in objects if o["kind"] == "text"], ["01 Intake", "02 Check", "03 Compose", "04 Archive"])
+        self.assertEqual([o["edge"] for o in objects if "edge" in o], self.b_spec["slides"][0]["diagram_spec"]["edges"])
+        self.assertGreater(len({o["bounds"]["h"] for o in objects if o["kind"] == "ellipse"}), 1)
+
+    def test_process_rejects_unfrozen_order(self):
+        spec = copy.deepcopy(self.b_spec)
+        next(iter(spec["visual_execution_plan"].values()))["node_order"].reverse()
+        self.assert_rejected(spec, "linear order")
+
+    def test_hub_central_and_peripheral_nodes_undirected(self):
+        row = self.execution["slides"][1]
+        self.assertEqual(row["archetype_rendered"], "FRAMEWORK_HUB")
+        self.assertEqual(sum(o["kind"] == "ellipse" for o in row["objects"]), 4)
+        self.assertEqual(sum("edge" in o for o in row["objects"]), 3)
+        self.assertTrue(all(not o["directed"] for o in row["objects"] if "edge" in o))
+        self.assertEqual([o["id"] for o in row["objects"] if o.get("anchor")], ["node-core"])
+
+    def test_system_has_only_explicit_edges_with_clipped_endpoints(self):
+        row = self.execution["slides"][2]
+        self.assertEqual([o["edge"] for o in row["objects"] if "edge" in o], self.b_spec["slides"][3]["diagram_spec"]["edges"])
+        for edge in [o for o in row["objects"] if "edge" in o]:
+            for key in ("source", "target"):
+                node = next(o for o in row["objects"] if o["id"] == "node-" + edge["edge"][key])
+                b, n = edge["bounds"], node["bounds"]
+                # Neither end may terminate at the node center.
+                center = (n["x"] + n["w"] / 2, n["y"] + n["h"] / 2)
+                self.assertNotEqual(center, (b["x"], b["y"]))
+                self.assertNotEqual(center, (b["x"] + b["w"], b["y"] + b["h"]))
+
+    def test_system_rejects_unknown_endpoints(self):
+        spec = copy.deepcopy(self.b_spec)
+        spec["slides"][3]["diagram_spec"]["edges"][0]["target"] = "invented"
+        self.assert_rejected(spec, "invalid/duplicate endpoints")
+
+    def test_editorial_preserves_six_complete_statements(self):
+        expected = [p for t in self.b_spec["slides"][4]["takeaways"] for p in t.splitlines()]
+        row = self.execution["slides"][3]
+        self.assertEqual([o["text"] for o in row["objects"] if o["kind"] == "text"], expected)
+        self.assertEqual(len(expected), 6)
+        for arm in (self.a, self.b):
+            actual = [p for t in arm["slides"][4]["texts"] for p in t.splitlines()]
+            self.assertTrue(all(actual.count(p) == 1 for p in expected))
+
+    def test_scientific_text_mutation_rejected(self):
+        spec = copy.deepcopy(self.b_spec)
+        spec["slides"][0]["diagram_spec"]["nodes"][0]["label"] = "NEW SCIENTIFIC CLAIM"
+        self.assert_rejected(spec, "node text must exactly preserve")
+
+    def test_canonical_ir_and_hashes_unchanged(self):
+        original = (self.bundle["staging"] / "deck_ir.json").read_bytes()  # generated-temp
+        for spec in (self.a_spec, self.b_spec):
+            self.assertEqual(spec["deck_ir"]["canonical_hash"], self.bundle["ir"]["canonical_hash"])
+            self.assertEqual(spec["slides"], self.bundle["canonical"]["slides"])
+        self.compose(self.b_spec)
+        self.assertEqual(original, (self.bundle["staging"] / "deck_ir.json").read_bytes())  # generated-temp
+        self.assertNotIn(b"visual_execution_plan", original)
+
+    def test_source_citation_notes_unchanged(self):
+        self.assertEqual(self.a["notes"], self.b["notes"])
+        for a, b in zip(self.a_spec["slides"], self.b_spec["slides"], strict=True):
+            for key in ("source_ids", "claim_ids", "short_source_label", "prohibited_overstatement", "speaker_notes"):
+                self.assertEqual(a[key], b[key])
+
+    def test_internal_geometry_inside_existing_frame(self):
+        for row in self.execution["slides"]:
+            frame = row["frame"]
+            for o in row["objects"]:
+                b = o["bounds"]
+                self.assertGreaterEqual(b["x"], frame["x"])
+                self.assertGreaterEqual(b["y"], frame["y"])
+                self.assertLessEqual(b["x"] + b["w"], frame["x"] + frame["w"] + 1e-6)
+                self.assertLessEqual(b["y"] + b["h"], frame["y"] + frame["h"] + 1e-6)
+                if o["kind"] == "text":
+                    self.assertGreaterEqual(o["font_size_pt"], 18)
+
+    def test_no_footer_intrusion(self):
+        footer = self.b_spec["layout_contract"]["zones"]["footer_exclusion"]["y"]
+        for row in self.execution["slides"]:
+            self.assertTrue(all(o["bounds"]["y"] + o["bounds"]["h"] < footer for o in row["objects"]))
+
+    def test_no_off_slide(self):
+        for slide in self.b["slides"]:
+            for o in slide["objects"]:
+                b = o["bounds"]
+                self.assertGreaterEqual(b["x"], 0)
+                self.assertGreaterEqual(b["y"], 0)
+                self.assertLessEqual(b["x"] + b["w"], 13.334)
+                self.assertLessEqual(b["y"] + b["h"], 7.501)
+
+    def test_incompatible_frame_fails_closed(self):
+        spec = copy.deepcopy(self.b_spec)
+        next(o for o in spec["slides"][0]["planned_geometry"] if o["object_id"].endswith(":structure"))["bounds"]["h"] = 1
+        self.assert_rejected(spec, "COMPOSITION_FRAME_INCOMPATIBLE")
+
+    def test_no_rasterized_semantic_diagrams(self):
+        for i in (0, 1, 3, 4):
+            objects = self.b["slides"][i]["objects"]
+            self.assertTrue(any(o["kind"] == "text" for o in objects))
+            self.assertFalse(any(o["kind"] == "image" for o in objects))
+
+    def test_non_target_renderers_unchanged(self):
+        for part, digest in self.a["parts"].items():
+            if part in ("ppt/slides/slide3.xml", "ppt/slides/slide6.xml") or part.startswith(("ppt/charts/", "ppt/embeddings/", "ppt/media/")):
+                self.assertEqual(digest, self.b["parts"][part])
+
+    def test_visible_text_invariant(self):
+        self.assertEqual([s["tokens"] for s in self.a["slides"]], [s["tokens"] for s in self.b["slides"]])
+
+    def test_text_comparison_detects_deletion_addition_number_change(self):
+        original = normalized_tokens(["Keep 6 statements."])
+        for changed in ("Keep statements.", "Keep 7 statements.", "Keep 6 statements. Proven."):
+            self.assertNotEqual(original, normalized_tokens([changed]))
+        self.assertEqual(original, normalized_tokens(["Keep", "6\nstatements."]))
+
+    def test_targeted_count_and_zero_fallback(self):
+        self.assertEqual(self.execution["targeted_slide_count"], 4)
+        self.assertEqual(self.execution["rendered_slide_count"], 4)
+        self.assertEqual(self.execution["generic_fallback_count"], 0)
+        self.assertTrue(all(s["archetype_requested"] == s["archetype_rendered"] for s in self.execution["slides"]))
+
+    def test_chart_cannot_be_targeted(self):
+        spec = copy.deepcopy(self.b_spec)
+        spec["visual_execution_plan"][spec["slides"][2]["slide_id"]] = {"archetype": "SYSTEM_MAP"}
+        self.assert_rejected(spec, "scientific/template renderers are protected")
+
+
+class CjkCalibrationTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.temp = tempfile.TemporaryDirectory(prefix="composition-cjk-")
+        cls.addClassCleanup(cls.temp.cleanup)
+        cls.root = Path(cls.temp.name)
+        cls.bundle = prepare(cls.root, ZH_FIXTURE)
+        cls.spec = arm_spec(cls.bundle, True)
+        cls.snapshot = package_snapshot(generate(cls.spec, cls.root / "cjk"))
+        cls.execution = json.loads((cls.root / "cjk/preview/composition_execution.json").read_text(encoding="utf-8"))
+
+    def reject(self, spec, phrase):
+        module = (ROOT / "scripts/academic_ppt/semantic_composition.mjs").as_uri()
+        code = f'import fs from "node:fs"; import {{prepareComposition}} from {json.dumps(module)}; prepareComposition(JSON.parse(fs.readFileSync(0,"utf8")));'
+        result = subprocess.run([shutil.which("node"), "--input-type=module", "-e", code], input=json.dumps(spec), capture_output=True, text=True, timeout=30)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn(phrase, result.stderr)
+
+    def test_six_chinese_stages_equal_sizes_and_exact_order(self):
+        row = self.execution["slides"][0]
+        nodes = [o for o in row["objects"] if o["id"].startswith("node-")]
+        self.assertEqual(len(nodes), 6)
+        self.assertEqual(len({(o["bounds"]["w"], o["bounds"]["h"]) for o in nodes}), 1)
+        self.assertEqual([o["edge"] for o in row["objects"] if "edge" in o], self.spec["slides"][0]["diagram_spec"]["edges"])
+
+    def test_hub_three_equal_peripheral_nodes_no_causal_arrows(self):
+        row = self.execution["slides"][1]
+        peripheral = [o for o in row["objects"] if o.get("semantic_role") == "equal_member"]
+        self.assertEqual(len(peripheral), 3)
+        self.assertEqual(len({(o["bounds"]["w"],o["bounds"]["h"],o["tone"],o["line_width"]) for o in peripheral}), 1)
+        self.assertTrue(all(not o["directed"] for o in row["objects"] if "edge" in o))
+
+    def test_five_node_system_has_no_terminal_highlight(self):
+        row = self.execution["slides"][2]
+        nodes = [o for o in row["objects"] if o["id"].startswith("node-")]
+        self.assertEqual(len(nodes), 5)
+        self.assertTrue(all(not o["anchor"] and o["semantic_role"] == "equal_member" for o in nodes))
+        self.assertEqual(len({(o["tone"],o["line_width"]) for o in nodes}),1)
+        self.assertEqual([o["edge"] for o in row["objects"] if "edge" in o], self.spec["slides"][3]["diagram_spec"]["edges"])
+
+    def test_six_full_chinese_statements_equal_typography(self):
+        row = self.execution["slides"][3]
+        texts = [o for o in row["objects"] if o["kind"] == "text"]
+        expected = [t for group in self.spec["slides"][4]["takeaways"] for t in group.splitlines()]
+        self.assertEqual([o["text"] for o in texts],expected)
+        self.assertEqual(len(texts),6)
+        self.assertTrue(all(o["font_size_pt"]==20 and not o["hero"] and not o["bold"] for o in texts))
+
+    def test_oversized_chinese_case_is_expected_rejection(self):
+        spec = copy.deepcopy(self.spec)
+        negative = self.bundle["fixture"]["capacity_negative"]
+        sentence = negative["paragraph"] * negative["repeat_per_statement"]
+        spec["slides"][4]["takeaways"] = [sentence+"\n"+sentence]*3
+        self.reject(spec, "COMPOSITION_FRAME_INCOMPATIBLE")
+
+    def test_no_font_reduction_below_approved_minimum(self):
+        spec = copy.deepcopy(self.spec)
+        next(iter(spec["visual_execution_plan"].values()))["font_size_pt"] = 17
+        self.reject(spec, "font below approved minimum")
+
+    def test_plan_labels_and_directions_cannot_drift(self):
+        for key in ("nodes", "edges"):
+            spec = copy.deepcopy(self.spec)
+            plan = next(iter(spec["visual_execution_plan"].values()))
+            if key == "nodes": plan[key][0]["label"] = "未经批准的标签"
+            else: plan[key][0]["directed"] = False
+            self.reject(spec, "must match the frozen hashed plan")
+
+    def test_missing_semantic_source_rejected(self):
+        spec=copy.deepcopy(self.spec)
+        next(iter(spec["visual_execution_plan"].values())).pop("source_locator")
+        self.reject(spec,"explicit source")
+
+    def test_crossing_an_unrelated_node_is_rejected(self):
+        spec=copy.deepcopy(self.spec)
+        plan=spec["visual_execution_plan"][spec["slides"][3]["slide_id"]]
+        plan["positions"]={"a":[0.16,0.19],"b":[0.50,0.19],"c":[0.84,0.19],"d":[0.32,0.80],"e":[0.68,0.80]}
+        self.reject(spec,"edge crosses node")
+
+    def test_plan_hash_covers_roles_emphasis_and_direction(self):
+        plan=self.spec["visual_execution_plan"]
+        original=canonical_json_hash(plan)
+        for field in ("emphasis","relationship_type","source_locator","central_id"):
+            changed=copy.deepcopy(plan)
+            next(iter(changed.values()))[field]="changed"
+            self.assertNotEqual(original,canonical_json_hash(changed))
+
+    def test_chinese_subscripts_slashes_and_abbreviations_preserved(self):
+        text="\n".join(self.snapshot["slides"][1]["texts"])
+        for value in ("rSO₂/PbtO₂","TCD/TCCD","cEEG/qEEG","共同主题"):
+            self.assertIn(value,text)
+
+    def test_preserved_full_excerpt_binding_does_not_require_claim_to_equal_title(self):
+        slide={"slide_id":"SLD-SYNTHETIC","single_key_message":"原有主信息","source_ids":["SRC-SYNTHETIC"],"claim_ids":["CLM-SYNTHETIC"]}
+        claim={"claim_id":"CLM-SYNTHETIC","source_id":"SRC-SYNTHETIC","claim_text":"这是登记的完整模拟摘录。","source_sha256":"hash"}
+        manifest=[{"source_id":"SRC-SYNTHETIC","sha256":"hash"}]
+        notes={"SLD-SYNTHETIC":"这是登记的完整模拟摘录。\n原有主信息"}
+        self.assertEqual(frozen_project_binding_issues([slide],[copy.deepcopy(slide)],[claim],manifest,notes),[])
+        changed=copy.deepcopy(slide);changed["single_key_message"]="新的科学主张"
+        self.assertTrue(frozen_project_binding_issues([changed],[slide],[claim],manifest,notes))
+
+    def test_excerpt_or_source_hash_mutation_is_rejected(self):
+        slide={"slide_id":"SLD-SYNTHETIC","source_ids":["SRC-SYNTHETIC"],"claim_ids":["CLM-SYNTHETIC"]}
+        claim={"claim_id":"CLM-SYNTHETIC","source_id":"SRC-SYNTHETIC","claim_text":"冻结摘录","source_sha256":"hash"}
+        manifest=[{"source_id":"SRC-SYNTHETIC","sha256":"hash"}]
+        self.assertTrue(frozen_project_binding_issues([slide],[slide],[claim],manifest,{"SLD-SYNTHETIC":"不匹配"}))
+        claim["source_sha256"]="changed"
+        self.assertTrue(frozen_project_binding_issues([slide],[slide],[claim],manifest,{"SLD-SYNTHETIC":"冻结摘录"}))
+
+
+class SemanticGrammarSEMANTICTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.temp = tempfile.TemporaryDirectory(prefix="compositiond-")
+        cls.addClassCleanup(cls.temp.cleanup)
+        cls.root = Path(cls.temp.name)
+        cls.bundle = prepare(cls.root, D_FIXTURE)
+        cls.spec = arm_spec(cls.bundle, True)
+        cls.a = package_snapshot(generate(arm_spec(cls.bundle, False), cls.root / "a"))
+        cls.b = package_snapshot(generate(cls.spec, cls.root / "b"))
+        cls.execution = json.loads((cls.root / "b/preview/composition_execution.json").read_text(encoding="utf-8"))
+
+    def reject(self, spec, phrase):
+        module = (ROOT / "scripts/academic_ppt/semantic_composition.mjs").as_uri()
+        code = f'import fs from "node:fs";import {{prepareComposition}} from {json.dumps(module)};prepareComposition(JSON.parse(fs.readFileSync(0,"utf8")));'
+        result = subprocess.run([shutil.which("node"), "--input-type=module", "-e", code], input=json.dumps(spec), text=True, capture_output=True, timeout=30)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn(phrase, result.stderr)
+
+    def changed(self, page):
+        spec = copy.deepcopy(self.spec)
+        slide = spec["slides"][page]
+        return spec, slide, spec["visual_execution_plan"][slide["slide_id"]]
+
+    def test_three_explicit_archetypes_zero_fallback(self):
+        self.assertEqual([r["archetype_rendered"] for r in self.execution["slides"]],
+                         ["LAYERED_LOOP_FRAMEWORK", "COMPOSITE_DUAL_FRAMEWORK", "TIMELINE_WITH_BAND"])
+        self.assertEqual(self.execution["generic_fallback_count"], 0)
+
+    def test_layered_loop_requires_closed_feedback(self):
+        s,item,p = self.changed(0)
+        p["edges"] = []; item["diagram_spec"]["edges"] = []
+        self.reject(s, "explicit teaching loop")
+
+    def test_layers_preserve_order_and_separate_principle(self):
+        row = self.execution["slides"][0]
+        self.assertEqual(row["semantics"]["layer_order"], ["0", "1", "2"])
+        self.assertEqual([(e["source"],e["target"]) for e in row["semantics"]["edges"]], [("0","1"),("1","2"),("2","0")])
+        self.assertEqual(row["semantics"]["external_roles"][0]["text"], self.spec["slides"][0]["single_key_message"])
+        nodes = [o for o in row["objects"] if o["id"].startswith("node-")]
+        self.assertEqual(len({o["bounds"]["w"] for o in nodes}), 1)
+        self.assertEqual([o["bounds"]["y"] for o in nodes], sorted(o["bounds"]["y"] for o in nodes))
+
+    def test_composite_requires_shared_relationship(self):
+        s,item,p = self.changed(1)
+        p["edges"] = []; item["diagram_spec"]["edges"] = []
+        self.reject(s, "explicit shared relationship")
+
+    def test_composite_groups_are_three_plus_one_and_no_item_edges(self):
+        row = self.execution["slides"][1]
+        core = next(g for g in row["semantics"]["groups"] if g["role"] == "right_core")
+        self.assertEqual(core["members"], ["3","4","5"])
+        self.assertEqual([n["node_id"] for n in row["semantics"]["nodes"] if n["role"] == "right_plus"], ["6"])
+        self.assertEqual([(e["source"],e["target"],e["directed"]) for e in row["semantics"]["edges"]], [("left","7",False),("right","7",False)])
+
+    def test_missing_timeline_order_rejected(self):
+        s,_,p = self.changed(3); p.pop("stage_order")
+        self.reject(s, "explicit stage order")
+
+    def test_future_cannot_be_current_stage(self):
+        s,item,p = self.changed(3)
+        p["nodes"][3]["role"] = "current_stage"
+        item["diagram_spec"]["nodes"] = copy.deepcopy(p["nodes"])
+        self.reject(s, "incorrect semantic roles")
+
+    def test_future_has_dashed_container_and_no_stage_arrow(self):
+        row = self.execution["slides"][2]
+        future = next(o for o in row["objects"] if o["id"] == "node-3")
+        self.assertEqual(future["dash_type"], "dash")
+        self.assertEqual(row["semantics"]["band_covers"], ["4","5","6","7"])
+        e = row["semantics"]["edges"][-1]
+        self.assertEqual((e["relationship_type"],e["directed"]), ("future_exploration_extension",False))
+        with zipfile.ZipFile(self.root / "b/deck.pptx") as z:
+            self.assertIn(b'prstDash val="dash"', z.read("ppt/slides/slide4.xml"))
+
+    def test_unsupported_item_edge_rejected(self):
+        s,item,p = self.changed(1)
+        p["edges"][0]["source"] = "8"
+        item["diagram_spec"]["edges"] = copy.deepcopy(p["edges"])
+        self.reject(s, "explicit shared relationship")
+
+    def test_provenance_and_role_input_in_plan_hash(self):
+        original = canonical_json_hash(self.spec["visual_execution_plan"])
+        for key in ("nodes", "groups", "edges"):
+            s,_,p = self.changed(1)
+            p[key][0]["source_locator"] = "changed"
+            self.assertNotEqual(original, canonical_json_hash(s["visual_execution_plan"]))
+        s,item,p = self.changed(1)
+        p["nodes"][0]["source_locator"] = ""
+        item["diagram_spec"]["nodes"] = copy.deepcopy(p["nodes"])
+        self.reject(s, "identity or provenance")
+
+    def test_text_notes_and_controls_identical(self):
+        self.assertEqual([x["tokens"] for x in self.a["slides"]], [x["tokens"] for x in self.b["slides"]])
+        self.assertEqual(self.a["notes"], self.b["notes"])
+        for name,digest in self.a["parts"].items():
+            if name in {"ppt/slides/slide3.xml","ppt/slides/slide5.xml"} or name.startswith(("ppt/charts/","ppt/media/","ppt/embeddings/")):
+                self.assertEqual(digest,self.b["parts"][name])
+
+    def test_fixed_font_capacity_rejects_overload(self):
+        s,item,p = self.changed(0)
+        text = "完整来源标签必须保留且不能缩小字号。" * 40
+        p["nodes"][0]["label"] = text
+        item["diagram_spec"]["nodes"] = copy.deepcopy(p["nodes"])
+        item["takeaways"][0] = text
+        self.reject(s, "COMPOSITION_FRAME_INCOMPATIBLE")
+
+    def test_objects_stay_inside_frame_and_minimum_font(self):
+        for row in self.execution["slides"]:
+            f = row["frame"]
+            for obj in row["objects"]:
+                b = obj["bounds"]
+                self.assertGreaterEqual(b["x"],f["x"])
+                self.assertGreaterEqual(b["y"],f["y"])
+                self.assertLessEqual(b["x"]+b["w"],f["x"]+f["w"]+1e-6)
+                self.assertLessEqual(b["y"]+b["h"],f["y"]+f["h"]+1e-6)
+                if obj["kind"] == "text": self.assertEqual(obj["font_size_pt"],20)
+
+    def test_protected_renderers_and_no_unknown_fourth_archetype(self):
+        s,_,p = self.changed(0); p["archetype"] = "INVENTED_FOURTH"
+        self.reject(s, "unknown SEMANTIC archetype")
+        s,item,_ = self.changed(0); item["visual_type"] = "source_figure"
+        self.reject(s, "protected renderer")
+
+
+class NativeArtDirectionTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.temp=tempfile.TemporaryDirectory(prefix="compositionea-")
+        cls.addClassCleanup(cls.temp.cleanup)
+        cls.root=Path(cls.temp.name)
+        cls.bundle=prepare(cls.root,E_FIXTURE)
+        cls.source=generate(arm_spec(cls.bundle,False),cls.root/"baseline")
+        first,chart=cls.bundle["canonical"]["slides"][:2]
+        sid=first["slide_id"]
+        cls.plan={"composition":"NATIVE_ART_DIRECTION","enabled":True,"synthetic_only":True,
+          "source_pptx_sha256":sha(cls.source),"font_family":"Microsoft YaHei","palette":cls.bundle["fixture"]["art_direction"]["palette"],
+          "semantic_plan":{},"semantic_plan_hash":canonical_json_hash({}),"targets":[
+            {"page":1,"slide_id":sid,"narrative_role":"hero","background":"F6F2EA","operations":[
+              {"shape_name":f"awf:{sid}:title","expected_text":first["slide_title"],"style":{"font_size_pt":44,"bold":True,"color":"1F3A36","bounds":[0.88,1.6,7.65,2.28]}}],
+             "decorations":[{"kind":"line","role":"presentation_only","bounds":[9.2,4.0,2.8,0],"color":"C9B28A"}]},
+            {"page":2,"slide_id":chart["slide_id"],"narrative_role":"chart_control","background":"F6F2EA","operations":[],
+             "chart_controls":[{"shape_name":f"awf:{chart['slide_id']}:chart","series_color":"5B7F72"}]}]}
+        cls.report=apply_native_art_direction(cls.source,cls.root/"styled.pptx",cls.plan)
+        cls.a=package_snapshot(cls.source);cls.c=package_snapshot(cls.root/"styled.pptx")
+
+    def reject(self, plan, message):
+        with self.assertRaisesRegex(RuntimeError,message):
+            apply_native_art_direction(self.source,self.root/"must-not-exist.pptx",plan)
+        self.assertFalse((self.root/"must-not-exist.pptx").exists())
+
+    def test_native_cover_styled_without_production_dispatch(self):
+        self.assertNotEqual(self.a["parts"]["ppt/slides/slide1.xml"],self.c["parts"]["ppt/slides/slide1.xml"])
+        self.assertFalse(self.report["production_code_changed"])
+        self.assertTrue(any(o["name"].startswith("art:") for o in self.c["slides"][0]["objects"]))
+
+    def test_explicit_style_flag_required(self):
+        p=copy.deepcopy(self.plan);p["enabled"]=False
+        self.reject(p,"ART_DIRECTION_COMPOSITION_NOT_ENABLED")
+
+    def test_frozen_native_source_hash_required(self):
+        p=copy.deepcopy(self.plan);p["source_pptx_sha256"]="changed"
+        self.reject(p,"Frozen style source mismatch")
+
+    def test_existing_or_source_output_never_overwritten(self):
+        old=sha(self.source)
+        with self.assertRaisesRegex(RuntimeError,"overwrite"):
+            apply_native_art_direction(self.source,self.source,self.plan)
+        self.assertEqual(old,sha(self.source))
+
+    def test_exact_text_and_notes_preserved(self):
+        self.assertEqual([s["texts"] for s in self.a["slides"]],[s["texts"] for s in self.c["slides"]])
+        self.assertEqual(self.a["notes"],self.c["notes"])
+
+    def test_source_figure_and_other_package_parts_preserved(self):
+        changed=set(self.report["changed_parts"])
+        with zipfile.ZipFile(self.source) as a,zipfile.ZipFile(self.root/"styled.pptx") as c:
+            self.assertEqual(set(a.namelist()),set(c.namelist()))
+            self.assertTrue(all(a.read(n)==c.read(n) for n in a.namelist() if n not in changed))
+            self.assertEqual(a.read("ppt/slides/slide3.xml"),c.read("ppt/slides/slide3.xml"))
+            self.assertTrue(all(a.read(n)==c.read(n) for n in a.namelist() if n.startswith(("ppt/media/","ppt/embeddings/"))))
+
+    def test_chart_tree_changes_only_style_and_preserves_axis_values(self):
+        from lxml import etree
+        def semantic(data):
+            root=etree.fromstring(data,etree.XMLParser(remove_blank_text=True))
+            for tag in ("spPr","txPr"):
+                for e in list(root.iter("{http://schemas.openxmlformats.org/drawingml/2006/chart}"+tag)):e.getparent().remove(e)
+            return etree.tostring(root,method="c14n")
+        with zipfile.ZipFile(self.source) as a,zipfile.ZipFile(self.root/"styled.pptx") as c:
+            x,y=a.read("ppt/charts/chart1.xml"),c.read("ppt/charts/chart1.xml")
+            self.assertNotEqual(x,y)
+            self.assertEqual(semantic(x),semantic(y))
+
+    def test_axis_change_is_not_a_style_operation(self):
+        p=copy.deepcopy(self.plan);p["targets"][1]["chart_controls"][0]["axis_min"]=10
+        self.reject(p,"axis/value changes forbidden")
+
+    def test_real_chart_styling_is_not_silently_enabled(self):
+        p=copy.deepcopy(self.plan);p["synthetic_only"]=False
+        self.reject(p,"Chart style control must be synthetic")
+
+    def test_text_mutation_in_styled_runs_rejected(self):
+        p=copy.deepcopy(self.plan);p["targets"][0]["operations"][0]["style"]["runs"]=[{"text":"New claim","font_size_pt":44}]
+        self.reject(p,"preserve exact text and order")
+
+    def test_footer_cannot_be_restyled(self):
+        p=copy.deepcopy(self.plan);sid=p["targets"][1]["slide_id"]
+        p["targets"][1]["operations"]=[{"shape_name":f"awf:{sid}:sources","style":{"color":"5B7F72"}}]
+        self.reject(p,"protected style target")
+
+    def test_target_footer_read_has_no_empty_text_body_side_effect(self):
+        from lxml import etree
+        ns={"p":"http://schemas.openxmlformats.org/presentationml/2006/main"}
+        def footers(data):
+            root=etree.fromstring(data,etree.XMLParser(remove_blank_text=True))
+            result={}
+            for s in root.findall(".//p:sp",ns):
+                name=s.find("p:nvSpPr/p:cNvPr",ns).get("name")
+                if any(k in name for k in (":sources",":page-number",":footer")):
+                    result[name]=etree.tostring(s,method="c14n")
+            return result
+        with zipfile.ZipFile(self.source) as a,zipfile.ZipFile(self.root/"styled.pptx") as c:
+            self.assertEqual(footers(a.read("ppt/slides/slide2.xml")),footers(c.read("ppt/slides/slide2.xml")))
+
+    def test_off_slide_and_footer_geometry_rejected(self):
+        p=copy.deepcopy(self.plan);p["targets"][0]["operations"][0]["style"]["bounds"]=[1,6,6,1]
+        self.reject(p,"safe frame/footer")
+
+    def test_no_automatic_font_shrinking(self):
+        p=copy.deepcopy(self.plan);p["targets"][0]["operations"][0]["style"]["font_size_pt"]=17
+        self.reject(p,"below minimum")
+
+    def test_neon_and_unapproved_tokens_rejected(self):
+        p=copy.deepcopy(self.plan);p["targets"][0]["operations"][0]["style"]["color"]="FF00FF"
+        self.reject(p,"Unapproved color")
+
+    def test_ornament_cannot_introduce_clinical_role(self):
+        p=copy.deepcopy(self.plan);p["targets"][0]["decorations"][0]["role"]="clinical_evidence"
+        self.reject(p,"non-evidence native ornament")
+
+    def test_semantic_hash_drift_rejected(self):
+        p=copy.deepcopy(self.plan);p["semantic_plan"]={"invented":"graph"}
+        self.reject(p,"Semantic plan hash mismatch")
+
+
+if __name__ == "__main__":
+    unittest.main()
