@@ -21,6 +21,17 @@ def synthetic_render(pptx,pdf,preview,*args,**kwargs):
     return 'SYNTHETIC_TEST_DOUBLE',paths,''
 
 
+def windows_short_path(path):
+    import ctypes
+    function=ctypes.WinDLL('kernel32',use_last_error=True).GetShortPathNameW
+    function.argtypes=(ctypes.c_wchar_p,ctypes.c_wchar_p,ctypes.c_uint32)
+    function.restype=ctypes.c_uint32
+    buffer=ctypes.create_unicode_buffer(32768)
+    length=function(str(path),buffer,len(buffer))
+    if not 0 < length < len(buffer):raise ctypes.WinError(ctypes.get_last_error())
+    return Path(buffer.value)
+
+
 class ManualHandoffTests(unittest.TestCase):
     def setUp(self):
         self.temp=tempfile.TemporaryDirectory(prefix='synthetic-handoff-');self.addCleanup(self.temp.cleanup)
@@ -254,6 +265,89 @@ class ManualHandoffTests(unittest.TestCase):
     def test_output_outside_authorized_run_rejected(self):
             self.out=self.root/'bad_output'
             with self.assertRaisesRegex(m.BridgeError,'AUTHORIZED_EXTERNAL_OUTPUT_REQUIRED'):self.intake()
+
+    @unittest.skipUnless(os.name=='nt','Windows filesystem alias regression')
+    def test_windows_short_output_matches_authorized_long_parent(self):
+        long_import=self.out
+        self.base=windows_short_path(self.base)
+        self.out=self.base/'candidate_runs'/self.run/'IMPORT_TEST'
+        self.assertNotEqual(self.out.parent,long_import.parent.resolve(strict=False))
+        self.assertFalse(self.out.parent.exists())
+        self.intake()
+        self.assertEqual(m.read_json(long_import/'candidate_intake_report.json')['status'],'EMPTY_INBOX_VALID')
+
+    @unittest.skipUnless(os.name=='nt','Windows filesystem case regression')
+    def test_windows_case_only_output_accepted(self):
+        original=self.out
+        self.out=Path(str(self.out).swapcase())
+        self.intake()
+        self.assertTrue((original/'candidate_asset_registry.json').is_file())
+
+    def test_output_sibling_run_rejected(self):
+        self.out=self.base/'candidate_runs'/(self.run+'_OTHER')/'IMPORT_TEST'
+        with self.assertRaisesRegex(m.BridgeError,'AUTHORIZED_EXTERNAL_OUTPUT_REQUIRED'):self.intake()
+        self.assertFalse(self.out.exists())
+
+    def test_output_must_be_direct_child_of_authorized_run(self):
+        self.out=self.out/'NESTED'
+        with self.assertRaisesRegex(m.BridgeError,'AUTHORIZED_EXTERNAL_OUTPUT_REQUIRED'):self.intake()
+        self.assertFalse(self.out.exists())
+
+    def test_output_inside_repository_rejected(self):
+        self.out=m.ROOT/'candidate_runs'/self.run/'IMPORT_TEST'
+        with self.assertRaisesRegex(m.BridgeError,'AUTHORIZED_EXTERNAL_OUTPUT_REQUIRED'):self.intake()
+        self.assertFalse(self.out.exists())
+
+    def test_repository_asset_root_rejected(self):
+        self.base=m.ROOT
+        with self.assertRaisesRegex(m.BridgeError,'EXTERNAL_ASSET_ROOT_REQUIRED'):self.intake()
+        self.assertFalse(self.out.exists())
+
+    def test_output_parent_traversal_escape_rejected(self):
+        self.out=self.out.parent/'..'/'SIBLING'/'IMPORT_TEST'
+        with self.assertRaisesRegex(m.BridgeError,'AUTHORIZED_EXTERNAL_OUTPUT_REQUIRED'):self.intake()
+        self.assertFalse(self.out.exists())
+
+    def test_output_reparse_leaf_rejected_before_identity(self):
+        self.out.mkdir(parents=True)
+        original=Path.lstat
+        def attrs(path):
+            result=original(path)
+            if path==self.out:
+                from types import SimpleNamespace
+                return SimpleNamespace(st_mode=result.st_mode,st_file_attributes=0x400)
+            return result
+        with patch.object(Path,'lstat',attrs),patch.object(m,'_path_identity',side_effect=AssertionError('Identity ran before reparse rejection')):
+            with self.assertRaisesRegex(m.BridgeError,'CANDIDATE_PATH_ESCAPE'):self.intake()
+        self.assertEqual(list(self.out.iterdir()),[])
+
+    @unittest.skipUnless(os.name=='nt','Windows junction regression')
+    def test_output_junction_rejected_before_identity(self):
+        target=self.root/'redirected';target.mkdir()
+        junction=self.base/'candidate_runs'
+        subprocess.run(['cmd','/c','mklink','/J',str(junction),str(target)],check=True,capture_output=True)
+        self.addCleanup(junction.rmdir)
+        with patch.object(m,'_path_identity',side_effect=AssertionError('Identity followed a junction')):
+            with self.assertRaisesRegex(m.BridgeError,'CANDIDATE_PATH_ESCAPE'):self.intake()
+        self.assertEqual(list(target.iterdir()),[])
+
+    @unittest.skipUnless(os.name=='nt','Windows filesystem alias regression')
+    def test_existing_short_alias_output_not_overwritten(self):
+        self.out.mkdir(parents=True);marker=self.out/'untouched.txt';marker.write_bytes(b'SYNTHETIC_SENTINEL')
+        self.out=windows_short_path(self.out.parent)/self.out.name
+        with self.assertRaisesRegex(m.BridgeError,'OUTPUT_ALREADY_EXISTS'):self.intake()
+        self.assertEqual(marker.read_bytes(),b'SYNTHETIC_SENTINEL')
+
+    @unittest.skipUnless(os.name=='nt','Windows filesystem alias regression')
+    def test_short_alias_sibling_output_rejected(self):
+        self.out=windows_short_path(self.base)/'candidate_runs'/(self.run+'_OTHER')/'IMPORT_TEST'
+        with self.assertRaisesRegex(m.BridgeError,'AUTHORIZED_EXTERNAL_OUTPUT_REQUIRED'):self.intake()
+        self.assertFalse(self.out.exists())
+
+    def test_invalid_import_id_still_rejected(self):
+        self.out=self.out.parent/'INVALID.IMPORT'
+        with self.assertRaisesRegex(m.BridgeError,'AUTHORIZED_EXTERNAL_OUTPUT_REQUIRED'):self.intake()
+        self.assertFalse(self.out.exists())
 
     def test_existing_output_not_overwritten(self):
             self.out.mkdir(parents=True)

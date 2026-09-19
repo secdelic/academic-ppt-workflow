@@ -1,6 +1,6 @@
 """Local manual generation packets and unapproved intake. No network generation."""
 from __future__ import annotations
-import argparse,copy,csv,hashlib,io,json,re,stat,warnings
+import argparse,copy,csv,hashlib,io,json,os,re,stat,warnings
 from datetime import datetime, timezone
 from pathlib import Path
 from . import illustration_requests as requests
@@ -131,6 +131,10 @@ def no_reparse(path, *, existing=True):
         info = part.lstat()
         check(not stat.S_ISLNK(info.st_mode) and not (getattr(info, 'st_file_attributes', 0) & 0x400), 'CANDIDATE_PATH_ESCAPE')
     check(not existing or path.exists(), 'CANDIDATE_INBOX_MISSING')
+
+def _path_identity(path):
+    # Comparison only; callers must reject reparse points before resolving.
+    return os.path.normcase(str(Path(path).resolve(strict=False)))
 
 def within(path, root):
     no_reparse(root)
@@ -287,8 +291,10 @@ def intake(package,output,*,asset_root=None,enabled=False,import_image_candidate
     if not enabled or not import_image_candidates:return None
     manifest=load_package(package,asset_root);output=Path(output).absolute()
     expected=external_root(asset_root)/'candidate_runs'/manifest['run_id']
-    check(output.parent==expected and bool(re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9_-]{0,79}',output.name)),'AUTHORIZED_EXTERNAL_OUTPUT_REQUIRED')
-    no_reparse(output,existing=False);check(not output.exists(),'OUTPUT_ALREADY_EXISTS')
+    no_reparse(expected,existing=False);no_reparse(output,existing=False)
+    check(_path_identity(output.parent)==_path_identity(expected),'AUTHORIZED_EXTERNAL_OUTPUT_REQUIRED')
+    check(bool(re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9_-]{0,79}',output.name)),'AUTHORIZED_EXTERNAL_OUTPUT_REQUIRED')
+    check(not output.exists(),'OUTPUT_ALREADY_EXISTS')
     found=discover(authorized_run(manifest['run_id'],asset_root),manifest['packets'])
     check(not found or manifest.get('baseline') is not None,'BASELINE_REQUIRED_FOR_LOCAL_REVIEW')
     imported_at=now();entries=[]

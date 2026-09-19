@@ -2,6 +2,7 @@
 
 ## UNRELEASED / NEXT
 
+- Normalize manual candidate intake path identities for Windows short-path aliases after reparse checks, preserving the exact authorized output parent and existing-output protection.
 - Consolidated native semantic composition, Art Direction, quality Floor, Ambition, controlled manual illustration intake, explicit approvals and real Master/Layout into generic assisted workflow modules.
 - Validated/full delivery now requires source-bound visual evidence and exact-deck human reviews; unresolved outputs remain drafts. Quick Enhance retains its bounded cache/KEEP path.
 - Added image-only approved asset assembly, post-assembly QA and immutable-deck review. No automatic image generation.
