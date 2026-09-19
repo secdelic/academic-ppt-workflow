@@ -16,11 +16,11 @@ New-Item -ItemType Directory -Force -Path $workspace,$reportDir | Out-Null
 function Resolve-Python3([string]$requested) {
     $candidates = @($requested, $env:PPT_PYTHON, (Get-Command python.exe -ErrorAction SilentlyContinue).Source, (Get-Command py.exe -ErrorAction SilentlyContinue).Source) | Where-Object { $_ }
     foreach ($candidate in $candidates) {
-        $args = if ((Split-Path $candidate -Leaf) -ieq "py.exe") { @("-3", "-c", "import sys; assert sys.version_info >= (3,11); print(sys.executable)") } else { @("-c", "import sys; assert sys.version_info >= (3,11); print(sys.executable)") }
-        $resolved = & $candidate @args 2>$null
-        if ($LASTEXITCODE -eq 0 -and $resolved) { return @($candidate, ((Split-Path $candidate -Leaf) -ieq "py.exe")) }
+        $probeArgs = if ((Split-Path $candidate -Leaf) -ieq "py.exe") { @("-3.12", "-c", "import sys; assert (3,12) <= sys.version_info < (3,13); print(sys.executable)") } else { @("-c", "import sys; assert (3,12) <= sys.version_info < (3,13); print(sys.executable)") }
+        $resolved = & $candidate @probeArgs 2>$null
+        if ($LASTEXITCODE -eq 0 -and $resolved) { return ([string]$resolved).Trim() }
     }
-    throw "BLOCKED: Python >=3.11 not found. Set -PythonExecutable or PPT_PYTHON."
+    throw "BLOCKED: Python 3.12 not found. Set -PythonExecutable or PPT_PYTHON."
 }
 function Resolve-Node([string]$requested) {
     $candidate = if ($requested) { $requested } elseif ($env:PPT_NODE) { $env:PPT_NODE } else { (Get-Command node.exe -ErrorAction SilentlyContinue).Source }
@@ -30,11 +30,14 @@ function Resolve-Node([string]$requested) {
     return $candidate
 }
 
-$pythonInfo = Resolve-Python3 $PythonExecutable
-$pythonCmd = $pythonInfo[0]; $pythonIsLauncher = [bool]$pythonInfo[1]
-$pythonArgs = if ($pythonIsLauncher) { @("-3") } else { @() }
-if (-not (Test-Path (Join-Path $venv "Scripts\python.exe"))) { & $pythonCmd @pythonArgs -m venv $venv }
+$pythonCmd = Resolve-Python3 $PythonExecutable
+if (-not (Test-Path (Join-Path $venv "Scripts\python.exe"))) {
+    & $pythonCmd -m venv $venv
+    if ($LASTEXITCODE -ne 0) { throw "BLOCKED: Python virtual environment creation failed" }
+}
 $venvPython = Join-Path $venv "Scripts\python.exe"
+& $venvPython -c "import sys; assert (3,12) <= sys.version_info < (3,13)"
+if ($LASTEXITCODE -ne 0) { throw "BLOCKED: Existing virtual environment requires Python 3.12" }
 & $venvPython -m pip install --disable-pip-version-check -r (Join-Path $repo "requirements-lock.txt")
 if ($LASTEXITCODE -ne 0) { throw "BLOCKED: locked Python dependency installation failed" }
 

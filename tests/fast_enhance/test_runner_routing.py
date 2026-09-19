@@ -126,7 +126,7 @@ class RuntimeModeRoutingTests(unittest.TestCase):
             ("template-create", "validated", "create-style-profile", "full_validation", False),
             ("template-fill", "validated", "fill-template", "full_validation", False),
             ("enhance", "quick", "enhance-existing", "fast_enhance", False),
-            ("enhance", "validated", "enhance-existing", "fast_enhance", True),
+            ("enhance", "validated", "enhance-existing", "full_validation", False),
             ("enhance", "full", "enhance-existing", "full_validation", False),
         )
         parser = build_parser()

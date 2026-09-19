@@ -73,13 +73,9 @@ class PortabilityTests(unittest.TestCase):
         self.assertEqual(result.returncode,0,result.stderr)
 
     def test_production_scope_has_no_fixed_repository_drive(self):
-        tracked = subprocess.run(
-            ["git", "ls-files", "run_ppt_workflow.py", "scripts", "config"],
-            cwd=ROOT,
-            text=True,
-            capture_output=True,
-            check=True,
-        ).stdout.splitlines()
+        from scripts.build_release_bundle import selected
+        tracked = [p.relative_to(ROOT).as_posix() for p in selected(ROOT)
+                   if p.relative_to(ROOT).parts[0] in ('run_ppt_workflow.py','scripts','config')]
         bad=[]
         for relative in tracked:
             path = ROOT / relative

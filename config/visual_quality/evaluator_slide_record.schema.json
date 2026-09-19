@@ -1,0 +1,176 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:academic-ppt:quality:evaluator-slide-record",
+  "description": "Operational observation projection; design_record retains frozen input unchanged. Null unresolved fields require BLOCK findings. This does not replace the planning schema.",
+  "type": "object",
+  "properties": {
+    "slide_id": {
+      "type": "string"
+    },
+    "slide_index": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "page_role": {
+      "enum": [
+        "HERO",
+        "CONTEXT",
+        "EVIDENCE",
+        "FRAMEWORK",
+        "RESULTS",
+        "COMPARISON",
+        "IMPLEMENTATION",
+        "TIMELINE",
+        "CLOSING",
+        "APPENDIX",
+        null
+      ]
+    },
+    "composition_family": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "semantic_mapping_status": {
+      "type": "string"
+    },
+    "generic_fallback_status": {
+      "type": "string"
+    },
+    "illustration_decision": {
+      "enum": [
+        "NO_ILLUSTRATION_NEEDED",
+        "ILLUSTRATION_RECOMMENDED",
+        "SOURCE_FIGURE_REQUIRED",
+        "APPROVED_ASSET_SELECTED",
+        "AI_CONCEPTUAL_CANDIDATE_POSSIBLE",
+        "HUMAN_DECISION_REQUIRED",
+        null
+      ]
+    },
+    "illustration_role": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "illustration_source_type": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "approved_asset_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "visual_focal_point_status": {
+      "type": "string"
+    },
+    "typography_hierarchy_status": {
+      "type": "string"
+    },
+    "art_direction_execution_status": {
+      "type": "string"
+    },
+    "layout_repetition_family": {
+      "type": "string"
+    },
+    "scientific_qa_status": {
+      "type": "string"
+    },
+    "geometry_qa_status": {
+      "type": "string"
+    },
+    "warnings": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "human_review_reasons": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "fallback_used": {
+      "type": "boolean"
+    },
+    "fallback_reason": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "fallback_source_stage": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "illustration_subject_summary": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "allowed_visual_types": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "prohibited_visual_types": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "source_priority": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "human_approval_required": {
+      "type": "boolean"
+    },
+    "design_record": {
+      "type": "object"
+    }
+  },
+  "required": [
+    "slide_id",
+    "slide_index",
+    "page_role",
+    "composition_family",
+    "semantic_mapping_status",
+    "generic_fallback_status",
+    "illustration_decision",
+    "illustration_role",
+    "illustration_source_type",
+    "approved_asset_ids",
+    "visual_focal_point_status",
+    "typography_hierarchy_status",
+    "art_direction_execution_status",
+    "layout_repetition_family",
+    "scientific_qa_status",
+    "geometry_qa_status",
+    "warnings",
+    "human_review_reasons",
+    "fallback_used",
+    "fallback_reason",
+    "fallback_source_stage",
+    "illustration_subject_summary",
+    "allowed_visual_types",
+    "prohibited_visual_types",
+    "source_priority",
+    "human_approval_required",
+    "design_record"
+  ],
+  "additionalProperties": true
+}

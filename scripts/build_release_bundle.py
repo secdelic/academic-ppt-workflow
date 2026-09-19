@@ -4,39 +4,34 @@ import argparse
 import fnmatch
 import hashlib
 import json
+import os
 import shutil
 import subprocess
 import zipfile
 from datetime import datetime, timezone
 from pathlib import Path
 
-VERSION = "v2.7.0-rc4"
-INCLUDE = [
-    "run_ppt_workflow.py", "pyproject.toml", "package.json", "package-lock.json", "requirements-lock.txt",
-    "README.md", "README_使用说明.md", "README_中文使用说明.md",
-    "README_FIRST_INSTALL.md", "CHANGELOG.md", ".gitignore", ".gitattributes",
-    "privacy_allowlist.yaml", "release_exclusion_rules.yaml", "config/**", "scripts/**",
-    "docs/**", "design_system/**", "visual_workspaces/**", "visual_templates/**",
-    "extensions/**", "prompts/**", "templates/**", "tests/**", "regression/**",
-    "governance/**", ".github/**", "AGENTS.md",
-]
-EXCLUDE = [
-    "config/local.yaml", "**/__pycache__/**", "**/*.pyc", "**/~$*", "**/*.tmp",
-    "input/**", "output/**", "staging/**", "audit/**", "benchmark/**", "archive/**",
-    "private/**", "runtime_logs/**", "install_receipts/**", "docs/*.docx",
-    ".cache/**", ".venv/**", "node_modules/**", ".git/**", "release/**",
-]
+import yaml
+
+# One checked-in selection authority, also used by privacy auditing.
+RULES_PATH = Path(__file__).resolve().parents[1] / "release_exclusion_rules.yaml"
+RULES = yaml.safe_load(RULES_PATH.read_text(encoding="utf-8"))
+INCLUDE, EXCLUDE = RULES["include"], RULES["exclude"]
+VERSION = "v" + json.loads((RULES_PATH.parent / "package.json").read_text(encoding="utf-8"))["version"]
+
 
 def match(path: str, patterns: list[str]) -> bool:
-    return any(fnmatch.fnmatch(path, p) or (p.endswith("/**") and path.startswith(p[:-3] + "/")) for p in patterns)
+    candidates=[variant for pattern in patterns for variant in ([pattern,pattern[3:]] if pattern.startswith('**/') else [pattern])]
+    return any(fnmatch.fnmatch(path, p) or (p.endswith("/**") and path.startswith(p[:-3] + "/")) for p in candidates)
 
 def selected(repo: Path) -> list[Path]:
     rows=[]
-    for path in repo.rglob("*"):
-        if not path.is_file(): continue
-        rel=path.relative_to(repo).as_posix()
-        if match(rel, EXCLUDE): continue
-        if match(rel, INCLUDE): rows.append(path)
+    for folder,dirs,files in os.walk(repo,followlinks=False):
+        base=Path(folder)
+        dirs[:]=[name for name in dirs if not match((base/name).relative_to(repo).as_posix()+"/",EXCLUDE)]
+        for name in files:
+            path=base/name;rel=path.relative_to(repo).as_posix()
+            if not match(rel,EXCLUDE) and match(rel,INCLUDE):rows.append(path)
     return sorted(rows, key=lambda p:p.relative_to(repo).as_posix().lower())
 
 def digest(path: Path) -> str:
@@ -54,6 +49,8 @@ def git_value(repo: Path, *arguments: str) -> str:
     return completed.stdout.strip()
 
 def build(repo: Path, output_root: Path) -> dict:
+    if repo == output_root or repo in output_root.parents:
+        raise ValueError("Release dry-run output must be outside the repository")
     output_root.mkdir(parents=True,exist_ok=True)
     files=selected(repo); bundle=output_root/f"academic-ppt-workflow-{VERSION}.zip"; prefix=f"academic-ppt-workflow-{VERSION}"
     manifest_files=[]
@@ -67,9 +64,9 @@ def build(repo: Path, output_root: Path) -> dict:
     checksum_rows=[]
     for path in sorted([bundle,bootstrap,output_root/"release_manifest.json"]):checksum_rows.append(f"{digest(path)}  {path.name}")
     (output_root/"SHA256SUMS.txt").write_text("\n".join(checksum_rows)+"\n",encoding="utf-8")
-    shutil.copy2(repo/"README_FIRST_INSTALL.md",output_root/"README_FIRST_INSTALL.md"); shutil.copy2(repo/"CHANGELOG.md",output_root/"CHANGELOG.md")
+    shutil.copy2(repo/"docs/中文操作说明书.md",output_root/"中文操作说明书.md"); shutil.copy2(repo/"CHANGELOG.md",output_root/"CHANGELOG.md")
     return manifest
 
 def main()->int:
-    p=argparse.ArgumentParser();p.add_argument("--repo",default=Path(__file__).resolve().parents[1]);p.add_argument("--output-root",default="release");a=p.parse_args();result=build(Path(a.repo).resolve(),Path(a.output_root).resolve());print(json.dumps(result["bundle"],indent=2));return 0
+    p=argparse.ArgumentParser();p.add_argument("--repo",default=Path(__file__).resolve().parents[1]);p.add_argument("--output-root",required=True);a=p.parse_args();result=build(Path(a.repo).resolve(),Path(a.output_root).resolve());print(json.dumps(result["bundle"],indent=2));return 0
 if __name__=="__main__":raise SystemExit(main())

@@ -1,0 +1,451 @@
+{
+  "fixture_id": "SEMANTIC_COMPOSITION",
+  "synthetic_only": true,
+  "boundary": "纯非临床软件构图测试；文字与关系不代表科研结果。",
+  "brief": {
+    "project_name": "SEMANTIC 显式语义构图测试",
+    "presentation_type": "research_report",
+    "language": "zh-CN",
+    "presentation_objective": "验证层级闭环、双模块及跨阶段结构的原生展示"
+  },
+  "style_profile": {
+    "theme_fonts": {
+      "major": {
+        "latin": "Microsoft YaHei"
+      },
+      "minor": {
+        "latin": "Microsoft YaHei"
+      }
+    }
+  },
+  "source_figure_svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"1200\" height=\"700\"><rect width=\"1200\" height=\"700\" fill=\"#eef4f8\"/><circle cx=\"350\" cy=\"350\" r=\"160\" fill=\"#0f766e\"/><rect x=\"720\" y=\"190\" width=\"280\" height=\"320\" fill=\"#2563eb\"/></svg>",
+  "chart": {
+    "categories": [
+      "模拟组甲",
+      "模拟组乙",
+      "模拟组丙"
+    ],
+    "values": [
+      20,
+      35,
+      50
+    ],
+    "units": "percent"
+  },
+  "slides": [
+    {
+      "key": "D01",
+      "title": "三层结构与明确声明的反馈闭环",
+      "message": "贯穿原则：来源明确 + 动态复核 + 多维核对",
+      "visual_type": "takeaway",
+      "takeaways": [
+        "组织与责任：规范范围 A-B",
+        "核对与评估：规范范围 C-H",
+        "实施与归档：规范范围 I-P"
+      ],
+      "diagram_spec": {
+        "nodes": [
+          {
+            "node_id": "0",
+            "label": "组织与责任：规范范围 A-B",
+            "role": "layer",
+            "source_locator": "fixture:D01.text[0]",
+            "emphasis": "equal_within_role"
+          },
+          {
+            "node_id": "1",
+            "label": "核对与评估：规范范围 C-H",
+            "role": "layer",
+            "source_locator": "fixture:D01.text[1]",
+            "emphasis": "equal_within_role"
+          },
+          {
+            "node_id": "2",
+            "label": "实施与归档：规范范围 I-P",
+            "role": "layer",
+            "source_locator": "fixture:D01.text[2]",
+            "emphasis": "equal_within_role"
+          }
+        ],
+        "edges": [
+          {
+            "edge_id": "0",
+            "source": "0",
+            "target": "1",
+            "relationship_type": "teaching_feedback_loop",
+            "directed": true,
+            "source_locator": "fixture:D01.explicit_edges[0]"
+          },
+          {
+            "edge_id": "1",
+            "source": "1",
+            "target": "2",
+            "relationship_type": "teaching_feedback_loop",
+            "directed": true,
+            "source_locator": "fixture:D01.explicit_edges[1]"
+          },
+          {
+            "edge_id": "2",
+            "source": "2",
+            "target": "0",
+            "relationship_type": "teaching_feedback_loop",
+            "directed": true,
+            "source_locator": "fixture:D01.explicit_edges[2]"
+          }
+        ]
+      },
+      "assignment": {
+        "archetype": "LAYERED_LOOP_FRAMEWORK",
+        "revision": "SEMANTIC",
+        "font_size_pt": 20,
+        "emphasis": "structural_roles_only",
+        "relationship_type": "explicit_teaching_structure",
+        "source_locator": "fixture:D01.declared_structure",
+        "groups": [],
+        "layer_order": [
+          "0",
+          "1",
+          "2"
+        ],
+        "external_roles": [
+          {
+            "role": "cross_cutting_principle",
+            "text": "贯穿原则：来源明确 + 动态复核 + 多维核对",
+            "source_locator": "fixture:D01.message"
+          }
+        ]
+      }
+    },
+    {
+      "key": "D02",
+      "title": "两个模块、三加一条件与共同结论",
+      "message": "两个模块共同服务于归档判断，模块内部没有全连接关系。",
+      "visual_type": "takeaway",
+      "takeaways": [
+        "文档管理：从“存放”扩展到“结构 + 内容 + 流转”\n结构\n内容\n流转\n保留每个文件的版本与责任记录",
+        "审核条件 3+1：\n①材料结构已核对\n②来源信息已核对\n③版本流转记录已核对\n+ ④未决问题已经登记",
+        "共同结论：归档不能依赖单一检查项"
+      ],
+      "diagram_spec": {
+        "nodes": [
+          {
+            "node_id": "0",
+            "label": "文档管理：从“存放”扩展到“结构 + 内容 + 流转”",
+            "role": "left_context",
+            "source_locator": "fixture:D02.text[0]",
+            "emphasis": "equal_within_role"
+          },
+          {
+            "node_id": "1",
+            "label": "保留每个文件的版本与责任记录",
+            "role": "left_note",
+            "source_locator": "fixture:D02.text[1]",
+            "emphasis": "equal_within_role"
+          },
+          {
+            "node_id": "2",
+            "label": "审核条件 3+1：",
+            "role": "right_heading",
+            "source_locator": "fixture:D02.text[2]",
+            "emphasis": "equal_within_role"
+          },
+          {
+            "node_id": "3",
+            "label": "①材料结构已核对",
+            "role": "right_core",
+            "source_locator": "fixture:D02.text[3]",
+            "emphasis": "equal_within_role"
+          },
+          {
+            "node_id": "4",
+            "label": "②来源信息已核对",
+            "role": "right_core",
+            "source_locator": "fixture:D02.text[4]",
+            "emphasis": "equal_within_role"
+          },
+          {
+            "node_id": "5",
+            "label": "③版本流转记录已核对",
+            "role": "right_core",
+            "source_locator": "fixture:D02.text[5]",
+            "emphasis": "equal_within_role"
+          },
+          {
+            "node_id": "6",
+            "label": "+ ④未决问题已经登记",
+            "role": "right_plus",
+            "source_locator": "fixture:D02.text[6]",
+            "emphasis": "equal_within_role"
+          },
+          {
+            "node_id": "7",
+            "label": "共同结论：归档不能依赖单一检查项",
+            "role": "shared_conclusion",
+            "source_locator": "fixture:D02.text[7]",
+            "emphasis": "equal_within_role"
+          },
+          {
+            "node_id": "8",
+            "label": "结构",
+            "role": "left_domain",
+            "source_locator": "fixture:D02.text[8]",
+            "emphasis": "equal_within_role"
+          },
+          {
+            "node_id": "9",
+            "label": "内容",
+            "role": "left_domain",
+            "source_locator": "fixture:D02.text[9]",
+            "emphasis": "equal_within_role"
+          },
+          {
+            "node_id": "10",
+            "label": "流转",
+            "role": "left_domain",
+            "source_locator": "fixture:D02.text[10]",
+            "emphasis": "equal_within_role"
+          }
+        ],
+        "edges": [
+          {
+            "edge_id": "0",
+            "source": "left",
+            "target": "7",
+            "relationship_type": "shared_conclusion",
+            "directed": false,
+            "source_locator": "fixture:D02.explicit_edges[0]"
+          },
+          {
+            "edge_id": "1",
+            "source": "right",
+            "target": "7",
+            "relationship_type": "shared_conclusion",
+            "directed": false,
+            "source_locator": "fixture:D02.explicit_edges[1]"
+          }
+        ]
+      },
+      "assignment": {
+        "archetype": "COMPOSITE_DUAL_FRAMEWORK",
+        "revision": "SEMANTIC",
+        "font_size_pt": 20,
+        "emphasis": "structural_roles_only",
+        "relationship_type": "explicit_teaching_structure",
+        "source_locator": "fixture:D02.declared_structure",
+        "groups": [
+          {
+            "group_id": "left",
+            "role": "left_module",
+            "members": [
+              "0",
+              "1",
+              "8",
+              "9",
+              "10"
+            ],
+            "source_locator": "fixture:D02.explicit_groups.left"
+          },
+          {
+            "group_id": "core",
+            "role": "right_core",
+            "members": [
+              "3",
+              "4",
+              "5"
+            ],
+            "source_locator": "fixture:D02.explicit_groups.core"
+          },
+          {
+            "group_id": "right",
+            "role": "right_module",
+            "members": [
+              "2",
+              "3",
+              "4",
+              "5",
+              "6"
+            ],
+            "source_locator": "fixture:D02.explicit_groups.right"
+          }
+        ]
+      }
+    },
+    {
+      "key": "D04",
+      "title": "原生数值图控制",
+      "message": "测试组甲、乙、丙的占位值为 20%、35% 和 50%。",
+      "visual_type": "editable_bar_chart",
+      "chart_caption": "纯软件占位数值。"
+    },
+    {
+      "key": "D03",
+      "title": "四个明确阶段与持续记录条带",
+      "message": "未来探索单独展示，不构成当前常规步骤。",
+      "visual_type": "takeaway",
+      "takeaways": [
+        "材料确认完整后再启动配对审阅\n在原有文档检查基础上，进一步核对版本、格式、引用与责任信息",
+        "材料登记\n内容检查\n配对审阅\n冻结归档\n审核记录贯穿材料登记—内容检查—配对审阅—冻结归档",
+        "自动排版建议：仅作为未来探索方向"
+      ],
+      "diagram_spec": {
+        "nodes": [
+          {
+            "node_id": "0",
+            "label": "材料确认完整后再启动配对审阅",
+            "role": "conditional_context",
+            "source_locator": "fixture:D03.text[0]",
+            "emphasis": "equal_within_role"
+          },
+          {
+            "node_id": "1",
+            "label": "在原有文档检查基础上，进一步核对版本、格式、引用与责任信息",
+            "role": "support_context",
+            "source_locator": "fixture:D03.text[1]",
+            "emphasis": "equal_within_role"
+          },
+          {
+            "node_id": "2",
+            "label": "审核记录贯穿材料登记—内容检查—配对审阅—冻结归档",
+            "role": "persistent_band",
+            "source_locator": "fixture:D03.text[2]",
+            "emphasis": "equal_within_role"
+          },
+          {
+            "node_id": "3",
+            "label": "自动排版建议：仅作为未来探索方向",
+            "role": "future_exploration",
+            "source_locator": "fixture:D03.text[3]",
+            "emphasis": "equal_within_role"
+          },
+          {
+            "node_id": "4",
+            "label": "材料登记",
+            "role": "current_stage",
+            "source_locator": "fixture:D03.text[4]",
+            "emphasis": "equal_within_role"
+          },
+          {
+            "node_id": "5",
+            "label": "内容检查",
+            "role": "current_stage",
+            "source_locator": "fixture:D03.text[5]",
+            "emphasis": "equal_within_role"
+          },
+          {
+            "node_id": "6",
+            "label": "配对审阅",
+            "role": "current_stage",
+            "source_locator": "fixture:D03.text[6]",
+            "emphasis": "equal_within_role"
+          },
+          {
+            "node_id": "7",
+            "label": "冻结归档",
+            "role": "current_stage",
+            "source_locator": "fixture:D03.text[7]",
+            "emphasis": "equal_within_role"
+          }
+        ],
+        "edges": [
+          {
+            "edge_id": "0",
+            "source": "4",
+            "target": "5",
+            "relationship_type": "stage_sequence",
+            "directed": true,
+            "source_locator": "fixture:D03.explicit_edges[0]"
+          },
+          {
+            "edge_id": "1",
+            "source": "5",
+            "target": "6",
+            "relationship_type": "stage_sequence",
+            "directed": true,
+            "source_locator": "fixture:D03.explicit_edges[1]"
+          },
+          {
+            "edge_id": "2",
+            "source": "6",
+            "target": "7",
+            "relationship_type": "stage_sequence",
+            "directed": true,
+            "source_locator": "fixture:D03.explicit_edges[2]"
+          },
+          {
+            "edge_id": "3",
+            "source": "current",
+            "target": "3",
+            "relationship_type": "future_exploration_extension",
+            "directed": false,
+            "source_locator": "fixture:D03.explicit_edges[3]"
+          }
+        ]
+      },
+      "assignment": {
+        "archetype": "TIMELINE_WITH_BAND",
+        "revision": "SEMANTIC",
+        "font_size_pt": 20,
+        "emphasis": "structural_roles_only",
+        "relationship_type": "explicit_teaching_structure",
+        "source_locator": "fixture:D03.declared_structure",
+        "groups": [
+          {
+            "group_id": "current",
+            "role": "current_stages",
+            "members": [
+              "4",
+              "5",
+              "6",
+              "7"
+            ],
+            "source_locator": "fixture:D03.explicit_groups.current"
+          }
+        ],
+        "stage_order": [
+          "4",
+          "5",
+          "6",
+          "7"
+        ],
+        "band_covers": [
+          "4",
+          "5",
+          "6",
+          "7"
+        ]
+      }
+    },
+    {
+      "key": "D05",
+      "title": "输入图形控制",
+      "message": "输入 SVG 字节保持不变。",
+      "visual_type": "source_figure"
+    }
+  ],
+  "negative_cases": [
+    {
+      "case": "no_explicit_loop",
+      "slide": 0,
+      "remove": "edges",
+      "expected": "explicit teaching loop"
+    },
+    {
+      "case": "no_shared_relationship",
+      "slide": 1,
+      "remove": "edges",
+      "expected": "explicit shared relationship"
+    },
+    {
+      "case": "no_stage_order",
+      "slide": 3,
+      "remove": "stage_order",
+      "expected": "explicit stage order"
+    },
+    {
+      "case": "ambiguous_future_current",
+      "slide": 3,
+      "change_future_role": "current_stage",
+      "expected": "incorrect semantic roles"
+    }
+  ]
+}

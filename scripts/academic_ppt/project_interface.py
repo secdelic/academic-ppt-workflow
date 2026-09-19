@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import os
+import json
 import shutil
 from dataclasses import dataclass
 from pathlib import Path
@@ -443,6 +444,7 @@ def configure_project_args(args: Any) -> tuple[Any, RunOutputPaths]:
     # decision is an audit/style adapter only and never enters Evidence.
     active_visual_brief = None
     if project.visual_brief().is_file():
+        args.visual_brief_path = str(project.visual_brief())
         active_visual_brief = load_visual_brief(
             project.visual_brief(), require_approved=True
         )
@@ -540,6 +542,7 @@ def publish_standard_outputs(engine_output: Path, run: RunOutputPaths) -> Path:
     engine_output = Path(engine_output).resolve()
     if not engine_output.is_dir():
         raise ProjectInterfaceError(f"Engine output is missing: {engine_output}")
+    pending = False
     pptx = _find_first(engine_output, ("updated.pptx", "*.pptx"))
     pdf = _find_first(engine_output, ("updated.pdf", "*.pdf"))
     contact = _find_first(engine_output, ("contact_sheet.png",))
@@ -562,11 +565,21 @@ def publish_standard_outputs(engine_output: Path, run: RunOutputPaths) -> Path:
             _copy_one(summary, run.audit / "execution_summary.md")
         return run.run_root
     if pptx is not None:
-        target = run.draft / "deck.pptx" if run.quality == "quick" else run.final / "deck.pptx"
+        gate_path = engine_output / "visual_delivery_gate.json"
+        gate = json.loads(gate_path.read_text(encoding="utf-8")) if gate_path.exists() else None
+        pending = gate is not None and gate.get("status") != "PASS"
+        if gate_path.exists():
+            _copy_one(gate_path, run.audit / "visual_delivery_gate.json")
+            write_json(run.audit / "visual_engine_location.json", {"engine_output": str(engine_output.resolve()),
+                       "review_context": str((engine_output / "visual_review_context.json").resolve())})
+        evidence = engine_output / "visual_evidence"
+        if evidence.is_dir():
+            shutil.copytree(evidence, run.audit / "visual_evidence")
+        target = run.draft / "deck.pptx" if run.quality == "quick" or pending else run.final / "deck.pptx"
         _copy_one(pptx, target)
     if run.quality != "quick":
         if pdf is not None:
-            _copy_one(pdf, run.final / "deck.pdf")
+            _copy_one(pdf, (run.draft if pending else run.final) / "deck.pdf")
         if contact is not None:
             _copy_one(contact, run.preview / "contact_sheet.png")
         elif changed_previews:
@@ -647,6 +660,9 @@ def validate_public_output_tree(run: RunOutputPaths) -> dict[str, Any]:
         if path.is_file()
     )
     required = set(contract["required_artifacts"])
+    gate_path = run.audit / "visual_delivery_gate.json"
+    if gate_path.exists() and json.loads(gate_path.read_text(encoding="utf-8")).get("status") != "PASS":
+        required = {name.replace("final/", "draft/", 1) for name in required}
     hidden = sorted(
         name for name in present if Path(name).name.casefold() in _INTERNAL_OUTPUT_NAMES
     )

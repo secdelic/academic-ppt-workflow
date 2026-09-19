@@ -36,3 +36,12 @@ audit/upstream_review/sources/
 
 # Real-world clinical shadow artifacts may contain protected health information.
 audit/real_world_mdt/
+
+# Manual asset runs and secrets are external project data.
+candidate_inbox/
+candidate_reviews/
+candidate_runs/
+approved_assets/
+.env
+.env.*
+*credentials*

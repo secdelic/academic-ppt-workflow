@@ -21,9 +21,6 @@ allowed_root_files:
   - package-lock.json
   - requirements-lock.txt
   - README.md
-  - README_中文使用说明.md
-  - README_使用说明.md
-  - README_FIRST_INSTALL.md
   - CHANGELOG.md
   - AGENTS.md
   - privacy_allowlist.yaml

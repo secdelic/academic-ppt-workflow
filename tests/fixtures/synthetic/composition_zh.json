@@ -1,5 +1,5 @@
 {
-  "fixture_id": "VISUAL_FIDELITY_EXPERIMENT_001",
+  "fixture_id": "SEMANTIC_COMPOSITION",
   "synthetic_only": true,
   "boundary": "本材料仅用于中文排版与关系校验，不构成医学事实或临床推荐。",
   "brief": {"project_name":"中文构图负载测试","presentation_type":"research_report","language":"zh-CN","presentation_objective":"检验完整中文文本与明确关系的展示容量"},
@@ -10,20 +10,20 @@
     {"key":"ZH01","title":"六个明确步骤：保留不同长度的标签","message":"顺序来自本测试的明确输入，步骤面积不编码数量。","visual_type":"takeaway",
      "takeaways":["明确展示目标与材料范围\n登记来源并逐项核对","保留缩写、单位与下标字符\n组织六条完整教学陈述","复核关系映射及证据边界\n保存审阅记录并交由作者确认"],
      "diagram_spec":{"nodes":[{"node_id":"a","label":"明确展示目标与材料范围"},{"node_id":"b","label":"登记来源并逐项核对"},{"node_id":"c","label":"保留缩写、单位与下标字符"},{"node_id":"d","label":"组织六条完整教学陈述"},{"node_id":"e","label":"复核关系映射及证据边界"},{"node_id":"f","label":"保存审阅记录并交由作者确认"}],"edges":[{"source":"a","target":"b","directed":true},{"source":"b","target":"c","directed":true},{"source":"c","target":"d","directed":true},{"source":"d","target":"e","directed":true},{"source":"e","target":"f","directed":true}]},
-     "assignment":{"archetype":"PROCESS_HORIZONTAL","node_order":["a","b","c","d","e","f"],"revision":"B1_CJK","emphasis":"equal","relationship_type":"explicit_sequence","source_locator":"fixture:ZH01.diagram_spec","font_size_pt":20}},
+     "assignment":{"archetype":"PROCESS_HORIZONTAL","node_order":["a","b","c","d","e","f"],"revision":"COMPACT_CJK","emphasis":"equal","relationship_type":"explicit_sequence","source_locator":"fixture:ZH01.diagram_spec","font_size_pt":20}},
     {"key":"ZH02","title":"中心与三个等权维度：中文、缩写及下标","message":"以下名称仅测试文字负载，不宣称临床关系已经验证。","visual_type":"takeaway",
      "takeaways":["模拟教学框架/共同主题\n模拟血流维度：TCD/TCCD、趋势核对","模拟氧合维度：rSO₂/PbtO₂","模拟功能维度：cEEG/qEEG、文字校验"],
      "diagram_spec":{"nodes":[{"node_id":"core","label":"模拟教学框架/共同主题"},{"node_id":"flow","label":"模拟血流维度：TCD/TCCD、趋势核对"},{"node_id":"oxygen","label":"模拟氧合维度：rSO₂/PbtO₂"},{"node_id":"function","label":"模拟功能维度：cEEG/qEEG、文字校验"}],"edges":[{"source":"core","target":"flow","directed":false},{"source":"core","target":"oxygen","directed":false},{"source":"core","target":"function","directed":false}]},
-     "assignment":{"archetype":"FRAMEWORK_HUB","central_id":"core","revision":"B1_CJK","emphasis":"equal_peripheral","relationship_type":"equal_dimensions","source_locator":"fixture:ZH02.diagram_spec","font_size_pt":20}},
+     "assignment":{"archetype":"FRAMEWORK_HUB","central_id":"core","revision":"COMPACT_CJK","emphasis":"equal_peripheral","relationship_type":"equal_dimensions","source_locator":"fixture:ZH02.diagram_spec","font_size_pt":20}},
     {"key":"ZH03","title":"模拟数字控制页：数据不承担医学含义","message":"模拟组甲、乙、丙的测试值分别为 20%、35% 和 50%。","visual_type":"editable_bar_chart","chart_caption":"纯软件测试数值，不是患者或研究结果。"},
     {"key":"ZH04","title":"五节点系统：长标签与明确关系","message":"只绘制输入列出的关联边，不用位置暗示医学优先级。","visual_type":"takeaway",
      "takeaways":["材料登记与版本标识\n较长标签：多来源文字一致性与不确定项核对","关系清单与方向复核\n显示层与讲稿逐项比对","最终人工审阅及修订记录"],
      "diagram_spec":{"nodes":[{"node_id":"a","label":"材料登记与版本标识"},{"node_id":"b","label":"较长标签：多来源文字一致性与不确定项核对"},{"node_id":"c","label":"关系清单与方向复核"},{"node_id":"d","label":"显示层与讲稿逐项比对"},{"node_id":"e","label":"最终人工审阅及修订记录"}],"edges":[{"source":"a","target":"b","directed":false},{"source":"a","target":"c","directed":false},{"source":"b","target":"d","directed":false},{"source":"c","target":"e","directed":false}]},
-     "assignment":{"archetype":"SYSTEM_MAP","positions":{"a":[0.50,0.17],"b":[0.16,0.48],"c":[0.84,0.48],"d":[0.28,0.83],"e":[0.72,0.83]},"revision":"B1_CJK","emphasis":"equal","relationship_type":"explicit_nondirectional_association","source_locator":"fixture:ZH04.diagram_spec","font_size_pt":20}},
+     "assignment":{"archetype":"SYSTEM_MAP","positions":{"a":[0.50,0.17],"b":[0.16,0.48],"c":[0.84,0.48],"d":[0.28,0.83],"e":[0.72,0.83]},"revision":"COMPACT_CJK","emphasis":"equal","relationship_type":"explicit_nondirectional_association","source_locator":"fixture:ZH04.diagram_spec","font_size_pt":20}},
     {"key":"ZH05","title":"六条完整句子：无优先级的总结","message":"本页六句等权，首句不会自动升级为主要建议。","visual_type":"takeaway",
      "takeaways":["1. 保留来源中的完整表述，不因排版困难删除限定条件。\n2. 同时核对中文、医学缩写和单位，避免字符替换改变含义。","3. 区分明确的关系与未知的关系，不根据常识补充连接线。\n4. 图形大小不代表样本数量，也不代表推荐强度或优先级。","5. 展示输入与讲稿保持可追溯，任何显示层变化均需记录。\n6. 自动检查通过后仍需作者审核，本测试不构成临床建议。"],
-     "assignment":{"archetype":"EDITORIAL_TAKEAWAY","revision":"B1_CJK","emphasis":"equal","relationship_type":"equal_statements","source_locator":"fixture:ZH05.takeaways","font_size_pt":20}},
+     "assignment":{"archetype":"EDITORIAL_TAKEAWAY","revision":"COMPACT_CJK","emphasis":"equal","relationship_type":"equal_statements","source_locator":"fixture:ZH05.takeaways","font_size_pt":20}},
     {"key":"ZH06","title":"原始模拟图像控制页","message":"保留输入 SVG 的原始字节，不使用生成图片替代数据。","visual_type":"source_figure"}
   ],
-  "capacity_negative":{"case":"EDITORIAL_OVER_CAPACITY","paragraph":"本句用于明确超出投影容量的负载测试，必须完整保留且不得摘要、删句或无限缩小字号。","repeat_per_statement":12,"expected":"EXPERIMENTAL_ARCHETYPE_FRAME_INCOMPATIBLE"}
+  "capacity_negative":{"case":"EDITORIAL_OVER_CAPACITY","paragraph":"本句用于明确超出投影容量的负载测试，必须完整保留且不得摘要、删句或无限缩小字号。","repeat_per_statement":12,"expected":"COMPOSITION_FRAME_INCOMPATIBLE"}
 }

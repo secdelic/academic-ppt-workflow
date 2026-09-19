@@ -11,12 +11,12 @@ if (!specPath || !outputPptx || !previewRoot) {
   throw new Error("Usage: generate_deck_pptxgen.mjs <spec.json> <output.pptx> <preview-root>");
 }
 const spec = JSON.parse(fs.readFileSync(specPath, "utf8"));
-// Experimental shadow path: absent/disabled flags never load experimental code.
-if (spec.experiment?.enabled === true && spec.experiment?.id !== "VISUAL_FIDELITY_EXPERIMENT_001") {
-  throw new Error("INVALID_VISUAL_FIDELITY_EXPERIMENT_ID");
+// An explicit source-bound composition plan is required for alternate semantics.
+if (spec.composition?.enabled === true && spec.composition?.id !== "SEMANTIC_COMPOSITION") {
+  throw new Error("INVALID_VISUAL_FIDELITY_COMPOSITION_ID");
 }
-const experiment = spec.experiment?.id === "VISUAL_FIDELITY_EXPERIMENT_001" && spec.experiment?.enabled === true
-  ? (await import("./experiments/visual_fidelity_001.mjs")).prepareExperiment(spec)
+const composition = spec.composition?.id === "SEMANTIC_COMPOSITION" && spec.composition?.enabled === true
+  ? (await import("./academic_ppt/semantic_composition.mjs")).prepareComposition(spec)
   : null;
 const pptx = new PptxGenJS();
 pptx.layout = "LAYOUT_WIDE";
@@ -610,9 +610,9 @@ for (const [index, item] of spec.slides.entries()) {
     });
   } else {
     addTitle(slide, item);
-    if (experiment?.has(item.slide_id)) {
+    if (composition?.has(item.slide_id)) {
       addMessage(slide, item);
-      experiment.render(slide, item, { pptx, C, font });
+      composition.render(slide, item, { pptx, C, font });
     } else if (item.visual_type === "event_rate_chart" || item.visual_type === "editable_bar_chart") {
       addBarChart(slide, item, false);
     } else if (item.visual_type === "missingness_chart") {
@@ -656,6 +656,6 @@ fs.writeFileSync(
   JSON.stringify({ schema_version: "2.1", layout_contract: spec.layout_contract, slides: spec.slides.map((slide) => ({ slide_id: slide.slide_id, planned_geometry: slide.planned_geometry })) }, null, 2),
 );
 await pptx.writeFile({ fileName: outputPptx });
-if (experiment) fs.writeFileSync(path.join(previewRoot, "experimental-execution.json"), JSON.stringify(experiment.report(), null, 2));
+if (composition) fs.writeFileSync(path.join(previewRoot, "composition_execution.json"), JSON.stringify(composition.report(), null, 2));
 console.log(`PPTXGENJS_SLIDES=${spec.slides.length}`);
 console.log(`PPTX=${outputPptx}`);

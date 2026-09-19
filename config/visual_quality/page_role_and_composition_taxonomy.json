@@ -1,0 +1,700 @@
+{
+  "schema_version": "visual-quality/1",
+  "status": "EXPERIMENTAL",
+  "canonical": true,
+  "approval_status": "PROPOSAL_NOT_HUMAN_APPROVED",
+  "roles": [
+    {
+      "page_role": "HERO",
+      "purpose": "建立主题和视觉入口",
+      "typical_semantics": "title_keywords",
+      "candidate_families": [
+        "HERO_SCENIC",
+        "TYPOGRAPHIC_STATEMENT",
+        "EDITORIAL_SPLIT"
+      ]
+    },
+    {
+      "page_role": "CONTEXT",
+      "purpose": "交代背景、范围与边界",
+      "typical_semantics": "context_statements",
+      "candidate_families": [
+        "CONTEXT_CONTRAST",
+        "EDITORIAL_SPLIT",
+        "FIGURE_CAPTION"
+      ]
+    },
+    {
+      "page_role": "EVIDENCE",
+      "purpose": "呈现证据来源、形成过程及局限",
+      "typical_semantics": "evidence_summary",
+      "candidate_families": [
+        "EVIDENCE_TABLE",
+        "PROCESS_HORIZONTAL",
+        "FIGURE_CAPTION"
+      ]
+    },
+    {
+      "page_role": "FRAMEWORK",
+      "purpose": "组织已有概念关系；不增写机制",
+      "typical_semantics": "explicit framework structure",
+      "candidate_families": [
+        "LAYERED_LOOP_FRAMEWORK",
+        "FRAMEWORK_HUB",
+        "COMPOSITE_DUAL_FRAMEWORK",
+        "TARGET_TRIPTYCH"
+      ]
+    },
+    {
+      "page_role": "RESULTS",
+      "purpose": "呈现实际观察、数据与不确定性",
+      "typical_semantics": "observed_results",
+      "candidate_families": [
+        "NATIVE_DATA_CHART",
+        "NATIVE_DATA_TABLE",
+        "FIGURE_CAPTION"
+      ]
+    },
+    {
+      "page_role": "COMPARISON",
+      "purpose": "比较同一维度下的对象",
+      "typical_semantics": "explicit_comparison",
+      "candidate_families": [
+        "PAIRED_COLUMNS",
+        "COMPARISON_TABLE",
+        "FIGURE_PAIR"
+      ]
+    },
+    {
+      "page_role": "IMPLEMENTATION",
+      "purpose": "说明实施条件、操作或限制",
+      "typical_semantics": "clinical_actions",
+      "candidate_families": [
+        "ACTION_ROWS",
+        "PARAMETER_GUARDRAIL",
+        "PROCESS_VERTICAL"
+      ]
+    },
+    {
+      "page_role": "TIMELINE",
+      "purpose": "呈现已授权的时间或阶段次序",
+      "typical_semantics": "dated_sequence or lifecycle_sequence",
+      "candidate_families": [
+        "TIMELINE_WITH_BAND",
+        "DATED_TIMELINE",
+        "PROCESS_HORIZONTAL"
+      ]
+    },
+    {
+      "page_role": "CLOSING",
+      "purpose": "总结要点、边界和结束信息",
+      "typical_semantics": "equal_statements",
+      "candidate_families": [
+        "EDITORIAL_TAKEAWAY",
+        "TYPOGRAPHIC_STATEMENT",
+        "EDITORIAL_SPLIT"
+      ]
+    },
+    {
+      "page_role": "APPENDIX",
+      "purpose": "提供补充细节、原图或来源索引",
+      "typical_semantics": "source_index",
+      "candidate_families": [
+        "SOURCE_INDEX",
+        "NATIVE_DATA_TABLE",
+        "FIGURE_CAPTION"
+      ]
+    }
+  ],
+  "families": [
+    {
+      "family_id": "HERO_SCENIC",
+      "approval_status": "ROLE_RECOMMENDATION_HUMAN_REVIEW_REQUIRED",
+      "semantic_structures": [
+        "title_keywords"
+      ],
+      "group_range": [
+        1,
+        5
+      ],
+      "real_figure_required": false,
+      "approved_illustration_required": true,
+      "density_support": [
+        "LOW",
+        "MEDIUM"
+      ],
+      "long_text_supported": false,
+      "description": "Title, sparse equal keywords, approved non-evidence scenery in reserved space",
+      "constraints": [
+        "preserve literal scientific text, units, qualifiers, negation, citations and source IDs",
+        "only source-authorized edges, grouping, ordering and equal weights",
+        "never add scientific relationships to obtain a layout"
+      ]
+    },
+    {
+      "family_id": "TYPOGRAPHIC_STATEMENT",
+      "approval_status": "ROLE_RECOMMENDATION_HUMAN_REVIEW_REQUIRED",
+      "semantic_structures": [
+        "title_keywords",
+        "equal_statements"
+      ],
+      "group_range": [
+        1,
+        6
+      ],
+      "real_figure_required": false,
+      "approved_illustration_required": false,
+      "density_support": [
+        "LOW",
+        "MEDIUM",
+        "HIGH"
+      ],
+      "long_text_supported": true,
+      "description": "One dominant title or statement with native supporting text",
+      "constraints": [
+        "preserve literal scientific text, units, qualifiers, negation, citations and source IDs",
+        "only source-authorized edges, grouping, ordering and equal weights",
+        "never add scientific relationships to obtain a layout"
+      ]
+    },
+    {
+      "family_id": "EDITORIAL_SPLIT",
+      "approval_status": "ROLE_RECOMMENDATION_HUMAN_REVIEW_REQUIRED",
+      "semantic_structures": [
+        "title_keywords",
+        "context_statements",
+        "equal_statements"
+      ],
+      "group_range": [
+        1,
+        6
+      ],
+      "real_figure_required": false,
+      "approved_illustration_required": false,
+      "density_support": [
+        "LOW",
+        "MEDIUM",
+        "HIGH"
+      ],
+      "long_text_supported": true,
+      "description": "Asymmetric text blocks and open space; no implied causal arrow",
+      "constraints": [
+        "preserve literal scientific text, units, qualifiers, negation, citations and source IDs",
+        "only source-authorized edges, grouping, ordering and equal weights",
+        "never add scientific relationships to obtain a layout"
+      ]
+    },
+    {
+      "family_id": "CONTEXT_CONTRAST",
+      "approval_status": "ROLE_RECOMMENDATION_HUMAN_REVIEW_REQUIRED",
+      "semantic_structures": [
+        "context_statements"
+      ],
+      "group_range": [
+        2,
+        4
+      ],
+      "real_figure_required": false,
+      "approved_illustration_required": false,
+      "density_support": [
+        "LOW",
+        "MEDIUM",
+        "HIGH"
+      ],
+      "long_text_supported": true,
+      "description": "Parallel context and scope, retaining limits and qualifiers",
+      "constraints": [
+        "preserve literal scientific text, units, qualifiers, negation, citations and source IDs",
+        "only source-authorized edges, grouping, ordering and equal weights",
+        "never add scientific relationships to obtain a layout"
+      ]
+    },
+    {
+      "family_id": "FIGURE_CAPTION",
+      "approval_status": "ROLE_RECOMMENDATION_HUMAN_REVIEW_REQUIRED",
+      "semantic_structures": [
+        "source_figure",
+        "context_statements",
+        "observed_results",
+        "evidence_summary"
+      ],
+      "group_range": [
+        1,
+        3
+      ],
+      "real_figure_required": true,
+      "approved_illustration_required": false,
+      "density_support": [
+        "LOW",
+        "MEDIUM",
+        "HIGH"
+      ],
+      "long_text_supported": true,
+      "description": "Registered source figure plus faithful caption and source locator",
+      "constraints": [
+        "preserve literal scientific text, units, qualifiers, negation, citations and source IDs",
+        "only source-authorized edges, grouping, ordering and equal weights",
+        "never add scientific relationships to obtain a layout"
+      ]
+    },
+    {
+      "family_id": "PROCESS_HORIZONTAL",
+      "approval_status": "ROLE_RECOMMENDATION_HUMAN_REVIEW_REQUIRED",
+      "semantic_structures": [
+        "explicit_sequence"
+      ],
+      "group_range": [
+        2,
+        6
+      ],
+      "real_figure_required": false,
+      "approved_illustration_required": false,
+      "density_support": [
+        "LOW",
+        "MEDIUM",
+        "HIGH"
+      ],
+      "long_text_supported": true,
+      "description": "Equal stages and only registered directed edges; heterogeneous counts never scale nodes",
+      "constraints": [
+        "preserve literal scientific text, units, qualifiers, negation, citations and source IDs",
+        "only source-authorized edges, grouping, ordering and equal weights",
+        "never add scientific relationships to obtain a layout"
+      ]
+    },
+    {
+      "family_id": "PROCESS_VERTICAL",
+      "approval_status": "ROLE_RECOMMENDATION_HUMAN_REVIEW_REQUIRED",
+      "semantic_structures": [
+        "explicit_sequence"
+      ],
+      "group_range": [
+        2,
+        8
+      ],
+      "real_figure_required": false,
+      "approved_illustration_required": false,
+      "density_support": [
+        "LOW",
+        "MEDIUM",
+        "HIGH"
+      ],
+      "long_text_supported": true,
+      "description": "Long labels in vertical stages; preserves exact sequence",
+      "constraints": [
+        "preserve literal scientific text, units, qualifiers, negation, citations and source IDs",
+        "only source-authorized edges, grouping, ordering and equal weights",
+        "never add scientific relationships to obtain a layout"
+      ]
+    },
+    {
+      "family_id": "EVIDENCE_TABLE",
+      "approval_status": "ROLE_RECOMMENDATION_HUMAN_REVIEW_REQUIRED",
+      "semantic_structures": [
+        "evidence_summary"
+      ],
+      "group_range": [
+        1,
+        20
+      ],
+      "real_figure_required": false,
+      "approved_illustration_required": false,
+      "density_support": [
+        "LOW",
+        "MEDIUM",
+        "HIGH"
+      ],
+      "long_text_supported": true,
+      "description": "Source-bound evidence, limitations and strength as native table",
+      "constraints": [
+        "preserve literal scientific text, units, qualifiers, negation, citations and source IDs",
+        "only source-authorized edges, grouping, ordering and equal weights",
+        "never add scientific relationships to obtain a layout"
+      ]
+    },
+    {
+      "family_id": "LAYERED_LOOP_FRAMEWORK",
+      "approval_status": "ROLE_RECOMMENDATION_HUMAN_REVIEW_REQUIRED",
+      "semantic_structures": [
+        "teaching_feedback_loop"
+      ],
+      "group_range": [
+        2,
+        4
+      ],
+      "real_figure_required": false,
+      "approved_illustration_required": false,
+      "density_support": [
+        "LOW",
+        "MEDIUM",
+        "HIGH"
+      ],
+      "long_text_supported": true,
+      "description": "Ordered teaching layers and authorized feedback edges; no causal upgrade",
+      "constraints": [
+        "preserve literal scientific text, units, qualifiers, negation, citations and source IDs",
+        "only source-authorized edges, grouping, ordering and equal weights",
+        "never add scientific relationships to obtain a layout"
+      ]
+    },
+    {
+      "family_id": "FRAMEWORK_HUB",
+      "approval_status": "ROLE_RECOMMENDATION_HUMAN_REVIEW_REQUIRED",
+      "semantic_structures": [
+        "equal_dimensions"
+      ],
+      "group_range": [
+        3,
+        6
+      ],
+      "real_figure_required": false,
+      "approved_illustration_required": false,
+      "density_support": [
+        "LOW",
+        "MEDIUM",
+        "HIGH"
+      ],
+      "long_text_supported": true,
+      "description": "Registered central entity and equal peripheral concepts; undirected unless supported",
+      "constraints": [
+        "preserve literal scientific text, units, qualifiers, negation, citations and source IDs",
+        "only source-authorized edges, grouping, ordering and equal weights",
+        "never add scientific relationships to obtain a layout"
+      ]
+    },
+    {
+      "family_id": "COMPOSITE_DUAL_FRAMEWORK",
+      "approval_status": "ROLE_RECOMMENDATION_HUMAN_REVIEW_REQUIRED",
+      "semantic_structures": [
+        "dual_framework"
+      ],
+      "group_range": [
+        2,
+        12
+      ],
+      "real_figure_required": false,
+      "approved_illustration_required": false,
+      "density_support": [
+        "LOW",
+        "MEDIUM",
+        "HIGH"
+      ],
+      "long_text_supported": true,
+      "description": "Two distinct modules with source-supported shared conclusion; no item pairings invented",
+      "constraints": [
+        "preserve literal scientific text, units, qualifiers, negation, citations and source IDs",
+        "only source-authorized edges, grouping, ordering and equal weights",
+        "never add scientific relationships to obtain a layout"
+      ]
+    },
+    {
+      "family_id": "TARGET_TRIPTYCH",
+      "approval_status": "ROLE_RECOMMENDATION_HUMAN_REVIEW_REQUIRED",
+      "semantic_structures": [
+        "experience_targets"
+      ],
+      "group_range": [
+        3,
+        3
+      ],
+      "real_figure_required": false,
+      "approved_illustration_required": false,
+      "density_support": [
+        "LOW",
+        "MEDIUM",
+        "HIGH"
+      ],
+      "long_text_supported": true,
+      "description": "Heterogeneous initial targets with units and approximation; never a statistical result chart",
+      "constraints": [
+        "preserve literal scientific text, units, qualifiers, negation, citations and source IDs",
+        "only source-authorized edges, grouping, ordering and equal weights",
+        "never add scientific relationships to obtain a layout"
+      ]
+    },
+    {
+      "family_id": "NATIVE_DATA_CHART",
+      "approval_status": "ROLE_RECOMMENDATION_HUMAN_REVIEW_REQUIRED",
+      "semantic_structures": [
+        "observed_results"
+      ],
+      "group_range": [
+        1,
+        20
+      ],
+      "real_figure_required": false,
+      "approved_illustration_required": false,
+      "density_support": [
+        "LOW",
+        "MEDIUM",
+        "HIGH"
+      ],
+      "long_text_supported": true,
+      "description": "Deterministic native chart bound to validated data contract; no AI image",
+      "constraints": [
+        "preserve literal scientific text, units, qualifiers, negation, citations and source IDs",
+        "only source-authorized edges, grouping, ordering and equal weights",
+        "never add scientific relationships to obtain a layout"
+      ]
+    },
+    {
+      "family_id": "NATIVE_DATA_TABLE",
+      "approval_status": "ROLE_RECOMMENDATION_HUMAN_REVIEW_REQUIRED",
+      "semantic_structures": [
+        "observed_results",
+        "source_index"
+      ],
+      "group_range": [
+        1,
+        40
+      ],
+      "real_figure_required": false,
+      "approved_illustration_required": false,
+      "density_support": [
+        "LOW",
+        "MEDIUM",
+        "HIGH"
+      ],
+      "long_text_supported": true,
+      "description": "Complete source-bound native table; preserve units and uncertainty",
+      "constraints": [
+        "preserve literal scientific text, units, qualifiers, negation, citations and source IDs",
+        "only source-authorized edges, grouping, ordering and equal weights",
+        "never add scientific relationships to obtain a layout"
+      ]
+    },
+    {
+      "family_id": "PAIRED_COLUMNS",
+      "approval_status": "ROLE_RECOMMENDATION_HUMAN_REVIEW_REQUIRED",
+      "semantic_structures": [
+        "explicit_comparison"
+      ],
+      "group_range": [
+        2,
+        2
+      ],
+      "real_figure_required": false,
+      "approved_illustration_required": false,
+      "density_support": [
+        "LOW",
+        "MEDIUM",
+        "HIGH"
+      ],
+      "long_text_supported": true,
+      "description": "Same comparison dimensions in aligned columns",
+      "constraints": [
+        "preserve literal scientific text, units, qualifiers, negation, citations and source IDs",
+        "only source-authorized edges, grouping, ordering and equal weights",
+        "never add scientific relationships to obtain a layout"
+      ]
+    },
+    {
+      "family_id": "COMPARISON_TABLE",
+      "approval_status": "ROLE_RECOMMENDATION_HUMAN_REVIEW_REQUIRED",
+      "semantic_structures": [
+        "explicit_comparison"
+      ],
+      "group_range": [
+        2,
+        8
+      ],
+      "real_figure_required": false,
+      "approved_illustration_required": false,
+      "density_support": [
+        "LOW",
+        "MEDIUM",
+        "HIGH"
+      ],
+      "long_text_supported": true,
+      "description": "Source-grounded comparison rows and columns without implied ranking",
+      "constraints": [
+        "preserve literal scientific text, units, qualifiers, negation, citations and source IDs",
+        "only source-authorized edges, grouping, ordering and equal weights",
+        "never add scientific relationships to obtain a layout"
+      ]
+    },
+    {
+      "family_id": "FIGURE_PAIR",
+      "approval_status": "ROLE_RECOMMENDATION_HUMAN_REVIEW_REQUIRED",
+      "semantic_structures": [
+        "explicit_comparison"
+      ],
+      "group_range": [
+        2,
+        2
+      ],
+      "real_figure_required": true,
+      "approved_illustration_required": false,
+      "density_support": [
+        "LOW",
+        "MEDIUM",
+        "HIGH"
+      ],
+      "long_text_supported": true,
+      "description": "Two registered figures; common scale only if scientifically valid",
+      "constraints": [
+        "preserve literal scientific text, units, qualifiers, negation, citations and source IDs",
+        "only source-authorized edges, grouping, ordering and equal weights",
+        "never add scientific relationships to obtain a layout"
+      ]
+    },
+    {
+      "family_id": "ACTION_ROWS",
+      "approval_status": "ROLE_RECOMMENDATION_HUMAN_REVIEW_REQUIRED",
+      "semantic_structures": [
+        "clinical_actions",
+        "parallel_items"
+      ],
+      "group_range": [
+        1,
+        8
+      ],
+      "real_figure_required": false,
+      "approved_illustration_required": false,
+      "density_support": [
+        "LOW",
+        "MEDIUM",
+        "HIGH"
+      ],
+      "long_text_supported": true,
+      "description": "Native action or item rows; source conditions remain attached",
+      "constraints": [
+        "preserve literal scientific text, units, qualifiers, negation, citations and source IDs",
+        "only source-authorized edges, grouping, ordering and equal weights",
+        "never add scientific relationships to obtain a layout"
+      ]
+    },
+    {
+      "family_id": "PARAMETER_GUARDRAIL",
+      "approval_status": "ROLE_RECOMMENDATION_HUMAN_REVIEW_REQUIRED",
+      "semantic_structures": [
+        "clinical_parameters"
+      ],
+      "group_range": [
+        2,
+        6
+      ],
+      "real_figure_required": false,
+      "approved_illustration_required": false,
+      "density_support": [
+        "LOW",
+        "MEDIUM",
+        "HIGH"
+      ],
+      "long_text_supported": true,
+      "description": "Parameters, limits and coordination remain separate; complete warning text",
+      "constraints": [
+        "preserve literal scientific text, units, qualifiers, negation, citations and source IDs",
+        "only source-authorized edges, grouping, ordering and equal weights",
+        "never add scientific relationships to obtain a layout"
+      ]
+    },
+    {
+      "family_id": "TIMELINE_WITH_BAND",
+      "approval_status": "ROLE_RECOMMENDATION_HUMAN_REVIEW_REQUIRED",
+      "semantic_structures": [
+        "lifecycle_sequence"
+      ],
+      "group_range": [
+        2,
+        8
+      ],
+      "real_figure_required": false,
+      "approved_illustration_required": false,
+      "density_support": [
+        "LOW",
+        "MEDIUM",
+        "HIGH"
+      ],
+      "long_text_supported": true,
+      "description": "Stages plus persistent band; future exploration kept distinct",
+      "constraints": [
+        "preserve literal scientific text, units, qualifiers, negation, citations and source IDs",
+        "only source-authorized edges, grouping, ordering and equal weights",
+        "never add scientific relationships to obtain a layout"
+      ]
+    },
+    {
+      "family_id": "DATED_TIMELINE",
+      "approval_status": "ROLE_RECOMMENDATION_HUMAN_REVIEW_REQUIRED",
+      "semantic_structures": [
+        "dated_sequence"
+      ],
+      "group_range": [
+        2,
+        10
+      ],
+      "real_figure_required": false,
+      "approved_illustration_required": false,
+      "density_support": [
+        "LOW",
+        "MEDIUM",
+        "HIGH"
+      ],
+      "long_text_supported": true,
+      "description": "Only source-supplied dates and durations, no invented spacing as time",
+      "constraints": [
+        "preserve literal scientific text, units, qualifiers, negation, citations and source IDs",
+        "only source-authorized edges, grouping, ordering and equal weights",
+        "never add scientific relationships to obtain a layout"
+      ]
+    },
+    {
+      "family_id": "EDITORIAL_TAKEAWAY",
+      "approval_status": "ROLE_RECOMMENDATION_HUMAN_REVIEW_REQUIRED",
+      "semantic_structures": [
+        "equal_statements"
+      ],
+      "group_range": [
+        1,
+        8
+      ],
+      "real_figure_required": false,
+      "approved_illustration_required": false,
+      "density_support": [
+        "LOW",
+        "MEDIUM",
+        "HIGH"
+      ],
+      "long_text_supported": true,
+      "description": "Equal takeaways with clear source and limits, no spurious ranking",
+      "constraints": [
+        "preserve literal scientific text, units, qualifiers, negation, citations and source IDs",
+        "only source-authorized edges, grouping, ordering and equal weights",
+        "never add scientific relationships to obtain a layout"
+      ]
+    },
+    {
+      "family_id": "SOURCE_INDEX",
+      "approval_status": "ROLE_RECOMMENDATION_HUMAN_REVIEW_REQUIRED",
+      "semantic_structures": [
+        "source_index"
+      ],
+      "group_range": [
+        1,
+        40
+      ],
+      "real_figure_required": false,
+      "approved_illustration_required": false,
+      "density_support": [
+        "LOW",
+        "MEDIUM",
+        "HIGH"
+      ],
+      "long_text_supported": true,
+      "description": "Readable citations and registered source locators",
+      "constraints": [
+        "preserve literal scientific text, units, qualifiers, negation, citations and source IDs",
+        "only source-authorized edges, grouping, ordering and equal weights",
+        "never add scientific relationships to obtain a layout"
+      ]
+    }
+  ],
+  "primary_role_rule": "Exactly one primary role per slide. Secondary content tags are descriptive only. Cover/content legacy labels do not determine scientific semantics. Coverage means N of N slides assigned, not all ten roles used.",
+  "mixed_role_rule": "Choose dominant communicative purpose and record rationale. A closing page may retain an appendix source-content tag. Role mapping must not split or add scientific content.",
+  "exception_families": [
+    "GENERIC_CARD_GRID",
+    "LEGACY_NATIVE_FLOW"
+  ],
+  "exception_rule": "Not approved selector defaults. Retained existing layout only, explicit reason, rejected alternatives, evidence locator and human review. Unknown role or no safe compatible family produces HOLD_EXISTING/INFORMATION_REQUIRED, never invented semantics."
+}

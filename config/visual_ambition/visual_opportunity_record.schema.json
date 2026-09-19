@@ -1,0 +1,238 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:academic-ppt:visual-ambition:visual-opportunity-record",
+  "type": "object",
+  "properties": {
+    "slide_id": {
+      "type": "string",
+      "pattern": "^(SLD-[A-F0-9]{20}|S[0-9]{3,6})$"
+    },
+    "page_role": {
+      "enum": [
+        "HERO",
+        "CONTEXT",
+        "EVIDENCE",
+        "FRAMEWORK",
+        "RESULTS",
+        "COMPARISON",
+        "IMPLEMENTATION",
+        "TIMELINE",
+        "CLOSING",
+        "APPENDIX"
+      ]
+    },
+    "quality_floor_status": {
+      "enum": [
+        "PASS",
+        "WARN",
+        "HUMAN_REVIEW",
+        "BLOCK"
+      ]
+    },
+    "illustration_enrichment_opportunity": {
+      "enum": [
+        "NONE",
+        "LOW",
+        "MEDIUM",
+        "HIGH",
+        "REFERENCE_GRADE_OPPORTUNITY"
+      ]
+    },
+    "illustration_role_candidate": {
+      "enum": [
+        "BACKGROUND_ATMOSPHERE",
+        "EDITORIAL_CUE",
+        "CONCEPT_SUPPORT",
+        null
+      ]
+    },
+    "illustration_subject_summary": {
+      "enum": [
+        "Abstract conceptual support; no clinical evidence, new mechanism, or diagnostic implication.",
+        "Muted editorial background atmosphere with protected space for native content; no geographic evidence.",
+        "Subordinate conceptual silhouette; no anatomical truth, laterality, diagnostic or causal claim.",
+        "Abstract research-process editorial cues; no invented study results or evidence-strength badges.",
+        "Abstract care-pathway atmosphere; preserve source-defined stages and conditions.",
+        "Abstract recovery-stage atmosphere; no promised outcome, patient portrayal, or invented duration.",
+        "Restrained editorial cue supporting reading order; no scientific or clinical evidence.",
+        null
+      ]
+    },
+    "source_priority": {
+      "const": [
+        "EXISTING_SCIENTIFIC_SOURCE_FIGURE",
+        "APPROVED_PROJECT_ASSET",
+        "APPROVED_DETERMINISTIC_LIBRARY",
+        "AI_CONCEPTUAL_CANDIDATE",
+        "NONE"
+      ]
+    },
+    "human_approval_required": {
+      "const": true
+    },
+    "visual_ambition_status": {
+      "enum": [
+        "ENRICHMENT_RECOMMENDED",
+        "NO_MEANINGFUL_ENRICHMENT_NEEDED",
+        "ENRICHMENT_REQUIRES_HUMAN_DECISION"
+      ]
+    },
+    "visual_anchor_role": {
+      "enum": [
+        "ANCHOR",
+        "SUPPORTING",
+        "UTILITY"
+      ]
+    },
+    "is_anchor": {
+      "type": "boolean"
+    },
+    "anchor_reason": {
+      "type": "string",
+      "minLength": 1
+    },
+    "recommended_ambition_level": {
+      "enum": [
+        "FLOOR",
+        "TARGET",
+        "STRETCH"
+      ]
+    },
+    "ambition_level_achieved": {
+      "const": "NOT_ASSESSED"
+    },
+    "enrichment_opportunity": {
+      "enum": [
+        "NONE",
+        "LOW",
+        "MEDIUM",
+        "HIGH",
+        "REFERENCE_GRADE_OPPORTUNITY"
+      ]
+    },
+    "primary_enrichment_channels": {
+      "type": "array",
+      "maxItems": 2,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "COMPOSITION_UPGRADE",
+          "ILLUSTRATION_ENRICHMENT",
+          "ICONOGRAPHY",
+          "TYPOGRAPHY_UPGRADE",
+          "EDITORIAL_COMPONENTS",
+          "MICROCOPY_OPPORTUNITY",
+          "BACKGROUND_SCENE",
+          "ANNOTATION_ENRICHMENT"
+        ]
+      }
+    },
+    "secondary_enrichment_channels": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "COMPOSITION_UPGRADE",
+          "ILLUSTRATION_ENRICHMENT",
+          "ICONOGRAPHY",
+          "TYPOGRAPHY_UPGRADE",
+          "EDITORIAL_COMPONENTS",
+          "MICROCOPY_OPPORTUNITY",
+          "BACKGROUND_SCENE",
+          "ANNOTATION_ENRICHMENT"
+        ]
+      }
+    },
+    "composition_upgrade_candidate": {
+      "type": "object"
+    },
+    "illustration_expected_gain": {
+      "type": "string"
+    },
+    "illustration_risk": {
+      "type": "string"
+    },
+    "microcopy_opportunity": {
+      "enum": [
+        "MICROCOPY_NOT_NEEDED",
+        "MICROCOPY_MAY_HELP",
+        "MICROCOPY_HIGH_VALUE",
+        "MICROCOPY_UNSAFE"
+      ]
+    },
+    "microcopy_text": {
+      "type": "null"
+    },
+    "reference_style_relevance": {
+      "type": "object"
+    },
+    "scientific_risk": {
+      "type": "string"
+    },
+    "semantic_risk": {
+      "type": "string"
+    },
+    "privacy_risk": {
+      "type": "string"
+    },
+    "reasoning_summary": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string"
+      }
+    },
+    "recommended_next_action": {
+      "enum": [
+        "NO_ACTION",
+        "COMPOSITION_REVIEW",
+        "ILLUSTRATION_CANDIDATE",
+        "ICON_SET_CANDIDATE",
+        "ART_DIRECTION_REVIEW",
+        "MICROCOPY_PROPOSAL",
+        "REFERENCE_GRADE_SCENE_TRIAL",
+        "HUMAN_SEMANTIC_DECISION",
+        "SOURCE_FIGURE_REQUIRED"
+      ]
+    },
+    "automatic_execution_allowed": {
+      "const": false
+    },
+    "floor_override_allowed": {
+      "const": false
+    }
+  },
+  "required": [
+    "slide_id",
+    "page_role",
+    "quality_floor_status",
+    "illustration_enrichment_opportunity",
+    "illustration_role_candidate",
+    "illustration_subject_summary",
+    "source_priority",
+    "human_approval_required",
+    "visual_ambition_status",
+    "visual_anchor_role",
+    "is_anchor",
+    "anchor_reason",
+    "recommended_ambition_level",
+    "ambition_level_achieved",
+    "enrichment_opportunity",
+    "primary_enrichment_channels",
+    "secondary_enrichment_channels",
+    "composition_upgrade_candidate",
+    "illustration_expected_gain",
+    "illustration_risk",
+    "microcopy_opportunity",
+    "microcopy_text",
+    "reference_style_relevance",
+    "scientific_risk",
+    "semantic_risk",
+    "privacy_risk",
+    "reasoning_summary",
+    "recommended_next_action",
+    "automatic_execution_allowed",
+    "floor_override_allowed"
+  ],
+  "additionalProperties": true
+}

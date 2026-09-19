@@ -1,5 +1,14 @@
 # Changelog
 
+## UNRELEASED / NEXT
+
+- Consolidated native semantic composition, Art Direction, quality Floor, Ambition, controlled manual illustration intake, explicit approvals and real Master/Layout into generic assisted workflow modules.
+- Validated/full delivery now requires source-bound visual evidence and exact-deck human reviews; unresolved outputs remain drafts. Quick Enhance retains its bounded cache/KEEP path.
+- Added image-only approved asset assembly, post-assembly QA and immutable-deck review. No automatic image generation.
+- Replaced duplicate user guides with one Chinese manual; merged current architecture and Fast Enhance contracts. Release selection has one exclusion authority.
+- Aligned Python metadata with the existing 2.7.0-rc4 authority. No new release version, tag or stable/generalization claim. A second independent real project remains unvalidated.
+
+
 ## v2.7.0-rc4
 
 - Replaced raw shape-tree equality as the sole KEEP gate with three fail-closed
